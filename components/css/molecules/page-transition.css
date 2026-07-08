@@ -10,6 +10,11 @@
   transition: opacity 160ms ease;
 }
 
+html.is-page-transitioning,
+body.is-page-transitioning {
+  overflow: hidden;
+}
+
 .page-transition.is-active {
   opacity: 1;
   pointer-events: auto;

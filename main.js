@@ -57,14 +57,18 @@ async function renderCurrentPage(options = {}) {
 
 function renderPageContent(content, shouldAnimate) {
   const app = document.getElementById("app");
+  const animatePage = Boolean(shouldAnimate);
 
-  app.classList.toggle("app-view--entering", shouldAnimate);
+  app.classList.toggle("app-view--entering", animatePage);
   app.classList.remove("app-view--visible");
   app.innerHTML = content;
   bindPageLinks();
 
-  if (shouldAnimate) {
-    requestAnimationFrame(() => app.classList.add("app-view--visible"));
+  if (animatePage) {
+    requestAnimationFrame(() => {
+      app.classList.add("app-view--visible");
+      app.classList.remove("app-view--entering");
+    });
   }
 }
 
@@ -150,6 +154,7 @@ async function renderSignupWithTransition() {
   pageTransitionRunning = true;
   const loader = await createSignupTransitionLoader();
 
+  setTransitionOverflow(true);
   document.body.append(loader);
   requestAnimationFrame(() => loader.classList.add("is-active"));
 
@@ -182,7 +187,15 @@ function cleanSignupTransitionParam() {
 
 function removeTransitionLoader(loader) {
   loader.classList.add("is-leaving");
-  setTimeout(() => loader.remove(), 180);
+  setTimeout(() => {
+    loader.remove();
+    setTransitionOverflow(false);
+  }, 180);
+}
+
+function setTransitionOverflow(isLocked) {
+  document.documentElement.classList.toggle("is-page-transitioning", isLocked);
+  document.body.classList.toggle("is-page-transitioning", isLocked);
 }
 
 async function createSignupTransitionLoader() {
