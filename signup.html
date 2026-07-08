@@ -16,16 +16,36 @@
         <a href="./index.html">Back</a>
         <h1>Join</h1>
         <h2>Sign up</h2>
-        <form class="auth-form" onsubmit="handleSignup(event)" novalidate>
-          <input id="signupName" type="text" placeholder="Name" />
-          <input id="signupEmail" type="email" placeholder="Email" />
-          <input id="signupPassword" type="password" placeholder="Password" />
-          <label class="privacy-check">
-            <input id="privacyAccepted" type="checkbox" />
-            I accept the Privacy Policy
+        <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)" novalidate>
+          <input id="signupName" name="name" type="text" placeholder="Name" autocomplete="name" />
+          <input id="signupEmail" name="email" type="email" placeholder="Email" autocomplete="email" />
+          <input
+            id="signupPassword"
+            name="password"
+            type="password"
+            placeholder="Password"
+            autocomplete="new-password"
+          />
+          <input
+            id="signupConfirmPassword"
+            name="confirmPassword"
+            type="password"
+            placeholder="Confirm Password"
+            autocomplete="new-password"
+          />
+          <label class="privacy-check" for="privacyAccepted">
+            <input
+              id="privacyAccepted"
+              name="privacyAccepted"
+              type="checkbox"
+              disabled
+              aria-describedby="signupMessage"
+            />
+            I accept the
+            <a id="privacyPolicyLink" href="./privacy-policy.html">Privacy Policy</a>
           </label>
           <p class="form-message" id="signupMessage"></p>
-          <button id="signupButton" type="submit">Sign up</button>
+          <button id="signupButton" type="submit" disabled>Sign up</button>
         </form>
       </section>
     </main>
