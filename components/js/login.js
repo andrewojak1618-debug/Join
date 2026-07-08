@@ -1,11 +1,13 @@
 function initLoginValidation() {
   const loginForm = document.getElementById("loginForm");
+  const guestLoginButton = document.getElementById("guestLoginButton");
 
-  if (!loginForm) {
+  if (!loginForm || !guestLoginButton) {
     return;
   }
 
   loginForm.addEventListener("submit", handleLoginSubmit);
+  guestLoginButton.addEventListener("click", handleGuestLogin);
 }
 
 function handleLoginSubmit(event) {
@@ -19,10 +21,19 @@ function handleLoginSubmit(event) {
     return;
   }
 
+  if (!isValidEmail(email)) {
+    showLoginError("Please enter a valid email address.");
+    return;
+  }
+
   showLoginError("");
 }
 
 function showLoginError(message) {
   const errorElement = document.getElementById("loginError");
   errorElement.textContent = message;
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
