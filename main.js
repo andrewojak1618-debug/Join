@@ -18,7 +18,7 @@ const routes = {
   summary: {
     title: "Join | Summary",
     template: "./components/html/pages/summary.html",
-    // Protected route: requires the temporary dummy user until Firebase/Auth is added.
+    // Protected route: requires a Firebase or fallback user before rendering.
     protected: true,
   },
 };
@@ -46,6 +46,7 @@ async function initApp() {
 }
 
 async function renderCurrentPage(options = {}) {
+  await waitForFirebaseAuth();
   const page = getAuthorizedPage();
   const route = routes[page];
   const response = await fetch(route.template);
@@ -83,16 +84,41 @@ function getValidPage() {
   return routes[page] ? page : "login";
 }
 
+/**
+ * Returns the requested page or redirects protected pages to login.
+ */
 function getAuthorizedPage() {
   const page = getValidPage();
-  if (isProtectedPage(page) && !getStoredUser()) return redirectToLoginPage();
+  if (isProtectedPage(page) && !isUserAuthenticated()) return redirectToLoginPage();
   return page;
 }
 
+
+/**
+ * Checks the user object synchronized from Firebase into localStorage.
+ */
+function isUserAuthenticated() {
+  return Boolean(getStoredUser());
+}
+
+
+/**
+ * Waits for Firebase Auth before protected routes are rendered.
+ */
+async function waitForFirebaseAuth() {
+  if (window.joinFirebaseReady) await window.joinFirebaseReady;
+}
+
+/**
+ * Reads the route config and tells whether a page needs login.
+ */
 function isProtectedPage(page) {
   return Boolean(routes[page].protected);
 }
 
+/**
+ * Replaces the URL with the login page when access is not allowed.
+ */
 function redirectToLoginPage() {
   window.history.replaceState({}, "", "?page=login");
   return "login";
