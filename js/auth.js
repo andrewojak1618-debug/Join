@@ -16,6 +16,7 @@ function handleSignup(event) {
 
 
 function handleGuestLogin() {
+  // Dummy guest login: stores a temporary guest user until Firebase/Auth is added.
   saveStoredUser({ name: 'Guest', type: 'guest' });
   window.location.href = './summary.html';
 }
@@ -37,4 +38,5 @@ function protectPage() {
 function getSignupName() {
   return document.getElementById('signupName').value.trim();
 }
+
 
