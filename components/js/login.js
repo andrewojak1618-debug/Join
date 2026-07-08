@@ -10,29 +10,58 @@ function initLoginValidation() {
   guestLoginButton.addEventListener("click", handleGuestLogin);
 }
 
-function handleLoginSubmit(event) {
+
+async function handleLoginSubmit(event) {
   event.preventDefault();
 
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value.trim();
+  const email = getLoginEmail();
+  const password = getLoginPassword();
 
+  if (!isLoginFormValid(email, password)) return;
+  await submitLogin(email, password);
+}
+
+
+async function submitLogin(email, password) {
+  try {
+    showLoginError("");
+    await handleLogin(email, password);
+  } catch (error) {
+    showLoginError(getAuthErrorMessage(error));
+  }
+}
+
+
+function isLoginFormValid(email, password) {
   if (email === "" || password === "") {
     showLoginError("Please fill in email and password.");
-    return;
+    return false;
   }
 
   if (!isValidEmail(email)) {
     showLoginError("Please enter a valid email address.");
-    return;
+    return false;
   }
 
-  showLoginError("");
+  return true;
 }
+
+
+function getLoginEmail() {
+  return document.getElementById("loginEmail").value.trim();
+}
+
+
+function getLoginPassword() {
+  return document.getElementById("loginPassword").value.trim();
+}
+
 
 function showLoginError(message) {
   const errorElement = document.getElementById("loginError");
   errorElement.textContent = message;
 }
+
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);

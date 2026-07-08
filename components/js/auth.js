@@ -1,17 +1,46 @@
-﻿function handleLogin(event) {
-  event.preventDefault();
+async function handleLogin(email, password) {
+  if (isFirebaseAuthReady()) {
+    await loginWithFirebase(email, password);
+    return;
+  }
   saveStoredUser({ name: 'User', type: 'login' });
   navigateToPage('summary');
 }
 
 
-function handleSignup(event) {
+async function handleSignup(event) {
   event.preventDefault();
   if (!isSignupFormValid()) {
     showSignupMessage(getSignupErrorMessage());
     return;
   }
+  await registerUser();
+}
+
+
+async function registerUser() {
+  try {
+    await saveSignedUpUser();
+    navigateToPage('summary');
+  } catch (error) {
+    showSignupMessage(getAuthErrorMessage(error));
+  }
+}
+
+
+async function saveSignedUpUser() {
+  if (isFirebaseAuthReady()) {
+    const user = await window.joinFirebaseAuth.registerFirebaseUser(getSignupName(), getSignupEmail(), getSignupPassword());
+    saveStoredUser(user);
+    return;
+  }
   saveStoredUser({ name: getSignupName(), type: 'signup' });
+}
+
+
+async function loginWithFirebase(email, password) {
+  const user = await window.joinFirebaseAuth.loginFirebaseUser(email, password);
+  saveStoredUser(user);
   navigateToPage('summary');
 }
 
@@ -22,13 +51,25 @@ function handleGuestLogin() {
 }
 
 
-function handleLogout() {
-  // Dummy logout: clears the temporary localStorage user until Firebase/Auth is added.
+async function handleLogout() {
+  if (isFirebaseAuthReady()) await window.joinFirebaseAuth.logoutFirebaseUser();
   clearStoredUser();
   navigateToPage('login');
 }
 
 
+function isFirebaseAuthReady() {
+  return Boolean(window.joinFirebaseAuth);
+}
+
+
+function getAuthErrorMessage(error) {
+  const code = error && error.code;
+  if (code === 'auth/invalid-credential') return 'Please check your email and password.';
+  if (code === 'auth/email-already-in-use') return 'This email address is already registered.';
+  if (code === 'auth/weak-password') return 'Please use at least 6 characters.';
+  return 'Authentication is currently not available.';
+}
 
 
 function initSignupValidation() {
