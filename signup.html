@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join | Sign up</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/molecules/buttons.css" />
+    <link rel="stylesheet" href="./css/pages/login.css" />
+    <script src="./js/shared.js" defer></script>
+    <script src="./js/auth.js" defer></script>
+  </head>
+  <body>
+    <main class="auth-page" id="app">
+      <section class="auth-card">
+        <a href="./index.html">Back</a>
+        <h1>Join</h1>
+        <h2>Sign up</h2>
+        <form class="auth-form" onsubmit="handleSignup(event)" novalidate>
+          <input id="signupName" type="text" placeholder="Name" />
+          <input id="signupEmail" type="email" placeholder="Email" />
+          <input id="signupPassword" type="password" placeholder="Password" />
+          <label class="privacy-check">
+            <input id="privacyAccepted" type="checkbox" />
+            I accept the Privacy Policy
+          </label>
+          <p class="form-message" id="signupMessage"></p>
+          <button id="signupButton" type="submit">Sign up</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
+

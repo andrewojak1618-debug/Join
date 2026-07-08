@@ -1,17 +1,35 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< HEAD
+    <title>Join | Log in</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/molecules/buttons.css" />
+    <link rel="stylesheet" href="./css/pages/login.css" />
+    <script src="./js/shared.js" defer></script>
+    <script src="./js/auth.js" defer></script>
+=======
     <title>Join</title>
     <link rel="stylesheet" href="./base.css" />
+>>>>>>> afd42f590270910142fb6a862a45dee9f4489df7
   </head>
   <body>
-    <main class="app" id="app">
-      <section class="start-screen">
+    <main class="auth-page" id="app">
+      <section class="auth-card">
         <h1>Join</h1>
-        <p>Projektstruktur steht. Hier startet die App.</p>
+        <h2>Log in</h2>
+        <form class="auth-form" onsubmit="handleLogin(event)" novalidate>
+          <input id="loginEmail" type="email" placeholder="Email" />
+          <input id="loginPassword" type="password" placeholder="Password" />
+          <p class="form-message" id="loginMessage"></p>
+          <button type="submit">Log in</button>
+          <button type="button" onclick="handleGuestLogin()">Guest Log in</button>
+        </form>
+        <p>Not a Join user? <a href="./signup.html">Sign up</a></p>
       </section>
     </main>
   </body>
 </html>
+
