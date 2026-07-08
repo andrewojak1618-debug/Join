@@ -1,4 +1,4 @@
-function handleLogin(event) {
+﻿function handleLogin(event) {
   event.preventDefault();
   saveStoredUser({ name: 'User', type: 'login' });
   navigateToPage('summary');
@@ -23,6 +23,7 @@ function handleGuestLogin() {
 
 
 function handleLogout() {
+  // Dummy logout: clears the temporary localStorage user until Firebase/Auth is added.
   clearStoredUser();
   navigateToPage('login');
 }
@@ -152,3 +153,5 @@ function getSignupButton() {
 function showSignupMessage(message) {
   document.getElementById('signupMessage').textContent = message;
 }
+
+
