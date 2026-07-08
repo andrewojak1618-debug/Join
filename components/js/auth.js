@@ -1,13 +1,7 @@
-// Dummy auth for the first project structure step.
-// This only uses localStorage and must be replaced with real Firebase/Auth later.
-
-document.addEventListener('DOMContentLoaded', initSignupValidation);
-
-
 function handleLogin(event) {
   event.preventDefault();
   saveStoredUser({ name: 'User', type: 'login' });
-  window.location.href = './summary.html';
+  navigateToPage('summary');
 }
 
 
@@ -18,25 +12,25 @@ function handleSignup(event) {
     return;
   }
   saveStoredUser({ name: getSignupName(), type: 'signup' });
-  window.location.href = './summary.html';
+  navigateToPage('summary');
 }
 
 
 function handleGuestLogin() {
   saveStoredUser({ name: 'Guest', type: 'guest' });
-  window.location.href = './summary.html';
+  navigateToPage('summary');
 }
 
 
 function handleLogout() {
   clearStoredUser();
-  window.location.href = './index.html';
+  navigateToPage('login');
 }
 
 
 function protectPage() {
   if (!getStoredUser()) {
-    window.location.href = './index.html';
+    navigateToPage('login');
   }
 }
 
@@ -58,11 +52,15 @@ function rememberPrivacyOpened() {
 
 
 function rememberPrivacyReturn() {
-  if (new URLSearchParams(window.location.search).get('privacy') !== 'opened') {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get('privacy') !== 'opened') {
     return;
   }
+
   rememberPrivacyOpened();
-  window.history.replaceState({}, '', window.location.pathname);
+  params.delete('privacy');
+  window.history.replaceState({}, '', `?${params.toString()}`);
 }
 
 
