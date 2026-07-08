@@ -113,8 +113,8 @@
   transform: translateY(-50%);
 }
 
-.form-field__icon::before,
-.form-field__icon::after {
+.auth-page--signup .form-field__icon::before,
+.auth-page--signup .form-field__icon::after {
   content: "";
   position: absolute;
   border-color: #6f6f6f;
