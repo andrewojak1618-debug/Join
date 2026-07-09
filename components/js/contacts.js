@@ -27,13 +27,3 @@ function getContactInitials(name) {
 function sortContactsByName(contacts) {
   return [...contacts].sort((a, b) => a.name.localeCompare(b.name));
 }
-
-
-function escapeContactText(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}

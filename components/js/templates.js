@@ -1,6 +1,5 @@
-
 function getContactItemTemplate(contact) {
-    return `
+  return `
   <li class="contacts-item">
     <span
       class="contacts-item-avatar"
@@ -9,13 +8,12 @@ function getContactItemTemplate(contact) {
       ${getContactInitials(contact.name)}
     </span>
     <div class="contacts-item-info">
-      <p class="contacts-item-name">${escapeContactText(contact.name)}</p>
-      <a class="contacts-item-email">${escapeContactText(contact.email)}</a>
+      <p class="contacts-item-name">${escapeHtmlText(contact.name)}</p>
+      <a class="contacts-item-email">${escapeHtmlText(contact.email)}</a>
     </div>
   </li>
-  `
+  `;
 }
-
 
 /**
  * Loads an HTML template file and returns its first root element.
