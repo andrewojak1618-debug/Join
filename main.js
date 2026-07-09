@@ -25,12 +25,13 @@ const routes = {
     title: "Join | Add Task",
     template: "./components/html/pages/add-task.html",
     // Protected route: task creation is only available after login.
+
     protected: true,
   },
-  board: {
-    title: "Join | Board",
-    template: "./components/html/pages/board.html",
-    // Protected route: saved tasks should only be visible after login.
+  contacts: {
+    title: "Join | Contacts",
+    template: "./components/html/pages/contacts.html",
+    // Protected route: contacts are only available after login.
     protected: true,
   },
 };
@@ -183,7 +184,8 @@ async function navigateToPage(page, params = {}) {
 function initPage(page) {
   if (page === "login") initLoginValidation();
   if (page === "signup") initSignupValidation();
-  if (page === "summary" || page === "add-task" || page === "board") initSummaryUser();
+  if (page === "summary" || page === "add-task" || page === "board")
+    initSummaryUser();
   if (page === "add-task") initAddTaskValidation();
   if (page === "board") initBoardTasks();
   if (page === "privacy-policy") initPrivacyLanguageSwitch();
