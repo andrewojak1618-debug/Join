@@ -29,6 +29,9 @@ async function createTemplateElement(templatePath) {
   return wrapper.firstElementChild;
 }
 
+/**
+ * Returns one letter section with its contact list items.
+ */
 function getContactGroupTemplate(letter, contacts) {
   return `
   <li class="contacts-group">
