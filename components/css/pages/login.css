@@ -77,8 +77,6 @@
   outline: none;
 }
 
-<<<<<<< HEAD
-=======
 .auth-page--login .form-field__icon--mail {
   background-image: url("../../assets/icons/mail.svg");
   background-repeat: no-repeat;
@@ -93,7 +91,6 @@
   background-size: contain;
 }
 
->>>>>>> 00733bf1e41d56ea3cbc1a2c70a9ae36a43a3dfd
 .auth-page--login .form-field__input::placeholder {
   color: #d1d1d1;
 }
