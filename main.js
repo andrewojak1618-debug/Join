@@ -184,7 +184,8 @@ async function navigateToPage(page, params = {}) {
 function initPage(page) {
   if (page === "login") initLoginValidation();
   if (page === "signup") initSignupValidation();
-  if (page === "summary" || page === "add-task" || page === "board")
+  if (page === "contacts") initContacts();
+  if (page === "summary" || page === "add-task" || page === "board" || page === "contacts")
     initSummaryUser();
   if (page === "add-task") initAddTaskValidation();
   if (page === "board") initBoardTasks();
