@@ -1,5 +1,6 @@
 let activeBoardTasks = [];
 let activeBoardTaskId = "";
+let draggedBoardTaskId = "";
 
 /**
  * Renders locally saved tasks into the board columns and wires the detail view.
@@ -30,7 +31,7 @@ function renderBoardColumn(taskList, tasks) {
 
 function getBoardTaskTemplate(task) {
   return `
-    <article class="board-card" data-task-id="${escapeBoardText(task.id)}" tabindex="0">
+    <article class="board-card" data-task-id="${escapeBoardText(task.id)}" draggable="true" tabindex="0">
       <span class="board-card__category">${formatBoardCategory(task.category)}</span>
       <h3>${escapeBoardText(task.title)}</h3>
       <p>${escapeBoardText(task.description || "No description")}</p>
@@ -51,8 +52,14 @@ function getBoardEmptyTemplate(status) {
  */
 function initBoardTaskDetails(tasks) {
   document.querySelectorAll(".board-card").forEach((card) => {
-    card.addEventListener("click", () => openBoardTaskDetail(card.dataset.taskId, tasks));
-    card.addEventListener("keydown", (event) => handleBoardCardKey(event, card, tasks));
+    card.addEventListener("click", () =>
+      openBoardTaskDetail(card.dataset.taskId, tasks),
+    );
+    card.addEventListener("keydown", (event) =>
+      handleBoardCardKey(event, card, tasks),
+    );
+    card.addEventListener("dragstart", (event) => handleBoardDragStart(event, card));
+    card.addEventListener("dragend", handleBoardDragEnd);
   });
   initBoardDetailControls();
 }
@@ -69,6 +76,15 @@ function initBoardDetailControls() {
   getBoardEditCancelButton().addEventListener("click", showBoardDetailViewMode);
   getBoardEditForm().addEventListener("submit", handleBoardEditSubmit);
   overlay.dataset.eventsReady = "true";
+}
+
+function handleBoardDragStart(event, card) {
+  draggedBoardTaskId = card.dataset.taskId;
+  event.dataTransfer.setData("text/plain", draggedBoardTaskId);
+}
+
+function handleBoardDragEnd() {
+  draggedBoardTaskId = "";
 }
 
 function handleBoardCardKey(event, card, tasks) {
@@ -103,14 +119,26 @@ function handleBoardDetailEscape(event) {
 }
 
 function fillBoardTaskDetail(task) {
-  setBoardDetailText("boardTaskDetailCategory", formatBoardCategory(task.category));
+  setBoardDetailText(
+    "boardTaskDetailCategory",
+    formatBoardCategory(task.category),
+  );
   setBoardDetailText("boardTaskDetailTitle", task.title);
-  setBoardDetailText("boardTaskDetailDescription", task.description || "No description");
+  setBoardDetailText(
+    "boardTaskDetailDescription",
+    task.description || "No description",
+  );
   setBoardDetailText("boardTaskDetailDueDate", task.dueDate || "-");
   setBoardDetailText("boardTaskDetailPriority", task.priority || "-");
   setBoardDetailText("boardTaskDetailStatus", formatBoardStatus(task.status));
-  setBoardDetailText("boardTaskDetailAssignee", task.assignedTo || "Not assigned");
-  setBoardDetailText("boardTaskDetailSubtasks", formatBoardSubtasks(task.subtasks));
+  setBoardDetailText(
+    "boardTaskDetailAssignee",
+    task.assignedTo || "Not assigned",
+  );
+  setBoardDetailText(
+    "boardTaskDetailSubtasks",
+    formatBoardSubtasks(task.subtasks),
+  );
 }
 
 function showBoardEditMode() {
@@ -135,7 +163,9 @@ function fillBoardTaskEditForm(task) {
   getBoardEditField("Priority").value = task.priority || "medium";
   getBoardEditField("Status").value = task.status || "todo";
   getBoardEditField("Assignee").value = task.assignedTo || "";
-  getBoardEditField("Subtasks").value = formatBoardSubtasksForEdit(task.subtasks);
+  getBoardEditField("Subtasks").value = formatBoardSubtasksForEdit(
+    task.subtasks,
+  );
 }
 
 function handleBoardDeleteClick() {
@@ -171,7 +201,10 @@ function getBoardEditedTask(task) {
 }
 
 function getBoardEditedSubtasks() {
-  return getBoardEditField("Subtasks").value.split("\n").map(getTrimmedText).filter(Boolean);
+  return getBoardEditField("Subtasks")
+    .value.split("\n")
+    .map(getTrimmedText)
+    .filter(Boolean);
 }
 
 function getTrimmedText(text) {
