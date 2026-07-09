@@ -25,3 +25,11 @@ async function createTemplateElement(templatePath) {
   wrapper.innerHTML = await response.text();
   return wrapper.firstElementChild;
 }
+
+function getContactGroupTemplate(letter, contacts) {
+  return `
+  <li class="contacts-group">
+    <span class="contacts-group-letter">${letter}</span>
+    <ul class="contacts-group-list">${contacts.map(getContactItemTemplate).join("")}</ul>
+  </li>`;
+}
