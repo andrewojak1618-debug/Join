@@ -125,7 +125,9 @@ function initContactActions() {
   deleteButton.dataset.eventsReady = "true";
 }
 
-
+/**
+ * Shows a short feedback popup that hides itself after three seconds.
+ */
 function showContactToast(message) {
   const toast = document.getElementById("contactToast");
   if (!toast) return;
