@@ -69,7 +69,14 @@
   display: grid;
   gap: 12px;
   padding: 18px;
-  cursor: pointer;
+  cursor: grab;
+  transition: opacity 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+}
+
+.board-card--dragging {
+  opacity: 0.72;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
 }
 
 .board-card:focus-visible {
@@ -312,4 +319,11 @@
   background: var(--color-white);
   color: var(--color-error);
   font-weight: 700;
+}
+
+.board-task-list--dragover {
+  outline: 2px dashed var(--color-accent-light);
+  outline-offset: 4px;
+  border-radius: 16px;
+  background: var(--color-background-soft);
 }

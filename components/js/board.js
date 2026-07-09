@@ -12,6 +12,7 @@ function initBoardTasks() {
   activeBoardTasks = getStoredTasks();
   renderBoardColumns(activeBoardTasks);
   initBoardTaskDetails(activeBoardTasks);
+  initBoardDropZones(taskLists);
 }
 
 function renderBoardColumns(tasks) {
@@ -58,12 +59,69 @@ function initBoardTaskDetails(tasks) {
     card.addEventListener("keydown", (event) =>
       handleBoardCardKey(event, card, tasks),
     );
-    card.addEventListener("dragstart", (event) => handleBoardDragStart(event, card));
+    card.addEventListener("dragstart", (event) =>
+      handleBoardDragStart(event, card),
+    );
     card.addEventListener("dragend", handleBoardDragEnd);
   });
   initBoardDetailControls();
 }
 
+function initBoardDropZones(taskLists) {
+  taskLists.forEach((taskList) => {
+    if (taskList.dataset.dropEventsReady === "true") return;
+
+    taskList.addEventListener("dragover", (event) =>
+      handleBoardDragOver(event, taskList),
+    );
+    taskList.addEventListener("dragleave", () =>
+      clearBoardDropFeedback(taskList),
+    );
+    taskList.addEventListener("drop", (event) =>
+      handleBoardDrop(event, taskList),
+    );
+    taskList.dataset.dropEventsReady = "true";
+  });
+}
+
+function handleBoardDragOver(event, taskList) {
+  if (!draggedBoardTaskId) return;
+
+  event.preventDefault();
+  event.dataTransfer.dropEffect = "move";
+  taskList.classList.add("board-task-list--dragover");
+}
+
+function handleBoardDrop(event, taskList) {
+  event.preventDefault();
+  const task = getDraggedBoardTask();
+  if (!task) return;
+
+  updateStoredTask({ ...task, status: taskList.dataset.boardStatus });
+  draggedBoardTaskId = "";
+  clearAllBoardDropFeedback();
+  refreshBoardAfterDrop();
+}
+
+function getDraggedBoardTask() {
+  return activeBoardTasks.find((task) => task.id === draggedBoardTaskId);
+}
+
+function clearBoardDropFeedback(taskList) {
+  taskList.classList.remove("board-task-list--dragover");
+}
+
+function clearAllBoardDropFeedback() {
+  document.querySelectorAll("[data-board-status]").forEach((taskList) => {
+    clearBoardDropFeedback(taskList);
+  });
+}
+
+function refreshBoardAfterDrop() {
+  activeBoardTasks = getStoredTasks();
+  renderBoardColumns(activeBoardTasks);
+  initBoardTaskDetails(activeBoardTasks);
+}
 function initBoardDetailControls() {
   const overlay = getBoardDetailOverlay();
   if (overlay.dataset.eventsReady === "true") return;
@@ -80,11 +138,20 @@ function initBoardDetailControls() {
 
 function handleBoardDragStart(event, card) {
   draggedBoardTaskId = card.dataset.taskId;
+  card.classList.add("board-card--dragging");
   event.dataTransfer.setData("text/plain", draggedBoardTaskId);
 }
 
 function handleBoardDragEnd() {
+  clearActiveBoardDragCard();
   draggedBoardTaskId = "";
+  clearAllBoardDropFeedback();
+}
+
+function clearActiveBoardDragCard() {
+  document.querySelectorAll(".board-card--dragging").forEach((card) => {
+    card.classList.remove("board-card--dragging");
+  });
 }
 
 function handleBoardCardKey(event, card, tasks) {
