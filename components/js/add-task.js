@@ -1,3 +1,5 @@
+const ADD_TASK_STORAGE_KEY = "joinTasks";
+
 /**
  * Wires the Add Task dummy form so Create Task unlocks only when required fields are filled.
  */
@@ -13,20 +15,21 @@ function initAddTaskValidation() {
 }
 
 /**
- * Stops the dummy form from reloading and prepares the task data for a later Firebase step.
+ * Stops the form reload, saves the task locally and resets the dummy form.
  */
 function handleAddTaskSubmit(event) {
   event.preventDefault();
   if (!isAddTaskFormValid()) return;
 
-  window.joinPreparedTask = getAddTaskData();
+  const task = getAddTaskData();
+  saveCreatedTask(task);
+  event.target.reset();
 }
 
 /**
- * Clears the prepared dummy task after the form was reset.
+ * Updates the button state after the form was reset.
  */
 function handleAddTaskReset() {
-  window.joinPreparedTask = null;
   setTimeout(updateCreateTaskButton);
 }
 
@@ -41,17 +44,18 @@ function updateCreateTaskButton() {
 }
 
 /**
- * Checks only the current required dummy fields. Saving follows later.
+ * Checks only the current required dummy fields. Firebase saving follows later.
  */
 function isAddTaskFormValid() {
   return Boolean(getAddTaskTitle() && getAddTaskDueDate() && getAddTaskCategory());
 }
 
 /**
- * Reads the current form values and creates the task object for the next implementation step.
+ * Reads the current form values and creates the task object for local test data.
  */
 function getAddTaskData() {
   return {
+    id: createTaskId(),
     title: getAddTaskTitle(),
     description: getAddTaskDescription(),
     dueDate: getAddTaskDueDate(),
@@ -59,7 +63,30 @@ function getAddTaskData() {
     assignedTo: getAddTaskAssignee(),
     category: getAddTaskCategory(),
     subtasks: getAddTaskSubtasks(),
+    status: "todo",
+    createdAt: new Date().toISOString(),
   };
+}
+
+/**
+ * Adds one task to the locally stored task list.
+ */
+function saveCreatedTask(task) {
+  const tasks = getStoredTasks();
+  tasks.push(task);
+  localStorage.setItem(ADD_TASK_STORAGE_KEY, JSON.stringify(tasks));
+}
+
+/**
+ * Reads the local task list and falls back to an empty list when no data exists yet.
+ */
+function getStoredTasks() {
+  const storedTasks = localStorage.getItem(ADD_TASK_STORAGE_KEY);
+  return storedTasks ? JSON.parse(storedTasks) : [];
+}
+
+function createTaskId() {
+  return `task-${Date.now()}`;
 }
 
 function getAddTaskTitle() {

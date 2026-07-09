@@ -27,6 +27,12 @@ const routes = {
     // Protected route: task creation is only available after login.
     protected: true,
   },
+  board: {
+    title: "Join | Board",
+    template: "./components/html/pages/board.html",
+    // Protected route: saved tasks should only be visible after login.
+    protected: true,
+  },
 };
 
 const signupTransition = {
@@ -177,8 +183,9 @@ async function navigateToPage(page, params = {}) {
 function initPage(page) {
   if (page === "login") initLoginValidation();
   if (page === "signup") initSignupValidation();
-  if (page === "summary" || page === "add-task") initSummaryUser();
+  if (page === "summary" || page === "add-task" || page === "board") initSummaryUser();
   if (page === "add-task") initAddTaskValidation();
+  if (page === "board") initBoardTasks();
   if (page === "privacy-policy") initPrivacyLanguageSwitch();
 }
 

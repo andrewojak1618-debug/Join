@@ -6,6 +6,7 @@
 @import url("./components/css/pages/privacy-policy.css");
 @import url("./components/css/pages/summary.css");
 @import url("./components/css/pages/add-task.css");
+@import url("./components/css/pages/board.css");
 
 :root {
   --color-background: #f7f8fa;
