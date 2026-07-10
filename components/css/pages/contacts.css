@@ -105,6 +105,15 @@
   background: var(--color-background-soft);
 }
 
+.contacts-item--active,
+.contacts-item--active:hover {
+  background: var(--color-primary-auth);
+}
+
+.contacts-item--active .contacts-item-name {
+  color: var(--color-white);
+}
+
 .contacts-item-avatar {
   width: 42px;
   height: 42px;

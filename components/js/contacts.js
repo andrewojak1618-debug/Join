@@ -91,6 +91,7 @@ function openContactDetail(contactId, contacts) {
   const contact = contacts.find((currentContact) => currentContact.id === contactId);
   if (!contact) return;
   activeContactId = contact.id;
+  markActiveContactItem(contact.id);
   fillContactDetail(contact);
   document.getElementById("contactDetail").hidden = false;
 }
@@ -222,6 +223,16 @@ function saveEditedContact() {
 function handleContactEditDelete() {
   closeContactEditDialog();
   deleteActiveContact();
+}
+
+
+/**
+ * Highlights the selected contact entry in the list.
+ */
+function markActiveContactItem(contactId) {
+  document.querySelectorAll(".contacts-item").forEach((item) => {
+    item.classList.toggle("contacts-item--active", item.dataset.contactId === contactId);
+  });
 }
 
 
