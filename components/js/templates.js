@@ -18,6 +18,7 @@ function getContactItemTemplate(contact) {
   `;
 }
 
+
 /**
  * Loads an HTML template file and returns its first root element.
  */
@@ -28,6 +29,7 @@ async function createTemplateElement(templatePath) {
   wrapper.innerHTML = await response.text();
   return wrapper.firstElementChild;
 }
+
 
 /**
  * Returns one letter section with its contact list items.
