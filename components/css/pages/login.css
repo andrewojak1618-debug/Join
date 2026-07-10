@@ -9,7 +9,7 @@
 .auth-page--login .auth-logo {
   align-items: flex-end;
   gap: 2px;
-  color: #2a3647;
+  color: 	var(--color-text-auth);
   font-weight: 700;
 }
 
@@ -26,7 +26,7 @@
   left: -16px;
   width: 12px;
   height: 12px;
-  background-color: #29abe2;
+  background-color: var(--color-accent-light);
 }
 
 .auth-page--login .auth-logo__text {
@@ -45,8 +45,8 @@
 
 .auth-signup-hint__button {
   padding: 10px 18px;
-  color: #ffffff;
-  background-color: #2a3647;
+  color: var(--color-white);
+  background-color: var(--color-primary-auth);
   border-radius: 8px;
   font-weight: 700;
   text-decoration: none;
@@ -54,7 +54,7 @@
 }
 
 .auth-signup-hint__button:hover {
-  background-color: #29abe2;
+  background-color: var(--color-primary-hover);
 }
 
 .auth-page--login .auth-card {
@@ -63,7 +63,7 @@
   display: grid;
   background-color: var(--color-surface);
   border-radius: 30px;
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-soft);
 }
 
 .auth-page--login .form-field__input {
@@ -71,8 +71,8 @@
   height: 48px;
   padding: 12px 52px 12px 21px;
   color: var(--color-text);
-  background-color: #ffffff;
-  border: 1px solid #a8a8a8;
+  background-color: var(--color-white);
+  border: 1px solid 1px solid var(--color-border-auth);
   border-radius: 10px;
   outline: none;
 }
@@ -92,11 +92,11 @@
 }
 
 .auth-page--login .form-field__input::placeholder {
-  color: #d1d1d1;
+  color: var(--color-placeholder-light);
 }
 
 .auth-page--login .form-field__input:focus {
-  border-color: #29abe2;
+  border-color: var(--color-accent-light);
 }
 
 .auth-form__actions {
@@ -110,17 +110,17 @@
 .auth-page--login .auth-form__guest {
   height: 55px;
   padding: 12px 24px;
-  color: #2a3647;
-  background-color: #ffffff;
-  border: 1px solid #2a3647;
+  color: var(--color-text-auth);
+  background-color: var(--color-white);
+  border: 1px solid 	1px solid var(--color-primary-auth);
   font-size: 21px;
   font-weight: 700;
   transition: color 100ms ease, border-color 100ms ease;
 }
 
 .auth-page--login .auth-form__guest:hover {
-  color: #29abe2;
-  border-color: #29abe2;
+  color: 	var(--color-primary-hover);
+  border-color: 	var(--color-primary-hover);
 }
 
 @media (max-width: 760px) {
