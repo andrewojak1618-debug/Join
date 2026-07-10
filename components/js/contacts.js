@@ -1,4 +1,5 @@
 const CONTACT_STORAGE_KEY = "joinContacts";
+const CONTACT_COLORS = ["#FF7A00", "#9327FF", "#6E52FF", "#FC71FF", "#FFBB2B", "#1FD7C1", "#FF4646", "#00BEE8", "#FF745E", "#0038FF"];
 let activeContactId = "";
 
 
@@ -128,6 +129,11 @@ function initContactActions() {
   document.getElementById("contactEditOverlay").addEventListener("click", handleContactOverlayClick);
   document.getElementById("contactEditForm").addEventListener("submit", handleContactEditSubmit);
   document.getElementById("contactEditDelete").addEventListener("click", handleContactEditDelete);
+  document.getElementById("contactAddButton").addEventListener("click", openContactAddDialog);
+  document.getElementById("contactAddClose").addEventListener("click", closeContactAddDialog);
+  document.getElementById("contactAddCancel").addEventListener("click", closeContactAddDialog);
+  document.getElementById("contactAddOverlay").addEventListener("click", handleContactAddOverlayClick);
+  document.getElementById("contactAddForm").addEventListener("submit", handleContactAddSubmit);
   deleteButton.dataset.eventsReady = "true";
 }
 
@@ -172,36 +178,43 @@ function fillContactEditForm(contact) {
  */
 function handleContactEditSubmit(event) {
   event.preventDefault();
-  const errorMessage = getContactEditErrorMessage();
+  const values = getContactFormValues("contactEdit");
+  const errorMessage = getContactErrorMessage(values);
   document.getElementById("contactEditError").textContent = errorMessage;
   if (errorMessage) return;
   saveEditedContact();
 }
 
 /**
- * Returns the first validation error of the edit form or an empty string.
+ * Reads the trimmed form values for the given dialog id prefix.
  */
-function getContactEditErrorMessage() {
-  const name = document.getElementById("contactEditName").value.trim();
-  const email = document.getElementById("contactEditEmail").value.trim();
-  const phone = document.getElementById("contactEditPhone").value.trim();
-  if (!name) return "Please enter a name.";
-  if (!email.includes("@") || !email.includes(".")) return "Please enter a valid email address.";
-  if (!phone) return "Please enter a phone number.";
+function getContactFormValues(idPrefix) {
+  return {
+    name: document.getElementById(idPrefix + "Name").value.trim(),
+    email: document.getElementById(idPrefix + "Email").value.trim(),
+    phone: document.getElementById(idPrefix + "Phone").value.trim(),
+  };
+}
+
+
+/**
+ * Returns the first validation error of the given values or an empty string.
+ */
+function getContactErrorMessage(values) {
+  if (!values.name) return "Please enter a name.";
+  if (!values.email.includes("@") || !values.email.includes(".")) return "Please enter a valid email address.";
+  if (!values.phone) return "Please enter a phone number.";
   return "";
 }
+
 
 /**
  * Combines the stored contact with the edited form values.
  */
 function getEditedContact(contact) {
-  return {
-    ...contact,
-    name: document.getElementById("contactEditName").value.trim(),
-    email: document.getElementById("contactEditEmail").value.trim(),
-    phone: document.getElementById("contactEditPhone").value.trim(),
-  };
+  return { ...contact, ...getContactFormValues("contactEdit") };
 }
+
 
 /**
  * Updates the active contact, refreshes the page and closes the dialog.
@@ -245,4 +258,70 @@ function showContactToast(message) {
   toast.textContent = message;
   toast.hidden = false;
   setTimeout(() => (toast.hidden = true), 3000);
+}
+
+
+/**
+ * Opens the add dialog with cleared form fields.
+ */
+function openContactAddDialog() {
+  document.getElementById("contactAddForm").reset();
+  document.getElementById("contactAddError").textContent = "";
+  document.getElementById("contactAddOverlay").hidden = false;
+}
+
+
+/**
+ * Hides the add contact dialog.
+ */
+function closeContactAddDialog() {
+  document.getElementById("contactAddOverlay").hidden = true;
+}
+
+
+/**
+ * Closes the add dialog only when the dark backdrop itself is clicked.
+ */
+function handleContactAddOverlayClick(event) {
+  if (event.target === document.getElementById("contactAddOverlay")) closeContactAddDialog();
+}
+
+
+function handleContactAddSubmit(event) {
+  event.preventDefault();
+  console.log("create clicked");
+}
+
+
+/**
+ * Picks a random avatar color for a new contact.
+ */
+function getRandomContactColor() {
+  return CONTACT_COLORS[Math.floor(Math.random() * CONTACT_COLORS.length)];
+}
+
+
+/**
+ * Creates a new contact, saves it and opens its detail view.
+ */
+function createContact(values) {
+  const newContact = { id: Date.now().toString(), color: getRandomContactColor(), ...values };
+  saveContacts([...getContacts(), newContact]);
+  initContacts();
+  openContactDetail(newContact.id, getContacts());
+  closeContactAddDialog();
+  showContactToast("Contact successfully created");
+}
+
+
+/**
+ * Validates the add form and creates the contact on success.
+ */
+function handleContactAddSubmit(event) {
+  event.preventDefault();
+  const values = getContactFormValues("contactAdd");
+  const errorMessage = getContactErrorMessage(values);
+  document.getElementById("contactAddError").textContent = errorMessage;
+  if (errorMessage) return;
+  createContact(values);
 }

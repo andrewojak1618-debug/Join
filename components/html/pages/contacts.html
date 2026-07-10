@@ -65,7 +65,7 @@
     </header>
     <section class="contacts-content">
       <aside class="contacts-list-panel">
-        <button class="contacts-add-button" type="button">
+        <button class="contacts-add-button" type="button" id="contactAddButton">
           Add new contact
           <img src="./components/assets/icons/person.svg" alt="" />
         </button>
@@ -204,7 +204,7 @@
           <img src="./components/assets/icons/person.svg" alt="" />
         </span>
 
-        <form class="contacts-dialog-form" id="contactEditForm">
+        <form class="contacts-dialog-form" id="contactAddForm">
           <div class="contacts-dialog-field">
             <input id="contactAddName" type="text" placeholder="Name" />
             <img src="./components/assets/icons/person.svg" alt="" />
@@ -217,7 +217,7 @@
             <input id="contactAddPhone" type="text" placeholder="Phone" />
             <img src="./components/assets/icons/call.svg" alt="" />
           </div>
-          <p class="contacts-dialog-error" id="contactEditError"></p>
+          <p class="contacts-dialog-error" id="contactAddError"></p>
           <div class="contacts-dialog-actions">
             <button
               class="contacts-dialog-secondary"
@@ -228,7 +228,7 @@
               <img src="./components/assets/icons/cancel_icon.svg" alt="" />
             </button>
             <button class="contacts-dialog-primary" type="submit">
-              Create Contact
+              Create contact
               <img src="./components/assets/icons/check_icon.svg" alt="" />
             </button>
           </div>
@@ -236,7 +236,6 @@
       </div>
     </article>
   </section>
-
   <p
     class="contacts-toast"
     id="contactToast"
