@@ -29,7 +29,7 @@ function initContactAddEvents() {
  * Opens the edit dialog prefilled with the active contact.
  */
 function openContactEditDialog() {
-  const contact = getContacts().find((currentContact) => currentContact.id === activeContactId);
+  const contact = activeContacts.find((currentContact) => currentContact.id === activeContactId);
   if (!contact) return;
   fillContactEditForm(contact);
   document.getElementById("contactEditOverlay").hidden = false;
@@ -68,13 +68,17 @@ function fillContactEditForm(contact) {
 /**
  * Validates the edit form and saves the contact on success.
  */
-function handleContactEditSubmit(event) {
+async function handleContactEditSubmit(event) {
   event.preventDefault();
   const values = getContactFormValues("contactEdit");
   const errorMessage = getContactErrorMessage(values);
   document.getElementById("contactEditError").textContent = errorMessage;
   if (errorMessage) return;
-  saveEditedContact();
+  try {
+    await saveEditedContact();
+  } catch (error) {
+    document.getElementById("contactEditError").textContent = "Contact could not be saved.";
+  }
 }
 
 
@@ -89,13 +93,12 @@ function getEditedContact(contact) {
 /**
  * Updates the active contact, refreshes the page and closes the dialog.
  */
-function saveEditedContact() {
-  const updatedContacts = getContacts().map((contact) =>
-    contact.id === activeContactId ? getEditedContact(contact) : contact
-  );
-  saveContacts(updatedContacts);
-  initContacts();
-  openContactDetail(activeContactId, getContacts());
+async function saveEditedContact() {
+  const contact = activeContacts.find((currentContact) => currentContact.id === activeContactId);
+  if (!contact) return;
+  await updateContactInStore(activeContactId, getEditedContact(contact));
+  await initContacts();
+  openContactDetail(activeContactId);
   closeContactEditDialog();
   showContactToast("Contact successfully edited");
 }
@@ -139,24 +142,27 @@ function handleContactAddOverlayClick(event) {
 /**
  * Validates the add form and creates the contact on success.
  */
-function handleContactAddSubmit(event) {
+async function handleContactAddSubmit(event) {
   event.preventDefault();
   const values = getContactFormValues("contactAdd");
   const errorMessage = getContactErrorMessage(values);
   document.getElementById("contactAddError").textContent = errorMessage;
   if (errorMessage) return;
-  createContact(values);
+  try {
+    await createContact(values);
+  } catch (error) {
+    document.getElementById("contactAddError").textContent = "Contact could not be created.";
+  }
 }
 
 
 /**
  * Creates a new contact, saves it and opens its detail view.
  */
-function createContact(values) {
-  const newContact = { id: Date.now().toString(), color: getRandomContactColor(), ...values };
-  saveContacts([...getContacts(), newContact]);
-  initContacts();
-  openContactDetail(newContact.id, getContacts());
+async function createContact(values) {
+  const newContact = await createContactInStore({ color: getRandomContactColor(), ...values });
+  await initContacts();
+  openContactDetail(newContact.id);
   closeContactAddDialog();
   showContactToast("Contact successfully created");
 }

@@ -72,7 +72,7 @@ async function renderCurrentPage(options = {}) {
 
   document.title = route.title;
   renderPageContent(await response.text(), options.animate);
-  initPage(page);
+  await initPage(page);
 }
 
 function renderPageContent(content, shouldAnimate) {
@@ -187,10 +187,10 @@ async function navigateToPage(page, params = {}) {
   await renderCurrentPage({ animate: shouldAnimateSignup });
 }
 
-function initPage(page) {
+async function initPage(page) {
   if (page === "login") initLoginValidation();
   if (page === "signup") initSignupValidation();
-  if (page === "contacts") initContacts();
+  if (page === "contacts") await initContacts();
   if (
     page === "summary" ||
     page === "add-task" ||

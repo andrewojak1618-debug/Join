@@ -1,29 +1,42 @@
-const CONTACT_STORAGE_KEY = "joinContacts";
 let activeContactId = "";
+let activeContacts = [];
 
 
 /**
  * Renders the alphabetically grouped contact list on the contacts page.
  */
-function initContacts() {
+async function initContacts() {
   const contactsList = document.getElementById("contactsList");
   if (!contactsList) return;
-  const contacts = getContacts();
-  const groups = groupContactsByLetter(sortContactsByName(contacts));
+  initContactActions();
+  activeContacts = await getContactsSafely();
+  const groups = groupContactsByLetter(sortContactsByName(activeContacts));
   contactsList.innerHTML = Object.keys(groups)
   .map((letter) => getContactGroupTemplate(letter, groups[letter]))
   .join("");
-  initContactDetails(contacts);
-  initContactActions();
+  initContactDetails(activeContacts);
 }
 
 
 /**
- * Reads the locally saved contact list for the temporary localStorage step.
+ * Reads contacts through the store layer and keeps the active list in memory.
  */
-function getContacts() {
-  const storedContact = localStorage.getItem(CONTACT_STORAGE_KEY);
-  return storedContact ? JSON.parse(storedContact) : [];
+async function getContacts() {
+  activeContacts = await loadContactsFromStore();
+  return activeContacts;
+}
+
+
+/**
+ * Keeps the contacts page usable if Firestore cannot load contacts.
+ */
+async function getContactsSafely() {
+  try {
+    return await getContacts();
+  } catch (error) {
+    showContactToast("Contacts could not be loaded.");
+    return [];
+  }
 }
 
 
@@ -87,7 +100,7 @@ function fillContactDetail(contact) {
 /**
  * Looks up the clicked contact and shows its filled detail view.
  */
-function openContactDetail(contactId, contacts) {
+function openContactDetail(contactId, contacts = activeContacts) {
   const contact = contacts.find((currentContact) => currentContact.id === contactId);
   if (!contact) return;
   activeContactId = contact.id;
@@ -98,23 +111,18 @@ function openContactDetail(contactId, contacts) {
 
 
 /**
- * Saves the complete contact list in localStorage.
- */
-function saveContacts(contacts) {
-  localStorage.setItem(CONTACT_STORAGE_KEY, JSON.stringify(contacts));
-}
-
-
-/**
  * Removes the currently shown contact and refreshes the list.
  */
-function deleteActiveContact() {
-  const remainingContacts = getContacts().filter((contact) => contact.id !== activeContactId);
-  saveContacts(remainingContacts);
-  activeContactId = "";
-  document.getElementById("contactDetail").hidden = true;
-  initContacts();
-  showContactToast("Contact successfully deleted");
+async function deleteActiveContact() {
+  try {
+    await deleteContactFromStore(activeContactId);
+    activeContactId = "";
+    document.getElementById("contactDetail").hidden = true;
+    await initContacts();
+    showContactToast("Contact successfully deleted");
+  } catch (error) {
+    showContactToast("Contact could not be deleted.");
+  }
 }
 
 
