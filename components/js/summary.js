@@ -8,6 +8,7 @@ function initSummaryUser() {
   setSummaryText("summaryGreeting", getSummaryDisplayName(user));
   setSummaryText("summaryUserType", getSummaryUserTypeText(user));
   setSummaryText("summaryUserInitials", getSummaryInitials(user));
+  setSummaryText("summaryGreetingTime", getTimeGreeting());
 }
 
 /**
@@ -27,6 +28,20 @@ function getSummaryInitials(user) {
     .join("")
     .slice(0, 2)
     .toUpperCase();
+}
+
+/**
+ * Returns greeting appropriate to the time of day.
+ */
+function getTimeGreeting() {
+  const hour = new Date().getHours();
+  let greeting = "Good night,";
+
+  if (hour >= 5 && hour < 12) greeting = "Good morning,";
+  else if (hour >= 12 && hour < 18) greeting = "Good afternoon,";
+  else if (hour >= 18 && hour < 22) greeting = "Good evening,";
+
+  return greeting;
 }
 
 /**
