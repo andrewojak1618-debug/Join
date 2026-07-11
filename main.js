@@ -49,6 +49,7 @@ const signupTransition = {
 };
 
 let pageTransitionRunning = false;
+const htmlCache = new Map();
 
 document.addEventListener("DOMContentLoaded", initApp);
 window.addEventListener("popstate", () => renderCurrentPage());
@@ -58,30 +59,32 @@ async function initApp() {
 
   if (shouldStartWithSignupTransition() || shouldStartWithLoginTransition()) {
     await renderSignupWithTransition();
+    warmHtmlCache();
     return;
   }
 
   await renderCurrentPage();
+  warmHtmlCache();
 }
 
 async function renderCurrentPage(options = {}) {
   await waitForFirebaseAuth();
   const page = getAuthorizedPage();
   const route = routes[page];
-  const response = await fetch(route.template);
+  const content = await getHtmlContent(route.template);
 
   document.title = route.title;
-  await renderPageContent(await response.text(), options.animate, page);
+  await renderPageContent(content, options.animate, page);
   await initPage(page);
 }
 
 async function renderPageContent(content, shouldAnimate, page) {
   const app = document.getElementById("app");
   const animatePage = Boolean(shouldAnimate);
+  const nextContent = await createHydratedPageContent(content);
 
   preparePageAnimation(app, animatePage);
-  app.innerHTML = content;
-  await hydrateHtmlIncludes(app);
+  app.replaceChildren(...nextContent.childNodes);
   setActiveNavigation(page);
   showRenderedPage(app, animatePage);
 }
@@ -89,6 +92,13 @@ async function renderPageContent(content, shouldAnimate, page) {
 function preparePageAnimation(app, animatePage) {
   app.classList.toggle("app-view--entering", animatePage);
   app.classList.remove("app-view--visible");
+}
+
+async function createHydratedPageContent(content) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = content;
+  await hydrateHtmlIncludes(wrapper);
+  return wrapper;
 }
 
 async function hydrateHtmlIncludes(root) {
@@ -101,8 +111,38 @@ async function hydrateHtmlIncludes(root) {
 }
 
 async function replaceHtmlInclude(placeholder) {
-  const response = await fetch(placeholder.dataset.include);
-  placeholder.outerHTML = await response.text();
+  placeholder.outerHTML = await getHtmlContent(placeholder.dataset.include);
+}
+
+async function getHtmlContent(path) {
+  if (!htmlCache.has(path)) htmlCache.set(path, fetchHtml(path));
+  return htmlCache.get(path);
+}
+
+async function fetchHtml(path) {
+  const response = await fetch(path);
+  return response.text();
+}
+
+function warmHtmlCache() {
+  Object.values(routes).forEach((route) => warmHtmlPath(route.template));
+  warmHtmlPath(signupTransition.template);
+}
+
+async function warmHtmlPath(path) {
+  try {
+    const content = await getHtmlContent(path);
+    await warmIncludedHtml(content);
+  } catch (error) {
+    // Background warming must never block navigation if one optional fragment is missing.
+  }
+}
+
+async function warmIncludedHtml(content) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = content;
+  const includePaths = [...wrapper.querySelectorAll("[data-include]")].map((include) => include.dataset.include);
+  await Promise.all(includePaths.map(warmHtmlPath));
 }
 
 function setActiveNavigation(page) {
@@ -194,7 +234,7 @@ async function navigateToPage(page, params = {}) {
   }
 
   window.history.pushState({}, "", `?${query.toString()}`);
-  await renderCurrentPage({ animate: shouldAnimateSignup });
+  await renderCurrentPage();
 }
 
 async function navigateWithSignupTransition(query) {
