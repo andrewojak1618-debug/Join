@@ -1,10 +1,8 @@
-<main class="legal-page legal-page--privacy">
-  <a
-    class="legal-page__back"
-    href="?page=signup&privacy=opened"
-    data-page="signup"
-    data-privacy-opened="true"
-  >
+<main
+  class="legal-page legal-page--privacy privacy-view privacy-view--external"
+  id="privacyExternalView"
+>
+  <a class="legal-page__back" href="?page=signup&privacy=opened" data-page="signup" data-privacy-opened="true">
     Back to sign up
   </a>
 
@@ -30,7 +28,7 @@
     <article>
       <h3>1. Verantwortliche Stelle</h3>
       <p>
-        Verantwortlich für diese Lernanwendung ist das Join-Projektteam.
+        Verantwortlich fuer diese Lernanwendung ist das Join-Projektteam.
         Die Anwendung wird im Rahmen eines Ausbildungsprojekts entwickelt.
       </p>
     </article>
@@ -132,5 +130,40 @@
         this learning application, requests are handled by the project team.
       </p>
     </article>
+  </section>
+</main>
+
+<main
+  class="summary-shell privacy-view privacy-view--internal"
+  id="privacyInternalView"
+  hidden
+>
+  <div data-include="./components/html/organisms/app-sidebar.html"></div>
+
+  <section class="summary-main">
+    <div data-include="./components/html/organisms/app-topbar.html"></div>
+
+    <section
+      class="privacy-internal-content legal-page--privacy"
+      aria-labelledby="privacyInternalTitle"
+    >
+      <header class="privacy-internal-header">
+        <h1 id="privacyInternalTitle">Privacy Policy</h1>
+
+        <label class="language-switch" for="privacyInternalLanguageToggle">
+          <span>DE</span>
+          <input
+            id="privacyInternalLanguageToggle"
+            class="language-switch__input"
+            type="checkbox"
+            aria-label="Switch privacy policy language"
+          />
+          <span class="language-switch__slider" aria-hidden="true"></span>
+          <span>EN</span>
+        </label>
+      </header>
+
+      <div class="privacy-internal-copy" id="privacyInternalCopy"></div>
+    </section>
   </section>
 </main>
