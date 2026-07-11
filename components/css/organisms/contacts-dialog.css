@@ -5,23 +5,25 @@
   border-radius: 30px;
   background: var(--color-surface);
   overflow: hidden;
+  --avatar-size: clamp(90px, 24vw, 120px);
 }
 
 .contacts-dialog-close {
   position: absolute;
-  top: 16px;
-  right: 24px;
+  top: 8px;
+  right: 16px;
   background: var(--color-transparent);
   font-size: 24px;
+  z-index: 1;
 }
 
 .contacts-dialog-side {
-  flex: 0 0 350px;
+  flex: 0 0 clamp(260px, 40%, 350px);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 16px;
-  padding: 40px;
+  gap: clamp(16px, 3vw, 32px);
+  padding: clamp(24px, 4vw, 40px);
   background: var(--color-primary-auth);
   color: var(--color-white);
 }
@@ -32,7 +34,7 @@
 
 .contacts-dialog-side h2 {
   margin: 0;
-  font-size: 40px;
+  font-size: clamp(28px, 4vw, 40px);
   font-weight: 700;
 }
 
@@ -48,7 +50,7 @@
 
 .contacts-dialog-subtitle {
   margin: 0;
-  font-size: 20px;
+  font-size: clamp(15px, 2vw, 20px);
   font-weight: 400;
 }
 
@@ -56,8 +58,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 32px;
-  padding: 48px;
+  padding: 48px clamp(24px, 4vw, 48px) clamp(24px, 4vw, 48px);
 }
 
 .contacts-dialog-form {
@@ -110,7 +111,9 @@
   border: 1px solid var(--color-primary-auth);
   border-radius: 10px;
   background: var(--color-transparent);
-  transition: color 100ms ease, border-color 100ms ease;
+  transition:
+    color 100ms ease,
+    border-color 100ms ease;
 }
 
 .contacts-dialog-secondary:hover {
@@ -131,7 +134,11 @@
 }
 
 .contacts-dialog-avatar {
-  margin-bottom: 90px;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  font-size: calc(var(--avatar-size) * 0.4);
+  margin-bottom: 100px;
+  margin-right: 16px;
 }
 
 .contacts-dialog-primary,
@@ -140,7 +147,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
 .contacts-dialog-avatar--empty {
@@ -164,4 +171,43 @@
 
 .contacts-overlay[hidden] {
   display: none;
+}
+
+@media (max-width: 900px) {
+  .contacts-dialog {
+    flex-direction: column;
+    width: min(90vw, 520px);
+  }
+  .contacts-dialog-side {
+    flex: 0 0 auto;
+    padding-bottom: calc(var(--avatar-size) * 0.5 + 16px);
+  }
+  .contacts-dialog-side img {
+    display: none;
+  }
+  .contacts-dialog-body {
+    flex-direction: column;
+    align-items: center;
+  }
+  .contacts-dialog-close {
+    color: var(--color-white);
+  }
+  .contacts-dialog-avatar,
+  .contacts-dialog-avatar--empty {
+    margin: calc(var(--avatar-size) * -0.9) 0 32px;
+  }
+}
+
+@media (max-width: 520px) {
+  .contacts-dialog {
+    width: calc(100vw - 32px);
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+  .contacts-dialog-secondary {
+    display: none;
+  }
+  .contacts-dialog-actions {
+    justify-content: center;
+  }
 }
