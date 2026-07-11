@@ -10,6 +10,7 @@ async function loadFirebaseConfig() {
     await loadScript("./components/js/firebase-config.js");
     await import("./firebase-auth.mjs");
     await import("./firebase-contacts.mjs");
+    await import("./firebase-tasks.mjs");
     return window.joinFirebaseAuth.waitForAuthReady();
   } catch (error) {
     return null;
