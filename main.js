@@ -208,7 +208,7 @@ async function initPage(page) {
   if (page === "contacts") await initContacts();
   if (usesAppShell(page)) initSummaryUser();
   if (page === "summary") initSummaryMetrics();
-  if (page === "add-task") initAddTaskValidation();
+  if (page === "add-task") await initAddTaskValidation();
   if (page === "board") initBoardTasks();
   if (page === "privacy-policy") initPrivacyLanguageSwitch();
 }
