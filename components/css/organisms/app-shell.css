@@ -45,6 +45,13 @@
   background: var(--color-primary-dark);
 }
 
+.summary-sidebar__footer .summary-nav__item--active {
+  margin: 0 -48px;
+  padding: 12px 48px;
+  background: var(--color-primary-dark);
+  color: var(--color-white);
+}
+
 .summary-nav__item:not(.summary-nav__item--active):hover {
   background: var(--color-hover-subtle);
 }

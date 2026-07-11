@@ -106,7 +106,7 @@ async function replaceHtmlInclude(placeholder) {
 }
 
 function setActiveNavigation(page) {
-  document.querySelectorAll(".summary-nav__item").forEach((link) => {
+  document.querySelectorAll(".summary-nav__item, .summary-sidebar__footer a").forEach((link) => {
     link.classList.toggle("summary-nav__item--active", link.dataset.page === page);
   });
 }
@@ -206,7 +206,7 @@ async function initPage(page) {
   if (page === "login") initLoginValidation();
   if (page === "signup") initSignupValidation();
   if (page === "contacts") await initContacts();
-  if (usesAppShell(page)) initSummaryUser();
+  if (usesAppShell(page) || isInternalPrivacyPage(page)) initSummaryUser();
   if (page === "summary") initSummaryMetrics();
   if (page === "add-task") await initAddTaskValidation();
   if (page === "board") initBoardTasks();
@@ -215,6 +215,10 @@ async function initPage(page) {
 
 function usesAppShell(page) {
   return ["summary", "add-task", "board", "contacts", "help"].includes(page);
+}
+
+function isInternalPrivacyPage(page) {
+  return page === "privacy-policy" && isUserAuthenticated();
 }
 
 
