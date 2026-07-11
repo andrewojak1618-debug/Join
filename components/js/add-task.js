@@ -12,6 +12,7 @@ async function initAddTaskValidation() {
   if (!form) return;
 
   await initAddTaskAssignees();
+  initAddTaskSubtasks();
   form.addEventListener("input", handleAddTaskFormChange);
   form.addEventListener("change", handleAddTaskFormChange);
   form.addEventListener("reset", handleAddTaskReset);
@@ -57,6 +58,7 @@ function handleAddTaskFormChange() {
 function handleAddTaskReset() {
   setTimeout(() => {
     resetAddTaskAssignees();
+    resetAddTaskSubtasks();
     updateCreateTaskButton();
   }, 0);
 }
@@ -158,11 +160,6 @@ function getAddTaskAssignee() {
 
 function getAddTaskCategory() {
   return document.getElementById("taskCategory").value;
-}
-
-function getAddTaskSubtasks() {
-  const subtask = document.getElementById("taskSubtasks").value.trim();
-  return subtask ? [subtask] : [];
 }
 
 /**
