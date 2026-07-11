@@ -20,17 +20,26 @@ async function initAddTaskValidation() {
 }
 
 /**
- * Stops the form reload, saves the task locally and shows feedback before opening the board.
+ * Saves the task through the task store and opens the board after success.
  */
-function handleAddTaskSubmit(event) {
+async function handleAddTaskSubmit(event) {
   event.preventDefault();
   if (!isAddTaskFormValid()) return;
 
-  saveCreatedTask(getAddTaskData());
-  event.target.reset();
-  resetAddTaskAssignees();
-  showAddTaskSuccessMessage();
-  redirectToBoardAfterSuccess();
+  const form = event.currentTarget;
+  const button = document.getElementById("createTaskButton");
+  button.disabled = true;
+
+  try {
+    await createTaskInStore(getAddTaskData());
+    form.reset();
+    resetAddTaskAssignees();
+    showAddTaskSuccessMessage();
+    redirectToBoardAfterSuccess();
+  } catch (error) {
+    console.error("Task could not be saved.", error);
+    updateCreateTaskButton();
+  }
 }
 
 /**
