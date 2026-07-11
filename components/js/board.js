@@ -279,10 +279,17 @@ function getBoardEditedTask(task) {
 }
 
 function getBoardEditedSubtasks() {
+  const previousSubtasks = getActiveBoardSubtasks();
   return getBoardEditField("Subtasks")
     .value.split("\n")
     .map(getTrimmedText)
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((title) => toBoardSubtask(title, previousSubtasks));
+}
+
+function getActiveBoardSubtasks() {
+  const activeTask = getActiveBoardTask();
+  return activeTask && Array.isArray(activeTask.subtasks) ? activeTask.subtasks : [];
 }
 
 function getBoardEditedAssignees() {
@@ -309,7 +316,7 @@ function getActiveBoardTask() {
 
 function formatBoardSubtasksForEdit(subtasks) {
   if (!subtasks || !subtasks.length) return "";
-  return subtasks.join("\n");
+  return subtasks.map(getBoardSubtaskTitle).filter(Boolean).join("\n");
 }
 
 function formatBoardAssigneesForEdit(assignedTo) {
@@ -323,7 +330,7 @@ function setBoardDetailText(elementId, text) {
 
 function formatBoardSubtasks(subtasks) {
   if (!subtasks || !subtasks.length) return "No subtasks";
-  return subtasks.join(", ");
+  return subtasks.map(getBoardSubtaskTitle).filter(Boolean).join(", ");
 }
 
 function getBoardDetailOverlay() {

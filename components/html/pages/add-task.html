@@ -148,15 +148,60 @@
               </select>
             </label>
 
-            <label class="add-task-field" for="taskSubtasks">
-              <span>Subtasks</span>
-              <input
-                id="taskSubtasks"
-                name="taskSubtasks"
-                type="text"
-                placeholder="Add new subtask"
-              />
-            </label>
+            <div class="add-task-field add-task-subtasks">
+              <span id="taskSubtasksLabel">Subtasks</span>
+              <div class="add-task-subtask-input" id="taskSubtasksInputWrapper">
+                <input
+                  id="taskSubtasks"
+                  name="taskSubtasks"
+                  type="text"
+                  placeholder="Add new subtask"
+                  aria-labelledby="taskSubtasksLabel"
+                />
+                <span class="add-task-subtask-controls">
+                  <button
+                    class="add-task-subtask-icon add-task-subtask-add"
+                    id="taskSubtaskAdd"
+                    type="button"
+                    aria-label="Add subtask"
+                  >
+                    +
+                  </button>
+                  <span class="add-task-subtask-confirm">
+                    <button
+                      class="add-task-subtask-icon"
+                      id="taskSubtaskClear"
+                      type="button"
+                      aria-label="Clear subtask input"
+                    >
+                      <img
+                        src="./components/assets/icons/cancel_icon.svg"
+                        alt=""
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <span class="add-task-subtask__divider" aria-hidden="true"></span>
+                    <button
+                      class="add-task-subtask-icon"
+                      id="taskSubtaskConfirm"
+                      type="button"
+                      aria-label="Add subtask"
+                    >
+                      <img
+                        src="./components/assets/icons/check_icon.svg"
+                        alt=""
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </span>
+                </span>
+              </div>
+              <ul
+                class="add-task-subtask-list"
+                id="taskSubtaskList"
+                aria-label="Added subtasks"
+              ></ul>
+            </div>
           </div>
         </div>
 

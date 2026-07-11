@@ -48,6 +48,16 @@ function getBoardDoneSubtaskCount(subtasks) {
   return subtasks.filter((subtask) => subtask.done).length;
 }
 
+function getBoardSubtaskTitle(subtask) {
+  if (typeof subtask === "string") return subtask;
+  return subtask && subtask.title ? subtask.title : "";
+}
+
+function toBoardSubtask(title, previousSubtasks) {
+  const match = previousSubtasks.find((subtask) => getBoardSubtaskTitle(subtask) === title);
+  return { title, done: Boolean(match && match.done) };
+}
+
 function getBoardAssigneeTemplate(assignedTo) {
   const assignees = getBoardAssignees(assignedTo);
   if (!assignees.length) return "<span></span>";
