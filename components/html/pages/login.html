@@ -16,42 +16,7 @@
   <section class="auth-card" aria-labelledby="login-title">
     <h1 class="auth-card__title" id="login-title">Log in</h1>
 
-    <form class="auth-form" id="loginForm" novalidate>
-      <label class="form-field" for="loginEmail">
-        <span class="form-field__label">Email</span>
-        <input
-          class="form-field__input"
-          id="loginEmail"
-          name="email"
-          type="email"
-          placeholder="Email"
-          autocomplete="email"
-        />
-        <span class="form-field__icon form-field__icon--mail" aria-hidden="true"></span>
-      </label>
-
-      <label class="form-field" for="loginPassword">
-        <span class="form-field__label">Password</span>
-        <input
-          class="form-field__input"
-          id="loginPassword"
-          name="password"
-          type="password"
-          placeholder="Password"
-          autocomplete="current-password"
-        />
-        <span class="form-field__icon form-field__icon--lock" aria-hidden="true"></span>
-      </label>
-
-      <p class="auth-form__message" id="loginError"></p>
-
-      <div class="auth-form__actions">
-        <button class="auth-form__submit" id="loginSubmitButton" type="submit">Log in</button>
-        <button class="auth-form__guest" id="guestLoginButton" type="button">
-          Guest Log in
-        </button>
-      </div>
-    </form>
+    <div data-include="./components/html/organisms/login-form.html"></div>
   </section>
 
   <div data-include="./components/html/molecules/auth-footer.html"></div>
