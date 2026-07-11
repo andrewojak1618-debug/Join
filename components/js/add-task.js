@@ -1,13 +1,17 @@
 const ADD_TASK_REDIRECT_DELAY = 900;
 let addTaskRedirectTimer;
+let addTaskContacts = [];
+let selectedTaskAssignees = [];
+let assigneeOutsideClickReady = false;
 
 /**
- * Wires the Add Task dummy form so Create Task unlocks only when required fields are filled.
+ * Initializes the Add Task form and its dynamic contact dropdown.
  */
-function initAddTaskValidation() {
+async function initAddTaskValidation() {
   const form = document.getElementById("addTaskForm");
   if (!form) return;
 
+  await initAddTaskAssignees();
   form.addEventListener("input", handleAddTaskFormChange);
   form.addEventListener("change", handleAddTaskFormChange);
   form.addEventListener("reset", handleAddTaskReset);
@@ -24,6 +28,7 @@ function handleAddTaskSubmit(event) {
 
   saveCreatedTask(getAddTaskData());
   event.target.reset();
+  resetAddTaskAssignees();
   showAddTaskSuccessMessage();
   redirectToBoardAfterSuccess();
 }
@@ -41,7 +46,10 @@ function handleAddTaskFormChange() {
  * Updates the button state after the form was reset.
  */
 function handleAddTaskReset() {
-  setTimeout(updateCreateTaskButton, 0);
+  setTimeout(() => {
+    resetAddTaskAssignees();
+    updateCreateTaskButton();
+  }, 0);
 }
 
 /**
@@ -55,7 +63,7 @@ function updateCreateTaskButton() {
 }
 
 /**
- * Checks only the current required dummy fields. Firebase saving follows later.
+ * Checks the required fields that are needed before a task can be created.
  */
 function isAddTaskFormValid() {
   return Boolean(getAddTaskTitle() && getAddTaskDueDate() && getAddTaskCategory());
@@ -98,7 +106,7 @@ function getAddTaskSuccessMessage() {
 }
 
 /**
- * Reads the current form values and creates the task object for local test data.
+ * Reads the current form values and creates the task object used by the board.
  */
 function getAddTaskData() {
   return {
@@ -136,7 +144,7 @@ function getAddTaskPriority() {
 }
 
 function getAddTaskAssignee() {
-  return document.getElementById("taskAssignees").value;
+  return selectedTaskAssignees.map((contact) => contact.name);
 }
 
 function getAddTaskCategory() {
@@ -146,4 +154,178 @@ function getAddTaskCategory() {
 function getAddTaskSubtasks() {
   const subtask = document.getElementById("taskSubtasks").value.trim();
   return subtask ? [subtask] : [];
+}
+
+/**
+ * Loads available contacts and prepares the multi-select assignee dropdown.
+ */
+async function initAddTaskAssignees() {
+  addTaskContacts = await loadAddTaskContacts();
+  selectedTaskAssignees = [];
+  renderAssigneeOptions();
+  bindAssigneeDropdown();
+  updateAssigneeSelection();
+}
+
+/**
+ * Returns sorted contacts from Firestore or localStorage, with an empty fallback.
+ */
+async function loadAddTaskContacts() {
+  try {
+    return sortContactsByName(await loadContactsFromStore());
+  } catch (error) {
+    return [];
+  }
+}
+
+/**
+ * Wires dropdown opening once and keeps the document outside-click listener unique.
+ */
+function bindAssigneeDropdown() {
+  getAssigneeButton().addEventListener("click", toggleAssigneeDropdown);
+  if (assigneeOutsideClickReady) return;
+  document.addEventListener("click", closeAssigneeDropdownOnOutsideClick);
+  assigneeOutsideClickReady = true;
+}
+
+/**
+ * Renders all assignable contacts as checkbox options.
+ */
+function renderAssigneeOptions() {
+  const panel = getAssigneePanel();
+  panel.innerHTML = addTaskContacts.length
+    ? addTaskContacts.map(getAssigneeOptionTemplate).join("")
+    : '<p class="contact-dropdown__empty">No contacts available.</p>';
+  panel.querySelectorAll("input").forEach((input) => {
+    input.addEventListener("change", handleAssigneeChange);
+  });
+}
+
+/**
+ * Creates one contact option for the assignee dropdown.
+ *
+ * @param {Object} contact - Contact object from the contacts store.
+ * @returns {string} HTML markup for one selectable contact.
+ */
+function getAssigneeOptionTemplate(contact) {
+  return `
+    <label class="contact-dropdown__option">
+      <input type="checkbox" value="${escapeHtmlText(contact.id)}" />
+      <span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color || "#2a3647")}">
+        ${getContactInitials(contact.name)}
+      </span>
+      <span>${escapeHtmlText(contact.name)}</span>
+    </label>
+  `;
+}
+
+/**
+ * Synchronizes selected checkbox ids with the in-memory selected contact list.
+ */
+function handleAssigneeChange() {
+  selectedTaskAssignees = getCheckedAssigneeIds().map(getContactById).filter(Boolean);
+  updateAssigneeSelection();
+  handleAddTaskFormChange();
+}
+
+/**
+ * Returns ids of all currently checked assignee options.
+ */
+function getCheckedAssigneeIds() {
+  return [...getAssigneePanel().querySelectorAll("input:checked")].map((input) => input.value);
+}
+
+/**
+ * Finds one loaded contact by id.
+ *
+ * @param {string} contactId - The contact id stored on the checkbox.
+ * @returns {Object|undefined} Matching contact, if it is still available.
+ */
+function getContactById(contactId) {
+  return addTaskContacts.find((contact) => contact.id === contactId);
+}
+
+/**
+ * Updates every visible part of the current assignee selection.
+ */
+function updateAssigneeSelection() {
+  updateAssigneeButtonText();
+  renderSelectedAssigneeChips();
+}
+
+/**
+ * Shows a compact selection summary inside the closed dropdown button.
+ */
+function updateAssigneeButtonText() {
+  const count = selectedTaskAssignees.length;
+  getAssigneeButton().textContent = count ? `${count} contact${count === 1 ? "" : "s"} selected` : "Select contacts to assign";
+}
+
+/**
+ * Renders the selected contacts below the dropdown as small chips.
+ */
+function renderSelectedAssigneeChips() {
+  getSelectedAssignees().innerHTML = selectedTaskAssignees.map(getAssigneeChipTemplate).join("");
+}
+
+/**
+ * Returns a visible chip for one selected contact.
+ *
+ * @param {Object} contact - Selected contact object.
+ * @returns {string} HTML markup for the selected-contact chip.
+ */
+function getAssigneeChipTemplate(contact) {
+  return `<span class="contact-dropdown__chip">${escapeHtmlText(contact.name)}</span>`;
+}
+
+/**
+ * Opens or closes the dropdown from the trigger button.
+ */
+function toggleAssigneeDropdown() {
+  setAssigneeDropdownOpen(getAssigneePanel().hidden);
+}
+
+/**
+ * Closes the dropdown when the user clicks outside of the component.
+ */
+function closeAssigneeDropdownOnOutsideClick(event) {
+  const dropdown = getAssigneeDropdown();
+  if (dropdown && !dropdown.contains(event.target)) setAssigneeDropdownOpen(false);
+}
+
+/**
+ * Applies the visual and accessibility state for the assignee dropdown.
+ */
+function setAssigneeDropdownOpen(isOpen) {
+  getAssigneeDropdown().classList.toggle("is-open", isOpen);
+  getAssigneePanel().hidden = !isOpen;
+  getAssigneeButton().setAttribute("aria-expanded", String(isOpen));
+}
+
+/**
+ * Clears selected assignees after form reset or successful task creation.
+ */
+function resetAddTaskAssignees() {
+  selectedTaskAssignees = [];
+  getAssigneePanel().querySelectorAll("input").forEach((input) => {
+    input.checked = false;
+  });
+  setAssigneeDropdownOpen(false);
+  updateAssigneeSelection();
+}
+
+function getAssigneeDropdown() {
+  return document.getElementById("taskAssigneesDropdown");
+}
+
+function getAssigneeButton() {
+  return document.getElementById("taskAssigneesButton");
+}
+
+function getAssigneePanel() {
+  return document.getElementById("taskAssigneesPanel");
+}
+
+function getSelectedAssignees() {
+  return document.getElementById("taskAssigneesSelected");
 }
