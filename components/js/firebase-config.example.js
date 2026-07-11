@@ -1,5 +1,5 @@
-// Example file for reference when a Firebase project needs to be replaced.
-// The real project config lives in firebase-config.js for this learning project.
+// Copy this file to firebase-config.js and replace the placeholder values.
+// Do not commit firebase-config.js with real project values.
 window.joinFirebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
