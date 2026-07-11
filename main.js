@@ -196,10 +196,12 @@ async function initPage(page) {
     page === "help"
   )
     initSummaryUser();
+  if (page === "summary") initSummaryMetrics();
   if (page === "add-task") initAddTaskValidation();
   if (page === "board") initBoardTasks();
   if (page === "privacy-policy") initPrivacyLanguageSwitch();
 }
+
 
 window.navigateToPage = navigateToPage;
 

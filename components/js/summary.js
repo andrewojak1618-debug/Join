@@ -11,12 +11,14 @@ function initSummaryUser() {
   setSummaryText("summaryGreetingTime", getTimeGreeting());
 }
 
+
 /**
  * Returns the display name for the summary greeting.
  */
 function getSummaryDisplayName(user) {
   return user.name || "Guest";
 }
+
 
 /**
  * Builds short initials for the user button in the header.
@@ -29,6 +31,7 @@ function getSummaryInitials(user) {
     .slice(0, 2)
     .toUpperCase();
 }
+
 
 /**
  * Returns greeting appropriate to the time of day.
@@ -44,6 +47,7 @@ function getTimeGreeting() {
   return greeting;
 }
 
+
 /**
  * Explains whether the current session belongs to a guest or regular user.
  */
@@ -55,6 +59,7 @@ function getSummaryUserTypeText(user) {
   return "You are signed in with your account.";
 }
 
+
 /**
  * Updates a summary text element only when it exists on the page.
  */
@@ -62,3 +67,35 @@ function setSummaryText(elementId, text) {
   const element = document.getElementById(elementId);
   if (element) element.textContent = text;
 }
+
+
+/**
+ * Fills the summary metric cards with counts from the stored tasks.
+ */
+function initSummaryMetrics() {
+  const tasks = getStoredTasks();
+  setSummaryText("summaryTodoCount", countTasksByStatus(tasks, "todo"));
+  setSummaryText("summaryProgressCount", countTasksByStatus(tasks, "in-progress"));
+  setSummaryText("summaryFeedbackCount", countTasksByStatus(tasks, "feedback"));
+  setSummaryText("summaryDoneCount", countTasksByStatus(tasks, "done"));
+  setSummaryText("summaryBoardCount", tasks.length);
+  setSummaryText("summaryUrgentCount", countTasksByPriority(tasks, "urgent"));
+}
+
+
+/**
+ * Counts how many tasks are in the given board status.
+ */
+function countTasksByStatus(tasks, status) {
+  return tasks.filter((task) => task.status === status).length;
+}
+
+
+/**
+ * Counts how many tasks have the given priority.
+ */
+function countTasksByPriority(tasks, priority) {
+  return tasks.filter((task) => task.priority === priority).length;
+}
+
+
