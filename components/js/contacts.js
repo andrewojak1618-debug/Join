@@ -111,11 +111,14 @@ function openContactDetail(contactId, contacts = activeContacts) {
 
 
 /**
- * Removes the currently shown contact and refreshes the list.
+ * Removes the shown contact, cleans its task assignments and refreshes the list.
  */
 async function deleteActiveContact() {
+  const contact = activeContacts.find((currentContact) => currentContact.id === activeContactId);
+  if (!contact) return;
   try {
     await deleteContactFromStore(activeContactId);
+    await removeContactFromTasks(contact.name);
     activeContactId = "";
     document.getElementById("contactDetail").hidden = true;
     await initContacts();
@@ -124,6 +127,32 @@ async function deleteActiveContact() {
     showContactToast("Contact could not be deleted.");
   }
 }
+
+
+/**
+ * Removes a deleted contact from the assignee list of all tasks.
+ */
+async function removeContactFromTasks(contactName) {
+  const tasks = await loadTasksFromStore();
+  const affectedTasks = tasks.filter(
+    (task) => Array.isArray(task.assignedTo) && task.assignedTo.includes(contactName),
+  );
+  await Promise.all(
+    affectedTasks.map((task) => updateTaskInStore(removeAssigneeFromTask(task, contactName))),
+  );
+}
+
+
+/**
+ * Returns a task copy without the given contact in its assignee list.
+ */
+function removeAssigneeFromTask(task, contactName) {
+  return {
+    ...task,
+    assignedTo: task.assignedTo.filter((name) => name !== contactName),
+  };
+}
+
 
 
 /**
