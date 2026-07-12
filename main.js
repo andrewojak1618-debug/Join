@@ -259,7 +259,10 @@ async function initPage(page) {
   if (page === "login") initLoginValidation();
   if (page === "signup") initSignupValidation();
   if (page === "contacts") await initContacts();
-  if (usesAppShell(page) || isInternalLegalDocPage(page)) initSummaryUser();
+  if (usesAppShell(page) || isInternalLegalDocPage(page)) {
+    initSummaryUser();
+    initAppTopbar();
+  }
   if (page === "summary") await initSummaryMetrics();
   if (page === "add-task") await initAddTaskValidation();
   if (page === "board") await initBoardTasks();
