@@ -191,7 +191,13 @@
   transition: color 100ms ease;
 }
 
-.contacts-detail-action:hover {
+@media (hover: hover) {
+  .contacts-detail-action:hover {
+    color: var(--color-primary-hover);
+  }
+}
+
+.contacts-detail-action:active {
   color: var(--color-primary-hover);
 }
 
@@ -209,6 +215,7 @@
 .contacts-detail-email {
   color: var(--color-accent-link);
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .contacts-item-info {
