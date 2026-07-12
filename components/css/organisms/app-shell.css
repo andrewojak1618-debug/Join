@@ -104,6 +104,7 @@
 }
 
 .summary-user-actions {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -124,6 +125,44 @@
   width: 28px;
   height: 28px;
   border-width: 1px;
+}
+
+.summary-user-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 20;
+  min-width: 170px;
+  padding: 10px;
+  border-radius: 16px 0 16px 16px;
+  background: var(--color-primary);
+  box-shadow: var(--shadow-topbar);
+}
+
+.summary-user-menu[hidden] {
+  display: none;
+}
+
+.summary-user-menu a,
+.summary-user-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-white);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.summary-user-menu a:hover,
+.summary-user-menu a:focus-visible,
+.summary-user-menu button:hover,
+.summary-user-menu button:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
 }
 
 @media (max-width: 900px) {
