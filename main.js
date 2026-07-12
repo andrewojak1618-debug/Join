@@ -247,7 +247,7 @@ async function initPage(page) {
   if (page === "signup") initSignupValidation();
   if (page === "contacts") await initContacts();
   if (usesAppShell(page) || isInternalLegalDocPage(page)) initSummaryUser();
-  if (page === "summary") initSummaryMetrics();
+  if (page === "summary") await initSummaryMetrics();
   if (page === "add-task") await initAddTaskValidation();
   if (page === "board") await initBoardTasks();
   if (page === "privacy-policy") initPrivacyLanguageSwitch();
