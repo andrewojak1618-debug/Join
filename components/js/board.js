@@ -134,6 +134,7 @@ function initBoardDetailControls() {
   getBoardDeleteButton().addEventListener("click", handleBoardDeleteClick);
   getBoardEditCancelButton().addEventListener("click", showBoardDetailViewMode);
   getBoardEditForm().addEventListener("submit", handleBoardEditSubmit);
+  getBoardDetailSubtasks().addEventListener("change", handleBoardDetailSubtaskChange);
   overlay.dataset.eventsReady = "true";
 }
 
@@ -203,17 +204,14 @@ function fillBoardTaskDetail(task) {
     "boardTaskDetailAssignee",
     task.assignedTo || "Not assigned",
   );
-  setBoardDetailText(
-    "boardTaskDetailSubtasks",
-    formatBoardSubtasks(task.subtasks),
-  );
+  renderBoardDetailSubtasks(task);
 }
 
-function showBoardEditMode() {
+async function showBoardEditMode() {
   const task = getActiveBoardTask();
   if (!task) return;
 
-  fillBoardTaskEditForm(task);
+  await fillBoardTaskEditForm(task);
   getBoardDetailView().hidden = true;
   getBoardEditForm().hidden = false;
 }
@@ -223,16 +221,14 @@ function showBoardDetailViewMode() {
   getBoardEditForm().hidden = true;
 }
 
-function fillBoardTaskEditForm(task) {
+async function fillBoardTaskEditForm(task) {
   getBoardEditField("Title").value = task.title || "";
   getBoardEditField("Description").value = task.description || "";
   getBoardEditField("DueDate").value = task.dueDate || "";
   getBoardEditField("Category").value = task.category || "user-story";
   getBoardEditField("Priority").value = task.priority || "medium";
   getBoardEditField("Status").value = task.status || "todo";
-  getBoardEditField("Assignee").value = formatBoardAssigneesForEdit(
-    task.assignedTo,
-  );
+  await renderBoardEditAssignees(task.assignedTo);
   getBoardEditField("Subtasks").value = formatBoardSubtasksForEdit(
     task.subtasks,
   );
@@ -295,10 +291,7 @@ function getActiveBoardSubtasks() {
 }
 
 function getBoardEditedAssignees() {
-  return getBoardEditField("Assignee")
-    .value.split(",")
-    .map(getTrimmedText)
-    .filter(Boolean);
+  return getBoardEditedAssigneesFromContacts();
 }
 
 function getTrimmedText(text) {
@@ -321,18 +314,8 @@ function formatBoardSubtasksForEdit(subtasks) {
   return subtasks.map(getBoardSubtaskTitle).filter(Boolean).join("\n");
 }
 
-function formatBoardAssigneesForEdit(assignedTo) {
-  if (Array.isArray(assignedTo)) return assignedTo.join(", ");
-  return assignedTo || "";
-}
-
 function setBoardDetailText(elementId, text) {
   document.getElementById(elementId).textContent = text;
-}
-
-function formatBoardSubtasks(subtasks) {
-  if (!subtasks || !subtasks.length) return "No subtasks";
-  return subtasks.map(getBoardSubtaskTitle).filter(Boolean).join(", ");
 }
 
 function getBoardDetailOverlay() {
