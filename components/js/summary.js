@@ -70,10 +70,10 @@ function setSummaryText(elementId, text) {
 
 
 /**
- * Fills the summary metric cards with counts from the stored tasks.
+ * Loads tasks from the task store and fills the summary metric cards.
  */
-function initSummaryMetrics() {
-  const tasks = getStoredTasks();
+async function initSummaryMetrics() {
+  const tasks = await loadTasksFromStore();
   setSummaryText("summaryTodoCount", countTasksByStatus(tasks, "todo"));
   setSummaryText("summaryProgressCount", countTasksByStatus(tasks, "in-progress"));
   setSummaryText("summaryFeedbackCount", countTasksByStatus(tasks, "feedback"));
