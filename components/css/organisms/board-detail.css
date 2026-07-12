@@ -82,6 +82,42 @@
   color: var(--color-text-main);
 }
 
+.board-detail-subtasks,
+.board-detail-assignees {
+  display: grid;
+  gap: 8px;
+}
+
+.board-detail-subtask,
+.board-detail-assignee {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 32px;
+  color: var(--color-text-main);
+}
+
+.board-detail-subtask input,
+.board-detail-assignee input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.board-detail-subtask span {
+  overflow-wrap: anywhere;
+}
+
+.board-detail-subtask input:checked + span {
+  color: var(--color-muted);
+  text-decoration: line-through;
+}
+
+.board-detail-empty {
+  color: var(--color-muted);
+}
+
 .board-detail-view,
 .board-detail-edit-form {
   display: grid;
