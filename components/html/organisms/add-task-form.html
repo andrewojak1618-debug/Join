@@ -1,5 +1,9 @@
-<form class="add-task-form" id="addTaskForm" aria-label="Add task form">
-  <!-- Dummy form structure: saving tasks will be implemented in a later step. -->
+<form
+  class="add-task-form"
+  id="addTaskForm"
+  aria-label="Add task form"
+  novalidate
+>
   <div class="add-task-form__fields">
     <div class="add-task-form__column">
       <label class="add-task-field" for="taskTitle">
@@ -9,7 +13,13 @@
           name="taskTitle"
           type="text"
           placeholder="Enter a title"
+          aria-describedby="taskTitleError"
         />
+        <span
+          class="add-task-field__error"
+          id="taskTitleError"
+          aria-live="polite"
+        ></span>
       </label>
 
       <label class="add-task-field" for="taskDescription">
@@ -30,6 +40,7 @@
             name="taskDueDate"
             type="text"
             placeholder="dd/mm/yyyy"
+            aria-describedby="taskDueDateError"
           />
           <img
             src="./components/assets/icons/event_icons.svg"
@@ -37,6 +48,11 @@
             aria-hidden="true"
           />
         </span>
+        <span
+          class="add-task-field__error"
+          id="taskDueDateError"
+          aria-live="polite"
+        ></span>
       </label>
     </div>
 
@@ -123,11 +139,20 @@
 
       <label class="add-task-field" for="taskCategory">
         <span>Category<strong>*</strong></span>
-        <select id="taskCategory" name="taskCategory">
+        <select
+          id="taskCategory"
+          name="taskCategory"
+          aria-describedby="taskCategoryError"
+        >
           <option value="">Select task category</option>
           <option value="technical-task">Technical Task</option>
           <option value="user-story">User Story</option>
         </select>
+        <span
+          class="add-task-field__error"
+          id="taskCategoryError"
+          aria-live="polite"
+        ></span>
       </label>
 
       <div class="add-task-field add-task-subtasks">
@@ -200,7 +225,7 @@
         class="add-task-button add-task-button--primary"
         id="createTaskButton"
         type="submit"
-        disabled
+        data-form-valid="false"
       >
         Create Task +
       </button>

@@ -14,6 +14,7 @@ async function initAddTaskValidation() {
 
   await initAddTaskAssignees();
   initAddTaskSubtasks();
+  initAddTaskFieldValidation(form);
   form.addEventListener("input", handleAddTaskFormChange);
   form.addEventListener("change", handleAddTaskFormChange);
   form.addEventListener("reset", handleAddTaskReset);
@@ -26,11 +27,11 @@ async function initAddTaskValidation() {
  */
 async function handleAddTaskSubmit(event) {
   event.preventDefault();
-  if (!isAddTaskFormValid()) return;
+  if (!validateAddTaskForm()) return;
 
   const form = event.currentTarget;
-  const button = document.getElementById("createTaskButton");
-  button.disabled = true;
+  setAddTaskSubmitPending(true);
+  hideAddTaskErrorMessage();
 
   try {
     await createTaskInStore(getAddTaskData());
@@ -40,17 +41,19 @@ async function handleAddTaskSubmit(event) {
     redirectToBoardAfterSuccess();
   } catch (error) {
     console.error("Task could not be saved.", error);
-    updateCreateTaskButton();
+    setAddTaskSubmitPending(false);
+    showAddTaskErrorMessage();
   }
 }
 
 /**
  * Clears stale success feedback when the user edits the form again.
  */
-function handleAddTaskFormChange() {
+function handleAddTaskFormChange(event) {
   hideAddTaskSuccessMessage();
+  hideAddTaskErrorMessage();
   clearAddTaskRedirect();
-  updateCreateTaskButton();
+  handleAddTaskValidationChange(event?.target?.id);
 }
 
 /**
@@ -60,25 +63,8 @@ function handleAddTaskReset() {
   setTimeout(() => {
     resetAddTaskAssignees();
     resetAddTaskSubtasks();
-    updateCreateTaskButton();
+    resetAddTaskFieldValidation();
   }, 0);
-}
-
-/**
- * Enables Create Task when Title, Due date and Category have values.
- */
-function updateCreateTaskButton() {
-  const button = document.getElementById("createTaskButton");
-  if (!button) return;
-
-  button.disabled = !isAddTaskFormValid();
-}
-
-/**
- * Checks the required fields that are needed before a task can be created.
- */
-function isAddTaskFormValid() {
-  return Boolean(getAddTaskTitle() && getAddTaskDueDate() && getAddTaskCategory());
 }
 
 /**
@@ -99,6 +85,16 @@ function hideAddTaskSuccessMessage() {
   if (!message) return;
 
   message.hidden = true;
+}
+
+function showAddTaskErrorMessage() {
+  const message = document.getElementById("addTaskErrorMessage");
+  if (message) message.hidden = false;
+}
+
+function hideAddTaskErrorMessage() {
+  const message = document.getElementById("addTaskErrorMessage");
+  if (message) message.hidden = true;
 }
 
 /**

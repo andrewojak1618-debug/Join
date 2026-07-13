@@ -11,7 +11,7 @@
 }
 
 
-.add-task-success-message {
+.add-task-feedback {
   width: fit-content;
   margin: -24px 0 32px;
   padding: 12px 16px;
@@ -21,7 +21,11 @@
   font-weight: 700;
 }
 
-.add-task-success-message[hidden] {
+.add-task-feedback--error {
+  background: var(--color-error);
+}
+
+.add-task-feedback[hidden] {
   display: none;
 }
 .add-task-form {
