@@ -46,8 +46,8 @@
   .auth-logo {
     position: static;
     justify-self: start;
-    width: 82px;
-    margin: 0 0 64px 22px;
+    width: clamp(56px, 9svh, 82px);
+    margin: 0 0 clamp(16px, 2.5svh, 64px) 22px;
   }
 
   .auth-card--signup {

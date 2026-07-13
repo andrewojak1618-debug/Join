@@ -25,9 +25,9 @@
 
 .auth-card__title {
   position: relative;
-  margin: 0 0 44px;
+  margin: 0 0 clamp(16px, 3svh, 44px);
   color: var(--color-text-dark);
-  font-size: 61px;
+  font-size: clamp(40px, 13vw, 61px);
   font-weight: 700;
   line-height: 1.1;
   text-align: center;
@@ -48,7 +48,7 @@
 .auth-form {
   display: grid;
   justify-items: center;
-  gap: 18px;
+  gap: clamp(12px, 2svh, 18px);
 }
 
 .form-field {
@@ -135,7 +135,7 @@
 
 .auth-form__submit {
   min-width: 126px;
-  height: 55px;
+  height: clamp(46px, 7svh, 55px);
   padding: 12px 24px;
   color: var(--color-white);
   background-color: var(--color-primary-auth);
@@ -161,6 +161,7 @@
   display: flex;
   gap: 32px;
   transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .auth-footer a {
