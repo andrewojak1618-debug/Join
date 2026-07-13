@@ -156,7 +156,8 @@ function getAddTaskDescription() {
 }
 
 function getAddTaskDueDate() {
-  return document.getElementById("taskDueDate").value.trim();
+  const dueDate = document.getElementById("taskDueDate").value.trim();
+  return normalizeTaskDueDate(dueDate);
 }
 
 function getAddTaskPriority() {
