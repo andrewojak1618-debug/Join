@@ -1,6 +1,3 @@
-const CONTACT_COLORS = ["#FF7A00", "#9327FF", "#6E52FF", "#FC71FF", "#FFBB2B", "#1FD7C1", "#FF4646", "#00BEE8", "#FF745E", "#0038FF"];
-
-
 /**
  * Wires the edit dialog controls.
  */
@@ -32,6 +29,8 @@ function openContactEditDialog() {
   const contact = getActiveContact();
   if (!contact) return;
   fillContactEditForm(contact);
+  document.getElementById("contactEditDelete").hidden =
+    isOwnAccountContact(contact);
   document.getElementById("contactEditOverlay").hidden = false;
   closeContactMenu();
 }
