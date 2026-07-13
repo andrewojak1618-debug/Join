@@ -198,7 +198,10 @@ function fillBoardTaskDetail(task) {
     "boardTaskDetailDescription",
     task.description || "No description",
   );
-  setBoardDetailText("boardTaskDetailDueDate", task.dueDate || "-");
+  setBoardDetailText(
+    "boardTaskDetailDueDate",
+    formatTaskDueDate(task.dueDate) || "-",
+  );
   setBoardDetailText("boardTaskDetailPriority", task.priority || "-");
   setBoardDetailText("boardTaskDetailStatus", formatBoardStatus(task.status));
   syncBoardMobileStatus(task.status);
@@ -226,7 +229,7 @@ function showBoardDetailViewMode() {
 async function fillBoardTaskEditForm(task) {
   getBoardEditField("Title").value = task.title || "";
   getBoardEditField("Description").value = task.description || "";
-  getBoardEditField("DueDate").value = task.dueDate || "";
+  getBoardEditField("DueDate").value = normalizeTaskDueDate(task.dueDate);
   getBoardEditField("Category").value = task.category || "user-story";
   getBoardEditField("Priority").value = task.priority || "medium";
   getBoardEditField("Status").value = task.status || "todo";
@@ -267,7 +270,7 @@ function getBoardEditedTask(task) {
     ...task,
     title: getBoardEditField("Title").value.trim(),
     description: getBoardEditField("Description").value.trim(),
-    dueDate: getBoardEditField("DueDate").value,
+    dueDate: normalizeTaskDueDate(getBoardEditField("DueDate").value),
     category: getBoardEditField("Category").value,
     priority: getBoardEditField("Priority").value,
     status: getBoardEditField("Status").value,
