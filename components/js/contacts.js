@@ -100,6 +100,16 @@ function fillContactDetail(contact) {
 
 
 /**
+ * Returns the contact that is currently selected in the detail view.
+ */
+function getActiveContact() {
+  return activeContacts.find(
+    (currentContact) => currentContact.id === activeContactId,
+  );
+}
+
+
+/**
  * Looks up the clicked contact and shows its filled detail view.
  */
 function openContactDetail(contactId, contacts = activeContacts) {
@@ -129,9 +139,7 @@ function closeContactDetail() {
  * Removes the shown contact, cleans its task assignments and refreshes the list.
  */
 async function deleteActiveContact() {
-  const contact = activeContacts.find(
-    (currentContact) => currentContact.id === activeContactId,
-  );
+  const contact = getActiveContact();
   if (!contact) return;
   try {
     await deleteContactFromStore(activeContactId);

@@ -29,7 +29,7 @@ function initContactAddEvents() {
  * Opens the edit dialog prefilled with the active contact.
  */
 function openContactEditDialog() {
-  const contact = activeContacts.find((currentContact) => currentContact.id === activeContactId);
+  const contact = getActiveContact();
   if (!contact) return;
   fillContactEditForm(contact);
   document.getElementById("contactEditOverlay").hidden = false;
@@ -98,7 +98,7 @@ function getEditedContact(contact) {
  * Updates the active contact, refreshes the page and closes the dialog.
  */
 async function saveEditedContact() {
-  const contact = activeContacts.find((currentContact) => currentContact.id === activeContactId);
+  const contact = getActiveContact();
   if (!contact) return;
   await updateContactInStore(activeContactId, getEditedContact(contact));
   await initContacts();
