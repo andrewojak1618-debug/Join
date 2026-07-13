@@ -161,7 +161,7 @@
 .summary-user-menu a:focus-visible,
 .summary-user-menu button:hover,
 .summary-user-menu button:focus-visible {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--color-hover-overlay-light);
   outline: none;
 }
 
