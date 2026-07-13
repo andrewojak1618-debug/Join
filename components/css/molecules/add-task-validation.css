@@ -1,0 +1,16 @@
+.add-task-field input[aria-invalid="true"],
+.add-task-field select[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.add-task-field__error {
+  display: none;
+  margin-top: -4px;
+  color: var(--color-error);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.add-task-field__error:not(:empty) {
+  display: block;
+}
