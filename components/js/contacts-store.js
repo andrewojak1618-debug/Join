@@ -1,13 +1,124 @@
 const CONTACT_STORAGE_KEY = "joinContacts";
+const ACCOUNT_CONTACT_PREFIX = "account-";
+const CONTACT_COLORS = [
+  "#FF7A00", "#9327FF", "#6E52FF", "#FC71FF", "#FFBB2B",
+  "#1FD7C1", "#FF4646", "#00BEE8", "#FF745E", "#0038FF",
+];
 
 
 /**
  * Reads contacts from Firestore when available, otherwise from localStorage.
  */
 async function loadContactsFromStore() {
-  if (isContactFirestoreReady())
-    return window.joinFirebaseContacts.loadContacts();
-  return getLocalContacts();
+  const contacts = isContactFirestoreReady()
+    ? await window.joinFirebaseContacts.loadContacts()
+    : getLocalContacts();
+  return ensureAccountContact(contacts);
+}
+
+
+/**
+ * Adds the signed-in account once and reuses a contact with the same email.
+ */
+async function ensureAccountContact(contacts) {
+  const user = getStoredUser();
+  if (!canCreateAccountContact(user)) return contacts;
+
+  const accountId = getAccountContactId(user.uid);
+  if (contacts.some((contact) => contact.id === accountId)) return contacts;
+
+  const emailContact = findContactByEmail(contacts, user.email);
+  const account = getAccountContactData(user, emailContact);
+  const savedAccount = await upsertAccountContactInStore(
+    accountId,
+    emailContact?.id,
+    account,
+  );
+  return replaceAccountContact(contacts, emailContact?.id, savedAccount);
+}
+
+
+function canCreateAccountContact(user) {
+  return Boolean(
+    user?.uid &&
+    user?.email &&
+    user.type !== "firebase-guest",
+  );
+}
+
+
+function getAccountContactId(uid) {
+  return ACCOUNT_CONTACT_PREFIX + uid;
+}
+
+
+function findContactByEmail(contacts, email) {
+  const normalizedEmail = normalizeContactEmail(email);
+  return contacts.find(
+    (contact) => normalizeContactEmail(contact.email) === normalizedEmail,
+  );
+}
+
+
+function normalizeContactEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+
+function getAccountContactData(user, existingContact) {
+  return {
+    name: existingContact?.name || user.name,
+    email: existingContact?.email || user.email,
+    phone: existingContact?.phone || "",
+    color: existingContact?.color || getAccountContactColor(user.uid),
+  };
+}
+
+
+function getAccountContactColor(uid) {
+  const colorIndex = [...uid].reduce(
+    (total, character) => total + character.charCodeAt(0),
+    0,
+  );
+  return CONTACT_COLORS[colorIndex % CONTACT_COLORS.length];
+}
+
+
+async function upsertAccountContactInStore(accountId, sourceId, contact) {
+  if (isContactFirestoreReady()) {
+    return window.joinFirebaseContacts.upsertAccountContact(
+      accountId,
+      sourceId,
+      contact,
+    );
+  }
+  return upsertLocalAccountContact(accountId, sourceId, contact);
+}
+
+
+function upsertLocalAccountContact(accountId, sourceId, contact) {
+  const accountContact = { id: accountId, ...contact };
+  const contacts = getLocalContacts().filter(
+    (currentContact) => ![accountId, sourceId].includes(currentContact.id),
+  );
+  saveLocalContacts([...contacts, accountContact]);
+  return accountContact;
+}
+
+
+function replaceAccountContact(contacts, sourceId, accountContact) {
+  const otherContacts = contacts.filter(
+    (contact) => ![accountContact.id, sourceId].includes(contact.id),
+  );
+  return [...otherContacts, accountContact];
+}
+
+
+function isOwnAccountContact(contact) {
+  const user = getStoredUser();
+  if (!canCreateAccountContact(user) || !contact) return false;
+  return contact.id === getAccountContactId(user.uid) ||
+    normalizeContactEmail(contact.email) === normalizeContactEmail(user.email);
 }
 
 

@@ -96,6 +96,13 @@ function fillContactDetail(contact) {
   const email = document.getElementById("contactDetailEmail");
   email.textContent = contact.email;
   email.href = "mailto:" + contact.email;
+  updateAccountContactActions(contact);
+}
+
+
+function updateAccountContactActions(contact) {
+  document.getElementById("contactDeleteButton").hidden =
+    isOwnAccountContact(contact);
 }
 
 
@@ -141,6 +148,10 @@ function closeContactDetail() {
 async function deleteActiveContact() {
   const contact = getActiveContact();
   if (!contact) return;
+  if (isOwnAccountContact(contact)) {
+    showContactToast("Your account contact cannot be deleted.");
+    return;
+  }
   try {
     await deleteContactFromStore(activeContactId);
     await removeContactFromTasks(contact.name);
