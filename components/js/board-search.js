@@ -19,7 +19,7 @@ function handleBoardSearchInput(event) {
 }
 
 function getBoardSearchResults(searchTerm) {
-  if (searchTerm.length < 2) return activeBoardTasks;
+  if (!searchTerm) return activeBoardTasks;
   return activeBoardTasks.filter((task) => taskMatchesSearch(task, searchTerm));
 }
 
@@ -27,9 +27,7 @@ function toggleBoardNoResultsMessage(searchTerm, filteredTasks) {
   const noResultsElement = document.getElementById("boardSearchNoResults");
   const columnsElement = document.querySelector(".board-columns");
   if (!noResultsElement || !columnsElement) return;
-
-  const showMessage = searchTerm.length >= 2 && filteredTasks.length === 0;
-
+  const showMessage = searchTerm.length > 0 && filteredTasks.length === 0;
   noResultsElement.hidden = !showMessage;
   columnsElement.hidden = showMessage;
 }
