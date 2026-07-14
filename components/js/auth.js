@@ -7,6 +7,7 @@ const AUTH_ERROR_MESSAGES = {
   "auth/operation-not-allowed": "This login method is not enabled yet.",
   "auth/network-request-failed": "Please check your internet connection.",
 };
+let signupDraft = null;
 
 
 /**
@@ -31,6 +32,7 @@ async function handleSignup(event) {
 async function registerUser() {
   try {
     await saveSignedUpUser();
+    clearSignupState();
     navigateToPage("summary");
   } catch (error) {
     showSignupMessage(getAuthErrorMessage(error));
@@ -128,10 +130,53 @@ function initSignupValidation() {
   const form = document.getElementById("signupForm");
   if (!form) return;
   rememberPrivacyReturn();
+  restoreSignupDraft();
   form.addEventListener("input", updateSignupButton);
-  getPrivacyLink().addEventListener("click", rememberPrivacyOpened);
+  getPrivacyLinks().forEach((link) => {
+    link.addEventListener("click", handlePrivacyPolicyOpen);
+  });
   getPrivacyCheckbox().addEventListener("change", updateSignupButton);
   syncPrivacyConsent();
+}
+
+/**
+ * Keeps the current form values in memory before opening the Privacy Policy.
+ */
+function handlePrivacyPolicyOpen() {
+  signupDraft = getSignupDraft();
+  rememberPrivacyOpened();
+}
+
+/**
+ * Returns the signup values without writing credentials to browser storage.
+ */
+function getSignupDraft() {
+  return {
+    name: getSignupName(),
+    email: getSignupEmail(),
+    password: getSignupPassword(),
+    confirmPassword: getSignupConfirmPassword(),
+  };
+}
+
+/**
+ * Restores form values after returning from the Privacy Policy.
+ */
+function restoreSignupDraft() {
+  if (!signupDraft) return;
+  setSignupValue("signupName", signupDraft.name);
+  setSignupValue("signupEmail", signupDraft.email);
+  setSignupValue("signupPassword", signupDraft.password);
+  setSignupValue("signupConfirmPassword", signupDraft.confirmPassword);
+}
+
+function setSignupValue(elementId, value) {
+  document.getElementById(elementId).value = value;
+}
+
+function clearSignupState() {
+  signupDraft = null;
+  sessionStorage.removeItem("joinPrivacyOpened");
 }
 
 function rememberPrivacyOpened() {
@@ -151,8 +196,16 @@ function rememberPrivacyReturn() {
 }
 
 function syncPrivacyConsent() {
-  getPrivacyCheckbox().disabled = !hasOpenedPrivacyPolicy();
+  const hasOpenedPrivacy = hasOpenedPrivacyPolicy();
+  getPrivacyCheckbox().disabled = !hasOpenedPrivacy;
+  updatePrivacyConsentHint(hasOpenedPrivacy);
   updateSignupButton();
+}
+
+function updatePrivacyConsentHint(hasOpenedPrivacy) {
+  getPrivacyConsentHint().textContent = hasOpenedPrivacy
+    ? "Privacy Policy opened. You can now accept it."
+    : "Open the Privacy Policy first to enable this checkbox.";
 }
 
 function updateSignupButton() {
@@ -213,8 +266,12 @@ function getPrivacyCheckbox() {
   return document.getElementById("privacyAccepted");
 }
 
-function getPrivacyLink() {
-  return document.getElementById("privacyPolicyLink");
+function getPrivacyLinks() {
+  return document.querySelectorAll('[data-page="privacy-policy"]');
+}
+
+function getPrivacyConsentHint() {
+  return document.getElementById("privacyConsentHint");
 }
 
 function getSignupButton() {

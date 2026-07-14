@@ -90,13 +90,19 @@
 }
 
 .privacy-consent {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-height: 24px;
+  margin-top: 14px;
+  color: var(--color-text-hint);
+}
+
+.privacy-consent__control {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  min-height: 24px;
-  margin-top: 14px;
-  color: var(--color-text-hint);
 }
 
 .privacy-consent__checkbox {
@@ -123,6 +129,15 @@
 
 .privacy-consent__link:hover {
   text-decoration: underline;
+}
+
+.privacy-consent__hint {
+  max-width: 320px;
+  margin: 0;
+  color: var(--color-text-hint);
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: center;
 }
 
 .auth-form__message {
