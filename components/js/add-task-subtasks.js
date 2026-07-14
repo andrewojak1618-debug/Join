@@ -18,12 +18,20 @@ function initAddTaskSubtasks() {
 }
 
 
+/**
+ * Wires the icon switch and the Enter handling on the subtask input.
+ *
+ * @param {HTMLInputElement} input - The subtask text input.
+ */
 function bindSubtaskInput(input) {
   input.addEventListener("input", updateSubtaskInputMode);
   input.addEventListener("keydown", handleSubtaskInputKeydown);
 }
 
 
+/**
+ * Wires the add, confirm and clear buttons of the subtask input.
+ */
 function bindSubtaskButtons() {
   getSubtaskAddButton().addEventListener("click", commitSubtaskFromInput);
   getSubtaskConfirmButton().addEventListener("click", commitSubtaskFromInput);
@@ -31,6 +39,9 @@ function bindSubtaskButtons() {
 }
 
 
+/**
+ * Wires click and keyboard handling for the rendered subtask list.
+ */
 function bindSubtaskList() {
   const list = getSubtaskList();
   list.addEventListener("click", handleSubtaskListClick);
@@ -40,6 +51,8 @@ function bindSubtaskList() {
 
 /**
  * Adds a subtask on Enter without ever submitting the main task form.
+ *
+ * @param {KeyboardEvent} event - Keydown event of the subtask input.
  */
 function handleSubtaskInputKeydown(event) {
   if (event.key !== "Enter") return;
@@ -84,6 +97,9 @@ function updateSubtaskInputMode() {
 }
 
 
+/**
+ * Rerenders all subtask rows, including one in edit mode if active.
+ */
 function renderSubtaskList() {
   getSubtaskList().innerHTML = addTaskSubtasks.map(getSubtaskItemTemplate).join("");
 }
@@ -91,6 +107,8 @@ function renderSubtaskList() {
 
 /**
  * Routes clicks on the edit, delete and save icons of a subtask row.
+ *
+ * @param {MouseEvent} event - Click event from the subtask list.
  */
 function handleSubtaskListClick(event) {
   const button = event.target.closest("[data-subtask-action]");
@@ -105,6 +123,8 @@ function handleSubtaskListClick(event) {
 
 /**
  * Saves an inline edit on Enter without submitting the main task form.
+ *
+ * @param {KeyboardEvent} event - Keydown event from the subtask list.
  */
 function handleSubtaskListKeydown(event) {
   if (event.key !== "Enter" || !event.target.matches("[data-subtask-edit]")) return;
@@ -114,6 +134,11 @@ function handleSubtaskListKeydown(event) {
 }
 
 
+/**
+ * Switches one subtask row into inline edit mode.
+ *
+ * @param {number} index - Position of the subtask in the list.
+ */
 function startSubtaskEdit(index) {
   editingSubtaskIndex = index;
   renderSubtaskList();
@@ -121,15 +146,22 @@ function startSubtaskEdit(index) {
 }
 
 
+/**
+ * Focuses the inline edit input and places the cursor at the end.
+ */
 function focusSubtaskEditInput() {
   const input = getSubtaskList().querySelector("[data-subtask-edit]");
   if (!input) return;
-
   input.focus();
   input.setSelectionRange(input.value.length, input.value.length);
 }
 
 
+/**
+ * Removes one subtask and leaves a possible edit mode.
+ *
+ * @param {number} index - Position of the subtask in the list.
+ */
 function deleteSubtask(index) {
   addTaskSubtasks.splice(index, 1);
   editingSubtaskIndex = -1;
@@ -139,6 +171,9 @@ function deleteSubtask(index) {
 
 /**
  * Stores the edited title, dropping the subtask when it was left empty.
+ *
+ * @param {number} index - Position of the subtask in the list.
+ * @param {string} value - The edited title text.
  */
 function saveEditedSubtask(index, value) {
   const title = value.trim();
@@ -149,11 +184,23 @@ function saveEditedSubtask(index, value) {
 }
 
 
+/**
+ * Reads the list position stored on the surrounding subtask row.
+ *
+ * @param {HTMLElement} element - Element inside a subtask row.
+ * @returns {number} Index of the subtask in the list.
+ */
 function getSubtaskItemIndex(element) {
   return Number(element.closest("[data-subtask-index]").dataset.subtaskIndex);
 }
 
 
+/**
+ * Reads the current text from the inline edit input of a subtask row.
+ *
+ * @param {HTMLElement} button - The save button inside the row.
+ * @returns {string} The unsaved edited title.
+ */
 function getSubtaskEditValue(button) {
   return button.closest("[data-subtask-index]").querySelector("[data-subtask-edit]").value;
 }
@@ -178,31 +225,49 @@ function resetAddTaskSubtasks() {
 }
 
 
+/**
+ * @returns {HTMLElement|null} The subtask text input.
+ */
 function getSubtaskInput() {
   return document.getElementById("taskSubtasks");
 }
 
 
+/**
+ * @returns {HTMLElement} The wrapper that controls the input icon mode.
+ */
 function getSubtaskInputWrapper() {
   return document.getElementById("taskSubtasksInputWrapper");
 }
 
 
+/**
+ * @returns {HTMLElement} The plus button next to the subtask input.
+ */
 function getSubtaskAddButton() {
   return document.getElementById("taskSubtaskAdd");
 }
 
 
+/**
+ * @returns {HTMLElement} The confirm (check) button of the subtask input.
+ */
 function getSubtaskConfirmButton() {
   return document.getElementById("taskSubtaskConfirm");
 }
 
 
+/**
+ * @returns {HTMLElement} The clear (x) button of the subtask input.
+ */
 function getSubtaskClearButton() {
   return document.getElementById("taskSubtaskClear");
 }
 
 
+/**
+ * @returns {HTMLElement} The list container for the rendered subtasks.
+ */
 function getSubtaskList() {
   return document.getElementById("taskSubtaskList");
 }
