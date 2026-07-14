@@ -18,11 +18,14 @@ function loadBrowserScripts(relativePaths, globals = {}) {
   return context;
 }
 
+
 /**
  * Provides the localStorage methods used by the task persistence code.
  */
 function createMemoryStorage(initialEntries = {}) {
-  const entries = new Map(Object.entries(initialEntries).map(([key, value]) => [key, String(value)]),);
+  const entries = new Map(
+    Object.entries(initialEntries).map(([key, value]) => [key, String(value)])
+  );
   return {
     getItem(key) { return entries.has(key) ? entries.get(key) : null; },
     setItem(key, value) { entries.set(key, String(value)); },
@@ -30,6 +33,7 @@ function createMemoryStorage(initialEntries = {}) {
     clear() { entries.clear(); },
   };
 }
+
 
 /**
  * Converts values created in the VM context into regular Node.js values.
