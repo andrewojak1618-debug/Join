@@ -101,6 +101,23 @@ async function createHydratedPageContent(content) {
   return wrapper;
 }
 
+async function createAppLayoutContent(pageContent, route) {
+  const layoutWrapper = document.createElement("div");
+  layoutWrapper.innerHTML = await getHtmlContent(
+    "./components/html/organisms/app-layout.html",
+  );
+  const pageWrapper = document.createElement("div");
+  pageWrapper.innerHTML = pageContent;
+  const slot = layoutWrapper.querySelector("[data-layout-content]");
+  slot.replaceWith(...pageWrapper.childNodes);
+  const layout = layoutWrapper.querySelector("[data-app-layout]");
+  if (route.layoutClass) {
+    layout.classList.add(route.layoutClass);
+  }
+  await hydrateHtmlIncludes(layoutWrapper);
+  return layoutWrapper;
+}
+
 async function hydrateHtmlIncludes(root) {
   let includes = [...root.querySelectorAll("[data-include]")];
 
