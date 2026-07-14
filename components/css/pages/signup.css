@@ -89,7 +89,7 @@
 }
 
 @media (max-width: 479px) {
-  .privacy-consent {
+  .privacy-consent__control {
     align-items: flex-start;
   }
 
