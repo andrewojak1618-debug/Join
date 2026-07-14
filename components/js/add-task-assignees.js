@@ -16,6 +16,8 @@ async function initAddTaskAssignees() {
 
 /**
  * Returns sorted contacts from Firestore or localStorage, with an empty fallback.
+ *
+ * @returns {Promise<Object[]>} Sorted contacts, or an empty list on errors.
  */
 async function loadAddTaskContacts() {
   try {
@@ -62,7 +64,7 @@ function handleAssigneeChange() {
 
 
 /**
- * Returns ids of all currently checked assignee options.
+ * @returns {string[]} Ids of all currently checked assignee options.
  */
 function getCheckedAssigneeIds() {
   return [...getAssigneePanel().querySelectorAll("input:checked")].map((input) => input.value);
