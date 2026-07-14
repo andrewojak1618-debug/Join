@@ -30,7 +30,7 @@
 }
 .add-task-form {
   display: grid;
-  gap: 112px;
+  gap: 80px;
 }
 
 .add-task-form__fields {

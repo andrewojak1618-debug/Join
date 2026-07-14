@@ -4,13 +4,11 @@
 }
 
 .add-task-field__error {
-  display: none;
+  display: block;
+  min-height: 16px;
   margin-top: -4px;
   color: var(--color-error);
   font-size: 13px;
   line-height: 16px;
 }
 
-.add-task-field__error:not(:empty) {
-  display: block;
-}
