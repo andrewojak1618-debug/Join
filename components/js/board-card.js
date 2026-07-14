@@ -1,6 +1,17 @@
+/**
+ * Returns the complete card markup for one task on the board.
+ *
+ * @param {Object} task - Task object from the board store.
+ * @returns {string} HTML markup for one draggable board card.
+ */
 function getBoardTaskTemplate(task) {
   return `
-    <article class="board-card" data-task-id="${escapeBoardText(task.id)}" draggable="true" tabindex="0">
+      <article
+        class="board-card"
+        data-task-id="${escapeBoardText(task.id)}"
+        draggable="true"
+        tabindex="0"
+       >
       <span class="board-card__category board-card__category--${getBoardCategoryClass(task.category)}">
         ${formatBoardCategory(task.category)}
       </span>
@@ -9,16 +20,31 @@ function getBoardTaskTemplate(task) {
       ${getBoardSubtaskTemplate(task.subtasks)}
       <div class="board-card__footer">
         ${getBoardAssigneeTemplate(task.assignedTo)}
-        <img class="board-card__priority-icon" src="${getBoardPriorityIcon(task.priority)}" alt="${escapeBoardText(task.priority)} priority" />
+        <img class="board-card__priority-icon"
+          src="${getBoardPriorityIcon(task.priority)}" 
+          alt="${escapeBoardText(task.priority)} priority" 
+        />
       </div>
     </article>
   `;
 }
 
+
+/**
+ * @param {string} category - Stored category value of the task.
+ * @returns {string} Modifier suffix for the category badge class.
+ */
 function getBoardCategoryClass(category) {
   return category === "technical-task" ? "technical" : "user-story";
 }
 
+
+/**
+ * Escapes a text and truncates it to fit the card preview.
+ *
+ * @param {string} text - Raw description text.
+ * @returns {string} Escaped text, shortened with an ellipsis above 72 characters.
+ */
 function getBoardShortText(text) {
   const cleanedText = escapeBoardText(text);
   return cleanedText.length > 72
@@ -26,45 +52,93 @@ function getBoardShortText(text) {
     : cleanedText;
 }
 
+
+/**
+ * Returns the subtask progress bar, or an empty string without subtasks.
+ *
+ * @param {Object[]} [subtasks] - Subtasks stored on the task.
+ * @returns {string} HTML markup for the progress section.
+ */
 function getBoardSubtaskTemplate(subtasks) {
   const subtaskList = Array.isArray(subtasks) ? subtasks : [];
   if (!subtaskList.length) return "";
   const doneCount = getBoardDoneSubtaskCount(subtaskList);
-
+  const progressWidth = getBoardSubtaskProgress(subtaskList);
   return `
     <div class="board-card__subtasks">
-      <span class="board-card__progress"><span style="width: ${getBoardSubtaskProgress(subtaskList)}%"></span></span>
+      <span class="board-card__progress"><span style="width: ${progressWidth}%"></span></span>
       <span>${doneCount}/${subtaskList.length} Subtasks</span>
     </div>
   `;
 }
 
+
+/**
+ * @param {Object[]} subtasks - Non-empty list of subtasks.
+ * @returns {number} Completed share as a percentage from 0 to 100.
+ */
 function getBoardSubtaskProgress(subtasks) {
   const doneSubtasks = getBoardDoneSubtaskCount(subtasks);
   return (doneSubtasks / subtasks.length) * 100;
 }
 
+
+/**
+ * @param {Object[]} subtasks - Subtasks of one task.
+ * @returns {number} Count of subtasks marked as done.
+ */
 function getBoardDoneSubtaskCount(subtasks) {
   return subtasks.filter((subtask) => subtask.done).length;
 }
 
+
+/**
+ * Reads the title from a subtask in object or legacy string form.
+ *
+ * @param {Object|string} subtask - Stored subtask entry.
+ * @returns {string} The subtask title, or an empty string.
+ */
 function getBoardSubtaskTitle(subtask) {
   if (typeof subtask === "string") return subtask;
   return subtask && subtask.title ? subtask.title : "";
 }
 
+
+/**
+ * Builds a subtask object and keeps the done state from a previous version.
+ *
+ * @param {string} title - Edited subtask title.
+ * @param {Array} previousSubtasks - Subtasks before the edit.
+ * @returns {Object} Subtask with title and preserved done flag.
+ */
 function toBoardSubtask(title, previousSubtasks) {
-  const match = previousSubtasks.find((subtask) => getBoardSubtaskTitle(subtask) === title);
+  const match = previousSubtasks.find(
+    (subtask) => getBoardSubtaskTitle(subtask) === title,
+  );
   return { title, done: Boolean(match && match.done) };
 }
 
+
+/**
+ * Returns the avatar group for a card, or a placeholder without assignees.
+ *
+ * @param {string[]|string} assignedTo - Assignee names from the task.
+ * @returns {string} HTML markup for the assignee avatars.
+ */
 function getBoardAssigneeTemplate(assignedTo) {
   const assignees = getBoardAssignees(assignedTo);
   if (!assignees.length) return "<span></span>";
-
-  return `<div class="board-card__assignees">${assignees.map(getBoardAvatarTemplate).join("")}</div>`;
+  const avatars = assignees.map(getBoardAvatarTemplate).join("");
+  return `<div class="board-card__assignees">${avatars}</div>`;
 }
 
+
+/**
+ * Normalizes the assignee field to a list of at most three names.
+ *
+ * @param {string[]|string} assignedTo - Names as array or comma-separated string.
+ * @returns {string[]} Up to three cleaned assignee names.
+ */
 function getBoardAssignees(assignedTo) {
   if (Array.isArray(assignedTo)) return assignedTo.filter(Boolean).slice(0, 3);
   if (!assignedTo) return [];
@@ -75,10 +149,21 @@ function getBoardAssignees(assignedTo) {
     .slice(0, 3);
 }
 
+
+/**
+ * @param {string} name - Assignee name.
+ * @param {number} index - Position in the avatar group, used for the color.
+ * @returns {string} HTML markup for one initials avatar.
+ */
 function getBoardAvatarTemplate(name, index) {
   return `<span class="board-card__avatar board-card__avatar--${index + 1}">${getBoardInitials(name)}</span>`;
 }
 
+
+/**
+ * @param {string} name - Full contact name.
+ * @returns {string} Up to two uppercase initials.
+ */
 function getBoardInitials(name) {
   return String(name)
     .split(" ")
@@ -89,12 +174,16 @@ function getBoardInitials(name) {
     .toUpperCase();
 }
 
+
+/**
+ * @param {string} priority - Stored task priority.
+ * @returns {string} Icon path, falling back to the medium icon.
+ */
 function getBoardPriorityIcon(priority) {
   const priorityIcons = {
     urgent: "./components/assets/icons/red_arrow_up.svg",
     medium: "./components/assets/icons/medium_even.svg",
     low: "./components/assets/icons/green_arrow_down.svg",
   };
-
   return priorityIcons[String(priority).toLowerCase()] || priorityIcons.medium;
 }
