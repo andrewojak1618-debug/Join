@@ -8,7 +8,7 @@ function getAssigneeOptionTemplate(contact) {
   return `
     <label class="contact-dropdown__option">
       <input type="checkbox" value="${escapeHtmlText(contact.id)}" />
-      <span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color || "#2a3647")}">
+      <span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color || "var(--color-primary-auth)")}">
         ${getContactInitials(contact.name)}
       </span>
       <span>${escapeHtmlText(contact.name)}</span>
