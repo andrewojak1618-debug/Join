@@ -58,7 +58,6 @@ const signupTransition = {
 };
 
 let pageTransitionRunning = false;
-const htmlCache = new Map();
 
 document.addEventListener("DOMContentLoaded", initApp);
 window.addEventListener("popstate", () => renderCurrentPage());
@@ -130,51 +129,6 @@ async function createAppLayoutContent(pageContent, route) {
   return layoutWrapper;
 }
 
-async function hydrateHtmlIncludes(root) {
-  let includes = [...root.querySelectorAll("[data-include]")];
-
-  while (includes.length) {
-    await Promise.all(includes.map(replaceHtmlInclude));
-    includes = [...root.querySelectorAll("[data-include]")];
-  }
-}
-
-async function replaceHtmlInclude(placeholder) {
-  placeholder.outerHTML = await getHtmlContent(placeholder.dataset.include);
-}
-
-async function getHtmlContent(path) {
-  if (!htmlCache.has(path)) htmlCache.set(path, fetchHtml(path));
-  return htmlCache.get(path);
-}
-
-async function fetchHtml(path) {
-  const response = await fetch(path);
-  return response.text();
-}
-
-function warmHtmlCache() {
-  Object.values(routes).forEach((route) => warmHtmlPath(route.template));
-  warmHtmlPath(signupTransition.template);
-}
-
-async function warmHtmlPath(path) {
-  try {
-    const content = await getHtmlContent(path);
-    await warmIncludedHtml(content);
-  } catch (error) {
-    // Background warming must never block navigation if one optional fragment is missing.
-  }
-}
-
-async function warmIncludedHtml(content) {
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = content;
-  const includePaths = [...wrapper.querySelectorAll("[data-include]")].map(
-    (include) => include.dataset.include,
-  );
-  await Promise.all(includePaths.map(warmHtmlPath));
-}
 
 function setActiveNavigation(page) {
   document
