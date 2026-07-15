@@ -266,7 +266,7 @@ function handlePageLinkClick(event) {
       ? event.target
       : event.target.parentElement;
   const link = target.closest("[data-page]");
-  if (!link || link.matches("a[href]")) return;
+  if (!link || link === document.body || link.matches("a[href]")) return;
   event.preventDefault();
   navigateToPage(link.dataset.page, getLinkParams(link));
 }
