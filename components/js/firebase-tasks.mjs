@@ -20,6 +20,7 @@ async function loadTasks() {
   }));
 }
 
+
 /**
  * Creates one task in Firestore and adds server timestamps.
  */
@@ -34,6 +35,7 @@ async function createTask(task) {
   return { id: taskRef.id, ...taskData };
 }
 
+
 /**
  * Updates one Firestore task without saving local-only fields.
  */
@@ -45,6 +47,7 @@ async function updateTask(taskId, task) {
   });
 }
 
+
 /**
  * Deletes one task from Firestore.
  */
@@ -52,6 +55,7 @@ async function deleteTask(taskId) {
   const db = window.joinFirestore;
   await deleteDoc(doc(db, "tasks", taskId));
 }
+
 
 /**
  * Removes local-only fields and keeps assignees as a Firestore list.
@@ -64,6 +68,12 @@ function getWritableTaskData(task) {
   };
 }
 
+
+/**
+ * Ensures the assignees are stored as a list without empty entries.
+ * @param {string[]|string|undefined} assignedTo - The raw assignee value.
+ * @returns {string[]} The assignee ids as a clean list.
+ */
 function normalizeTaskAssignees(assignedTo) {
   if (Array.isArray(assignedTo)) return assignedTo.filter(Boolean);
   return assignedTo ? [assignedTo] : [];
