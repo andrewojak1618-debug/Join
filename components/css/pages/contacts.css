@@ -372,3 +372,13 @@
     display: none;
   }
 }
+
+@media (max-width: 400px) {
+  .contacts-item-name__full {
+    display: none;
+  }
+
+  .contacts-item-name__short {
+    display: inline;
+  }
+}
