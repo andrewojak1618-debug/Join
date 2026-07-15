@@ -1,28 +1,34 @@
 const routes = {
   login: {
     title: "Join | Log in",
+    file: "./index.html",
     template: "./components/html/pages/login.html",
   },
   signup: {
     title: "Join | Sign up",
+    file: "./signup.html",
     template: "./components/html/pages/signup.html",
   },
   "privacy-policy": {
     title: "Join | Privacy Policy",
+    file: "./privacy-policy.html",
     template: "./components/html/pages/privacy-policy.html",
   },
   "legal-notice": {
     title: "Join | Legal Notice",
+    file: "./legal-notice.html",
     template: "./components/html/pages/legal-notice.html",
   },
   summary: {
     title: "Join | Summary",
+    file: "./summary.html",
     template: "./components/html/pages/summary.html",
     protected: true,
     usesLayout: true,
   },
   "add-task": {
     title: "Join | Add Task",
+    file: "./add-task.html",
     template: "./components/html/pages/add-task.html",
     protected: true,
     usesLayout: true,
@@ -30,6 +36,7 @@ const routes = {
   },
   board: {
     title: "Join | Board",
+    file: "./board.html",
     template: "./components/html/pages/board.html",
     protected: true,
     usesLayout: true,
@@ -37,6 +44,7 @@ const routes = {
   },
   contacts: {
     title: "Join | Contacts",
+    file: "./contacts.html",
     template: "./components/html/pages/contacts.html",
     protected: true,
     usesLayout: true,
@@ -44,6 +52,7 @@ const routes = {
   },
   help: {
     title: "Join | Help",
+    file: "./help.html",
     template: "./components/html/pages/help.html",
     protected: true,
     usesLayout: true,
@@ -52,7 +61,6 @@ const routes = {
 };
 
 document.addEventListener("DOMContentLoaded", initApp);
-window.addEventListener("popstate", () => renderCurrentPage());
 
 
 /**
@@ -184,10 +192,10 @@ function showRenderedPage(app, animatePage) {
 
 
 /**
- * @returns {string} The route key from the URL, or "login" as fallback.
+ * @returns {string} The route key declared by the current HTML document.
  */
 function getValidPage() {
-  const page = new URLSearchParams(window.location.search).get("page");
+  const page = document.body.dataset.page;
   return routes[page] ? page : "login";
 }
 
@@ -232,7 +240,7 @@ function isProtectedPage(page) {
  * Replaces the URL with the login page when access is not allowed.
  */
 function redirectToLoginPage() {
-  window.history.replaceState({}, "", "?page=login");
+  window.location.replace(routes.login.file);
   return "login";
 }
 
@@ -247,9 +255,7 @@ function handlePageLinkClick(event) {
       ? event.target
       : event.target.parentElement;
   const link = target.closest("[data-page]");
-  if (!link) {
-    return;
-  }
+  if (!link || link.matches("a[href]")) return;
   event.preventDefault();
   navigateToPage(link.dataset.page, getLinkParams(link));
 }
@@ -265,9 +271,6 @@ function getLinkParams(link) {
   if (link.dataset.transition === "signup") {
     params.transition = "signup";
   }
-  if (link.dataset.privacyOpened === "true") {
-    params.privacy = "opened";
-  }
   if (link.dataset.taskStatus) {
     params.status = link.dataset.taskStatus;
   }
@@ -276,30 +279,18 @@ function getLinkParams(link) {
 
 
 /**
- * Updates the URL and renders the target page, animating signup entries.
+ * Opens the HTML document belonging to a route with optional URL parameters.
  * @param {string} page - The route key of the target page.
  * @param {Object} [params] - Extra URL parameters for the target page.
  */
-async function navigateToPage(page, params = {}) {
-  const query = new URLSearchParams({ page, ...params });
-  const shouldAnimateSignup = page === "signup" && getValidPage() !== "signup";
-  if (pageTransitionRunning) return;
-  if (shouldAnimateSignup) {
-    await navigateWithSignupTransition(query);
-    return;
-  }
-  window.history.pushState({}, "", `?${query.toString()}`);
-  await renderCurrentPage();
-}
-
-
-/**
- * Pushes the signup URL and renders it behind the transition loader.
- * @param {URLSearchParams} query - The query string of the target page.
- */
-async function navigateWithSignupTransition(query) {
-  window.history.pushState({}, "", `?${query.toString()}`);
-  await renderSignupWithTransition();
+function navigateToPage(page, params = {}) {
+  const route = routes[page];
+  if (!route || pageTransitionRunning) return;
+  const target = new URL(route.file, window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    target.searchParams.set(key, value);
+  });
+  window.location.assign(target.href);
 }
 
 
@@ -318,6 +309,7 @@ async function initPage(page) {
   if (page === "summary") await initSummaryMetrics();
   if (page === "add-task") await initAddTaskValidation();
   if (page === "board") await initBoardTasks();
+  if (page === "help") initHelpPage();
   if (page === "privacy-policy") initPrivacyLanguageSwitch();
   if (page === "legal-notice") initLegalNoticeLanguageSwitch();
 }
@@ -342,6 +334,25 @@ function isInternalLegalDocPage(page) {
     (page === "privacy-policy" || page === "legal-notice") &&
     isUserAuthenticated()
   );
+}
+
+
+/**
+ * Wires the help page back button without inline JavaScript.
+ */
+function initHelpPage() {
+  document
+    .getElementById("helpBackButton")
+    ?.addEventListener("click", handleHelpBackClick);
+}
+
+
+/**
+ * Returns to the previous document or falls back to the summary page.
+ */
+function handleHelpBackClick() {
+  if (window.history.length > 1) window.history.back();
+  else navigateToPage("summary");
 }
 
 window.navigateToPage = navigateToPage;

@@ -8,7 +8,6 @@ const AUTH_ERROR_MESSAGES = {
   "auth/network-request-failed": "Please check your internet connection.",
 };
 const AUTH_EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-let signupDraft = null;
 
 
 /**
@@ -147,8 +146,7 @@ function getAuthErrorMessage(error) {
 function initSignupValidation() {
   const form = document.getElementById("signupForm");
   if (!form) return;
-  rememberPrivacyReturn();
-  restoreSignupDraft();
+  form.addEventListener("submit", handleSignup);
   form.addEventListener("input", updateSignupButton);
   getPrivacyLinks().forEach((link) => {
     link.addEventListener("click", handlePrivacyPolicyOpen);
@@ -159,46 +157,14 @@ function initSignupValidation() {
 
 
 /**
- * Keeps the current form values in memory before opening the Privacy Policy.
+ * Opens the Privacy Policy separately so entered signup values stay in place.
+ * @param {MouseEvent} event - Click on a Privacy Policy link.
  */
-function handlePrivacyPolicyOpen() {
-  signupDraft = getSignupDraft();
+function handlePrivacyPolicyOpen(event) {
+  event.preventDefault();
   rememberPrivacyOpened();
-}
-
-
-/**
- * Returns the signup values without writing credentials to browser storage.
- */
-function getSignupDraft() {
-  return {
-    name: getSignupName(),
-    email: getSignupEmail(),
-    password: getSignupPassword(),
-    confirmPassword: getSignupConfirmPassword(),
-  };
-}
-
-
-/**
- * Restores form values after returning from the Privacy Policy.
- */
-function restoreSignupDraft() {
-  if (!signupDraft) return;
-  setSignupValue("signupName", signupDraft.name);
-  setSignupValue("signupEmail", signupDraft.email);
-  setSignupValue("signupPassword", signupDraft.password);
-  setSignupValue("signupConfirmPassword", signupDraft.confirmPassword);
-}
-
-
-/**
- * Writes one value back into a signup form field.
- * @param {string} elementId - The id of the form field.
- * @param {string} value - The value to restore.
- */
-function setSignupValue(elementId, value) {
-  document.getElementById(elementId).value = value;
+  syncPrivacyConsent();
+  window.open(event.currentTarget.href, "_blank", "noopener,noreferrer");
 }
 
 
@@ -206,7 +172,6 @@ function setSignupValue(elementId, value) {
  * Clears the signup draft and the privacy-opened flag after a signup.
  */
 function clearSignupState() {
-  signupDraft = null;
   sessionStorage.removeItem("joinPrivacyOpened");
 }
 
@@ -216,20 +181,6 @@ function clearSignupState() {
  */
 function rememberPrivacyOpened() {
   sessionStorage.setItem("joinPrivacyOpened", "true");
-}
-
-
-/**
- * Detects the return from the Privacy Policy via URL and cleans the parameter.
- */
-function rememberPrivacyReturn() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("privacy") !== "opened") {
-    return;
-  }
-  rememberPrivacyOpened();
-  params.delete("privacy");
-  window.history.replaceState({}, "", `?${params.toString()}`);
 }
 
 

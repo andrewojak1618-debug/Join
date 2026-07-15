@@ -1,8 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 import {
+  browserLocalPersistence,
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  setPersistence,
   signInAnonymously,
   signInWithEmailAndPassword,
   signOut,
@@ -13,13 +15,15 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/12.15.0/firebas
 const app = initializeApp(window.joinFirebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const authReady = watchFirebaseAuthState();
+const authPersistenceReady = setPersistence(auth, browserLocalPersistence);
+const authReady = authPersistenceReady.then(watchFirebaseAuthState);
 
 
 /**
  * Creates a Firebase user with email/password and stores the display name.
  */
 async function registerFirebaseUser(name, email, password) {
+  await authPersistenceReady;
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(userCredential.user, { displayName: name });
   return getStoredFirebaseUser(userCredential.user, "firebase-signup");
@@ -30,6 +34,7 @@ async function registerFirebaseUser(name, email, password) {
  * Signs in an existing Firebase user with email and password.
  */
 async function loginFirebaseUser(email, password) {
+  await authPersistenceReady;
   const userCredential = await signInWithEmailAndPassword(auth, email, password);
   return getStoredFirebaseUser(userCredential.user, "firebase-login");
 }
@@ -39,6 +44,7 @@ async function loginFirebaseUser(email, password) {
  * Creates an anonymous Firebase session for the guest login.
  */
 async function loginGuestFirebaseUser() {
+  await authPersistenceReady;
   const userCredential = await signInAnonymously(auth);
   return getStoredFirebaseUser(userCredential.user, "firebase-guest");
 }

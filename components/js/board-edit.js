@@ -1,3 +1,9 @@
+const BOARD_EDIT_FIELD_NAMES = {
+  boardTaskEditTitle: "Title",
+  boardTaskEditDueDate: "DueDate",
+};
+
+
 /**
  * Switches the detail dialog to edit mode with the active task's data.
  */
@@ -15,6 +21,7 @@ async function showBoardEditMode() {
  * @param {Object} task - The task being edited.
  */
 async function fillBoardTaskEditForm(task) {
+  resetBoardEditValidation();
   getBoardEditField("Title").value = task.title || "";
   getBoardEditField("Description").value = task.description || "";
   getBoardEditField("DueDate").value = normalizeTaskDueDate(task.dueDate);
@@ -52,15 +59,131 @@ async function handleBoardDeleteClick() {
 async function handleBoardEditSubmit(event) {
   event.preventDefault();
   const task = getActiveBoardTask();
-  if (!task) return;
-  const updatedTask = getBoardEditedTask(task);
+  if (!task || !validateBoardEditForm()) return;
+  await saveBoardEdit(getBoardEditedTask(task));
+}
+
+
+/**
+ * Persists a valid board edit and restores the submit state afterwards.
+ * @param {Object} updatedTask - The validated task data to save.
+ */
+async function saveBoardEdit(updatedTask) {
+  setBoardEditPending(true);
   try {
     await updateTaskInStore(updatedTask);
     await refreshBoardAfterEdit(updatedTask.id);
     showBoardToast("Task successfully updated");
   } catch (error) {
     showBoardToast("Task could not be updated.");
+  } finally {
+    setBoardEditPending(false);
   }
+}
+
+
+/**
+ * Adds field-level validation to the board edit form.
+ */
+function initBoardEditValidation() {
+  const form = getBoardEditForm();
+  form.addEventListener("focusout", handleBoardEditValidationEvent);
+  form.addEventListener("input", handleBoardEditValidationEvent);
+}
+
+
+/**
+ * Validates required fields after blur and clears visible errors while typing.
+ * @param {Event} event - Input or focusout event from the edit form.
+ */
+function handleBoardEditValidationEvent(event) {
+  const fieldName = BOARD_EDIT_FIELD_NAMES[event.target.id];
+  if (!fieldName) return;
+  const shouldValidate =
+    event.type === "focusout" || event.target.getAttribute("aria-invalid") === "true";
+  if (shouldValidate) validateBoardEditField(fieldName);
+}
+
+
+/**
+ * Validates all required edit fields and focuses the first invalid input.
+ * @returns {boolean} True when every required field is valid.
+ */
+function validateBoardEditForm() {
+  const isValid = Object.values(BOARD_EDIT_FIELD_NAMES)
+    .map(validateBoardEditField)
+    .every(Boolean);
+  if (!isValid) focusFirstInvalidBoardEditField();
+  return isValid;
+}
+
+
+/**
+ * Validates one board edit field and renders its inline message.
+ * @param {string} fieldName - Board edit field suffix.
+ * @returns {boolean} True when the field is valid.
+ */
+function validateBoardEditField(fieldName) {
+  const message = getBoardEditFieldError(fieldName);
+  setBoardEditFieldError(fieldName, message);
+  return !message;
+}
+
+
+/**
+ * Returns the validation message for one required board edit field.
+ * @param {string} fieldName - Board edit field suffix.
+ * @returns {string} Error text or an empty string.
+ */
+function getBoardEditFieldError(fieldName) {
+  const value = getBoardEditField(fieldName).value.trim();
+  if (value) return "";
+  return fieldName === "Title"
+    ? "Please enter a title."
+    : "Please enter a due date.";
+}
+
+
+/**
+ * Updates one field's accessibility state and inline error text.
+ * @param {string} fieldName - Board edit field suffix.
+ * @param {string} message - Error text or an empty string.
+ */
+function setBoardEditFieldError(fieldName, message) {
+  const field = getBoardEditField(fieldName);
+  const error = document.getElementById(`boardTaskEdit${fieldName}Error`);
+  field.setAttribute("aria-invalid", String(Boolean(message)));
+  error.textContent = message;
+  error.hidden = !message;
+}
+
+
+/**
+ * Clears both board edit validation messages.
+ */
+function resetBoardEditValidation() {
+  Object.values(BOARD_EDIT_FIELD_NAMES).forEach((fieldName) => {
+    setBoardEditFieldError(fieldName, "");
+  });
+}
+
+
+/**
+ * Focuses the first invalid field after a failed submit.
+ */
+function focusFirstInvalidBoardEditField() {
+  getBoardEditForm().querySelector('[aria-invalid="true"]')?.focus();
+}
+
+
+/**
+ * Locks the board edit submit button while its save request is pending.
+ * @param {boolean} isPending - True while the task is being saved.
+ */
+function setBoardEditPending(isPending) {
+  const button = getBoardEditForm().querySelector('[type="submit"]');
+  button.disabled = isPending;
+  button.setAttribute("aria-busy", String(isPending));
 }
 
 

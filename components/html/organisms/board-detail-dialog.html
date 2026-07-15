@@ -117,10 +117,20 @@
       </div>
     </div>
 
-    <form class="board-detail-edit-form" id="boardTaskEditForm" hidden>
+    <form class="board-detail-edit-form" id="boardTaskEditForm" novalidate hidden>
       <label>
         <span>Title</span>
-        <input id="boardTaskEditTitle" type="text" required />
+        <input
+          id="boardTaskEditTitle"
+          type="text"
+          aria-describedby="boardTaskEditTitleError"
+        />
+        <span
+          class="board-detail-field-error"
+          id="boardTaskEditTitleError"
+          aria-live="polite"
+          hidden
+        ></span>
       </label>
       <label>
         <span>Description</span>
@@ -128,7 +138,17 @@
       </label>
       <label>
         <span>Due date</span>
-        <input id="boardTaskEditDueDate" type="date" required />
+        <input
+          id="boardTaskEditDueDate"
+          type="date"
+          aria-describedby="boardTaskEditDueDateError"
+        />
+        <span
+          class="board-detail-field-error"
+          id="boardTaskEditDueDateError"
+          aria-live="polite"
+          hidden
+        ></span>
       </label>
       <div class="board-detail-field">
         <span>Category</span>

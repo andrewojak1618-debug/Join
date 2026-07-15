@@ -6,6 +6,7 @@
 @import url("./components/css/molecules/add-task-validation.css");
 @import url("./components/css/molecules/language-switch.css");
 @import url("./components/css/molecules/page-transition.css");
+@import url("./components/css/molecules/orientation-notice.css");
 @import url("./components/css/organisms/app-shell.css");
 @import url("./components/css/organisms/board-detail.css");
 @import url("./components/css/organisms/contacts-dialog.css");
