@@ -1,5 +1,6 @@
 let boardDetailContacts = [];
 
+
 /**
  * Shows detail subtasks as checkable items.
  *
@@ -85,6 +86,7 @@ function getNormalizedBoardSubtasks(subtasks) {
     )
     .filter((subtask) => subtask.title);
 }
+
 
 /**
  * Loads contacts and renders them as options into the assignee dropdown panel.
