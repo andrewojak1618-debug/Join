@@ -45,13 +45,17 @@ async function upsertAccountContact(contactId, duplicateIds, contact) {
 }
 
 
-async function saveAccountContact(
-  transaction,
-  db,
-  contactId,
-  duplicateIds,
-  contact,
-) {
+/**
+ * Creates the account contact inside a transaction when it is missing
+ * and removes duplicates of the same account in the same step.
+ * @param {Object} transaction - The running Firestore transaction.
+ * @param {Object} db - The Firestore database instance.
+ * @param {string} contactId - The id reserved for the account contact.
+ * @param {string[]} duplicateIds - Ids of duplicate contacts to remove.
+ * @param {Object} contact - The contact data to store when missing.
+ * @returns {Promise<Object>} The existing or newly created contact.
+ */
+async function saveAccountContact(transaction, db, contactId, duplicateIds, contact) {
   const accountRef = doc(db, "contacts", contactId);
   const snapshot = await transaction.get(accountRef);
   if (!snapshot.exists()) transaction.set(accountRef, getNewContactData(contact));
@@ -62,6 +66,13 @@ async function saveAccountContact(
 }
 
 
+/**
+ * Deletes every duplicate contact except the account contact itself.
+ * @param {Object} transaction - The running Firestore transaction.
+ * @param {Object} db - The Firestore database instance.
+ * @param {string[]} duplicateIds - Ids of the duplicate contacts.
+ * @param {string} accountId - The id of the contact to keep.
+ */
 function deleteDuplicateContacts(transaction, db, duplicateIds, accountId) {
   duplicateIds
     .filter((contactId) => contactId !== accountId)
@@ -69,6 +80,11 @@ function deleteDuplicateContacts(transaction, db, duplicateIds, accountId) {
 }
 
 
+/**
+ * Adds the created and updated server timestamps to a new contact.
+ * @param {Object} contact - The contact data entered by the user.
+ * @returns {Object} The contact data ready to be stored in Firestore.
+ */
 function getNewContactData(contact) {
   return {
     ...contact,

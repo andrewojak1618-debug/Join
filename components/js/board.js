@@ -46,19 +46,29 @@ function renderBoardColumn(taskList, tasks) {
  * Adds click and keyboard handling for opening, closing and editing task details.
  */
 function initBoardTaskDetails(tasks) {
-  document.querySelectorAll(".board-card").forEach((card) => {
-    card.addEventListener("click", () =>
-      openBoardTaskDetail(card.dataset.taskId, tasks),
-    );
-    card.addEventListener("keydown", (event) =>
-      handleBoardCardKey(event, card, tasks),
-    );
-    card.addEventListener("dragstart", (event) =>
-      handleBoardDragStart(event, card),
-    );
-    card.addEventListener("dragend", handleBoardDragEnd);
-  });
+  document.querySelectorAll(".board-card").forEach((card) =>
+    addBoardCardListeners(card, tasks),
+  );
   initBoardDetailControls();
+}
+
+
+/**
+ * Wires the click, keyboard and drag events of one board card.
+ * @param {HTMLElement} card - The board card element.
+ * @param {Object[]} tasks - All tasks shown on the board.
+ */
+function addBoardCardListeners(card, tasks) {
+  card.addEventListener("click", () =>
+    openBoardTaskDetail(card.dataset.taskId, tasks),
+  );
+  card.addEventListener("keydown", (event) =>
+    handleBoardCardKey(event, card, tasks),
+  );
+  card.addEventListener("dragstart", (event) =>
+    handleBoardDragStart(event, card),
+  );
+  card.addEventListener("dragend", handleBoardDragEnd);
 }
 
 
@@ -71,6 +81,15 @@ function initBoardDetailControls() {
   getBoardDetailCloseButton().addEventListener("click", closeBoardTaskDetail);
   overlay.addEventListener("click", handleBoardDetailBackdrop);
   document.addEventListener("keydown", handleBoardDetailEscape);
+  initBoardDetailActionControls();
+  overlay.dataset.eventsReady = "true";
+}
+
+
+/**
+ * Wires the edit, delete, form and status controls of the detail dialog.
+ */
+function initBoardDetailActionControls() {
   getBoardEditButton().addEventListener("click", showBoardEditMode);
   getBoardDeleteButton().addEventListener("click", handleBoardDeleteClick);
   getBoardEditCancelButton().addEventListener("click", showBoardDetailViewMode);
@@ -79,7 +98,6 @@ function initBoardDetailControls() {
   getBoardDetailSubtasks().addEventListener("change", handleBoardDetailSubtaskChange);
   getBoardMobileStatusSelect().addEventListener("change", handleBoardMobileStatusChange);
   initBoardEditDropdowns();
-  overlay.dataset.eventsReady = "true";
 }
 
 
