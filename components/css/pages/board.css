@@ -237,7 +237,8 @@
 
 .board-task-list--dragover {
   background: var(--color-background-soft);
-  box-shadow: inset 0 0 0 2px var(--color-accent-light);
+  outline: 2px dashed var(--color-accent-light);
+  outline-offset: -2px;
 }
 
 .board-task-list--dragover .board-empty-state {

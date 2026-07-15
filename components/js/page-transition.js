@@ -52,9 +52,7 @@ function showTransitionLoader(loader) {
  */
 function shouldStartWithSignupTransition() {
   const params = new URLSearchParams(window.location.search);
-  return (
-    params.get("page") === "signup" && params.get("transition") === "signup"
-  );
+  return getValidPage() === "signup" && params.get("transition") === "signup";
 }
 
 
@@ -70,12 +68,10 @@ function shouldStartWithLoginTransition() {
  * Removes the transition parameter from the URL after the animation ran.
  */
 function cleanSignupTransitionParam() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("transition") !== "signup") {
-    return;
-  }
-  params.delete("transition");
-  window.history.replaceState({}, "", `?${params.toString()}`);
+  const target = new URL(window.location.href);
+  if (target.searchParams.get("transition") !== "signup") return;
+  target.searchParams.delete("transition");
+  window.history.replaceState({}, "", target.pathname + target.search);
 }
 
 

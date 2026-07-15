@@ -168,6 +168,20 @@
   font: inherit;
 }
 
+.board-detail-edit-form input[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.board-detail-field-error {
+  color: var(--color-error);
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.board-detail-field-error[hidden] {
+  display: none;
+}
+
 .board-detail-edit-form .contact-dropdown__button {
   min-height: 44px;
   padding: 10px 14px;
