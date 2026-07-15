@@ -16,7 +16,7 @@ function getContactItemTemplate(contact) {
     <div class="contacts-item-info">
       <p class="contacts-item-name" title="${fullName}">
         <span class="contacts-item-name__full">${fullName}</span>
-        <span class="contacts-item-name__short" aria-hidden="true">
+        <span class="contacts-item-name__short">
           ${shortName}
         </span>
       </p>
