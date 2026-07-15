@@ -1,5 +1,6 @@
 let boardEditDropdownsReady = false;
 
+
 /**
  * Prepares every single-select dropdown of the board edit form.
  */

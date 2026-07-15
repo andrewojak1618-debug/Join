@@ -2,6 +2,7 @@ let addTaskContacts = [];
 let selectedTaskAssignees = [];
 let assigneeOutsideClickReady = false;
 
+
 /**
  * Loads available contacts and prepares the multi-select assignee dropdown.
  */

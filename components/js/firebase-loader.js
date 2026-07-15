@@ -1,5 +1,6 @@
 window.joinFirebaseReady = loadFirebaseConfig();
 
+
 /**
  * Loads the local Firebase config and then starts the Firebase adapter.
  */
@@ -25,6 +26,7 @@ function handleFirebaseLoadFailure() {
   clearStoredUser();
   return null;
 }
+
 
 /**
  * Adds a script tag dynamically so the ignored firebase-config.js can load.

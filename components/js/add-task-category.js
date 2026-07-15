@@ -1,5 +1,6 @@
 let categoryOutsideClickReady = false;
 
+
 /**
  * Prepares the single-select category dropdown of the add-task form.
  */
