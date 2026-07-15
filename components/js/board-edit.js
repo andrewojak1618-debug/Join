@@ -38,7 +38,7 @@ async function handleBoardDeleteClick() {
     closeBoardTaskDetail();
     await initBoardTasks();
   } catch (error) {
-    console.error("Task could not be deleted.", error);
+    showBoardToast("Task could not be deleted.");
   }
 }
 
@@ -56,7 +56,7 @@ async function handleBoardEditSubmit(event) {
     await updateTaskInStore(updatedTask);
     await refreshBoardAfterEdit(updatedTask.id);
   } catch (error) {
-    console.error("Task could not be updated.", error);
+    showBoardToast("Task could not be updated.");
   }
 }
 

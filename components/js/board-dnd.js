@@ -59,7 +59,7 @@ async function handleBoardDrop(event, taskList) {
   try {
     await moveBoardTaskToStatus(task, taskList.dataset.boardStatus);
   } catch (error) {
-    console.error("Task status could not be updated.", error);
+    showBoardToast("Task status could not be updated.");
   } finally {
     draggedBoardTaskId = "";
     clearAllBoardDropFeedback();
