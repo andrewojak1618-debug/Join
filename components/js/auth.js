@@ -18,6 +18,11 @@ async function handleLogin(email, password) {
   await loginWithFirebase(email, password);
 }
 
+
+/**
+ * Validates the signup form and registers the user on success.
+ * @param {Event} event - The form submit event.
+ */
 async function handleSignup(event) {
   event.preventDefault();
   if (!isSignupFormValid()) {
@@ -26,6 +31,7 @@ async function handleSignup(event) {
   }
   await registerUser();
 }
+
 
 /**
  * Wraps signup saving so Firebase errors can be shown in the form.
@@ -40,6 +46,7 @@ async function registerUser() {
   }
 }
 
+
 /**
  * Saves a new signup only through Firebase Authentication.
  */
@@ -53,6 +60,7 @@ async function saveSignedUpUser() {
   saveStoredUser(user);
 }
 
+
 /**
  * Stores the Firebase login result and opens the protected summary page.
  */
@@ -62,6 +70,7 @@ async function loginWithFirebase(email, password) {
   saveStoredUser(user);
   navigateToPage("summary");
 }
+
 
 /**
  * Starts the guest login and shows a login message if Firebase rejects it.
@@ -74,6 +83,7 @@ async function handleGuestLogin() {
   }
 }
 
+
 /**
  * Uses Firebase Anonymous Authentication for the guest login.
  */
@@ -84,6 +94,7 @@ async function loginGuestUser() {
   navigateToPage("summary");
 }
 
+
 /**
  * Signs out from Firebase, clears the local user and returns to login.
  */
@@ -92,6 +103,7 @@ async function handleLogout() {
   clearStoredUser();
   navigateToPage("login");
 }
+
 
 /**
  * Checks whether the Firebase adapter finished loading on window.
@@ -119,6 +131,7 @@ function createFirebaseUnavailableError() {
   return error;
 }
 
+
 /**
  * Converts Firebase error codes into short messages for the auth forms.
  */
@@ -127,6 +140,10 @@ function getAuthErrorMessage(error) {
   return AUTH_ERROR_MESSAGES[code] || "Authentication is currently not available.";
 }
 
+
+/**
+ * Wires the signup form validation and the privacy consent handling.
+ */
 function initSignupValidation() {
   const form = document.getElementById("signupForm");
   if (!form) return;
@@ -140,6 +157,7 @@ function initSignupValidation() {
   syncPrivacyConsent();
 }
 
+
 /**
  * Keeps the current form values in memory before opening the Privacy Policy.
  */
@@ -147,6 +165,7 @@ function handlePrivacyPolicyOpen() {
   signupDraft = getSignupDraft();
   rememberPrivacyOpened();
 }
+
 
 /**
  * Returns the signup values without writing credentials to browser storage.
@@ -160,6 +179,7 @@ function getSignupDraft() {
   };
 }
 
+
 /**
  * Restores form values after returning from the Privacy Policy.
  */
@@ -171,31 +191,51 @@ function restoreSignupDraft() {
   setSignupValue("signupConfirmPassword", signupDraft.confirmPassword);
 }
 
+
+/**
+ * Writes one value back into a signup form field.
+ * @param {string} elementId - The id of the form field.
+ * @param {string} value - The value to restore.
+ */
 function setSignupValue(elementId, value) {
   document.getElementById(elementId).value = value;
 }
 
+
+/**
+ * Clears the signup draft and the privacy-opened flag after a signup.
+ */
 function clearSignupState() {
   signupDraft = null;
   sessionStorage.removeItem("joinPrivacyOpened");
 }
 
+
+/**
+ * Marks in sessionStorage that the Privacy Policy has been opened.
+ */
 function rememberPrivacyOpened() {
   sessionStorage.setItem("joinPrivacyOpened", "true");
 }
 
+
+/**
+ * Detects the return from the Privacy Policy via URL and cleans the parameter.
+ */
 function rememberPrivacyReturn() {
   const params = new URLSearchParams(window.location.search);
-
   if (params.get("privacy") !== "opened") {
     return;
   }
-
   rememberPrivacyOpened();
   params.delete("privacy");
   window.history.replaceState({}, "", `?${params.toString()}`);
 }
 
+
+/**
+ * Enables the consent checkbox only after the Privacy Policy was opened.
+ */
 function syncPrivacyConsent() {
   const hasOpenedPrivacy = hasOpenedPrivacyPolicy();
   getPrivacyCheckbox().disabled = !hasOpenedPrivacy;
@@ -203,17 +243,30 @@ function syncPrivacyConsent() {
   updateSignupButton();
 }
 
+
+/**
+ * Explains below the checkbox why it is enabled or still locked.
+ * @param {boolean} hasOpenedPrivacy - True when the Privacy Policy was opened.
+ */
 function updatePrivacyConsentHint(hasOpenedPrivacy) {
   getPrivacyConsentHint().textContent = hasOpenedPrivacy
     ? "Privacy Policy opened. You can now accept it."
     : "Open the Privacy Policy first to enable this checkbox.";
 }
 
+
+/**
+ * Enables the signup button only while the whole form is valid.
+ */
 function updateSignupButton() {
   getSignupButton().disabled = !isSignupFormValid();
   if (isSignupFormValid()) showSignupMessage("");
 }
 
+
+/**
+ * @returns {boolean} True when all signup fields and the consent are valid.
+ */
 function isSignupFormValid() {
   return Boolean(
     getSignupName() &&
@@ -225,6 +278,11 @@ function isSignupFormValid() {
   );
 }
 
+
+/**
+ * Returns the message for the first failed signup rule.
+ * @returns {string} The error text, or an empty string when valid.
+ */
 function getSignupErrorMessage() {
   if (!getSignupName()) return "Please enter your name.";
   if (!isEmailValid()) return "Please enter a valid email address.";
@@ -235,50 +293,99 @@ function getSignupErrorMessage() {
   return "";
 }
 
+
+/**
+ * @returns {boolean} True when the entered email matches the email pattern.
+ */
 function isEmailValid() {
   return AUTH_EMAIL_PATTERN.test(getSignupEmail());
 }
 
+
+/**
+ * @returns {boolean} True when both entered passwords are identical.
+ */
 function passwordsMatch() {
   return getSignupPassword() === getSignupConfirmPassword();
 }
 
+
+/**
+ * @returns {boolean} True when the Privacy Policy was opened in this session.
+ */
 function hasOpenedPrivacyPolicy() {
   return sessionStorage.getItem("joinPrivacyOpened") === "true";
 }
 
+
+/**
+ * @returns {string} The trimmed name from the signup form.
+ */
 function getSignupName() {
   return document.getElementById("signupName").value.trim();
 }
 
+
+/**
+ * @returns {string} The trimmed email from the signup form.
+ */
 function getSignupEmail() {
   return document.getElementById("signupEmail").value.trim();
 }
 
+
+/**
+ * @returns {string} The password from the signup form.
+ */
 function getSignupPassword() {
   return document.getElementById("signupPassword").value;
 }
 
+
+/**
+ * @returns {string} The password confirmation from the signup form.
+ */
 function getSignupConfirmPassword() {
   return document.getElementById("signupConfirmPassword").value;
 }
 
+
+/**
+ * @returns {HTMLElement} The privacy consent checkbox.
+ */
 function getPrivacyCheckbox() {
   return document.getElementById("privacyAccepted");
 }
 
+
+/**
+ * @returns {NodeList} All links that open the Privacy Policy page.
+ */
 function getPrivacyLinks() {
   return document.querySelectorAll('[data-page="privacy-policy"]');
 }
 
+
+/**
+ * @returns {HTMLElement} The hint element below the consent checkbox.
+ */
 function getPrivacyConsentHint() {
   return document.getElementById("privacyConsentHint");
 }
 
+
+/**
+ * @returns {HTMLElement} The submit button of the signup form.
+ */
 function getSignupButton() {
   return document.getElementById("signupButton");
 }
 
+
+/**
+ * Shows a feedback message below the signup form.
+ * @param {string} message - The text to display, or an empty string to clear.
+ */
 function showSignupMessage(message) {
   document.getElementById("signupMessage").textContent = message;
 }
