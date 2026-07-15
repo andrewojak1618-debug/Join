@@ -31,6 +31,21 @@ async function createTemplateElement(templatePath) {
 
 
 /**
+ * Abbreviates every name part after the first name.
+ * @param {string} name - Complete contact name.
+ * @returns {string} Short name for the mobile contact list.
+ */
+function getAbbreviatedContactName(name) {
+  const nameParts = String(name).trim().split(/\s+/).filter(Boolean);
+  if (nameParts.length < 2) return nameParts[0] || "";
+  const initials = nameParts
+    .slice(1)
+    .map((namePart) => `${namePart.charAt(0).toUpperCase()}.`);
+  return `${nameParts[0]} ${initials.join(" ")}`;
+}
+
+
+/**
  * Returns one letter section with its contact list items.
  */
 function getContactGroupTemplate(letter, contacts) {
