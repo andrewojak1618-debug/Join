@@ -43,16 +43,6 @@ function renderBoardColumn(taskList, tasks) {
 
 
 /**
- * Returns the empty-state markup for a column without tasks.
- * @param {string} status - The status of the empty column.
- * @returns {string} The empty-state HTML.
- */
-function getBoardEmptyTemplate(status) {
-  return `<p class="board-empty-state">No tasks ${formatBoardStatus(status)}</p>`;
-}
-
-
-/**
  * Adds click and keyboard handling for opening, closing and editing task details.
  */
 function initBoardTaskDetails(tasks) {

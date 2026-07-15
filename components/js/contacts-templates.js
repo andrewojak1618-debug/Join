@@ -25,7 +25,6 @@ function getContactItemTemplate(contact) {
 async function createTemplateElement(templatePath) {
   const response = await fetch(templatePath);
   const wrapper = document.createElement("div");
-
   wrapper.innerHTML = await response.text();
   return wrapper.firstElementChild;
 }

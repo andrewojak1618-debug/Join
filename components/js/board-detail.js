@@ -15,23 +15,6 @@ function renderBoardDetailSubtasks(task) {
 
 
 /**
- * Returns one checkable subtask row for the detail view.
- *
- * @param {Object} subtask - Normalized subtask with title and done flag.
- * @param {number} index - Position of the subtask in the list.
- * @returns {string} HTML markup for one subtask row.
- */
-function getBoardDetailSubtaskTemplate(subtask, index) {
-  return `
-    <label class="board-detail-subtask">
-      <input type="checkbox" data-detail-subtask-index="${index}" ${subtask.done ? "checked" : ""} />
-      <span>${escapeBoardText(subtask.title)}</span>
-    </label>
-  `;
-}
-
-
-/**
  * Persists one checked state change and refreshes the open detail view.
  *
  * @param {Event} event - Change event from the subtask checkbox list.
@@ -131,29 +114,6 @@ async function loadBoardDetailContacts() {
   } catch (error) {
     return [];
   }
-}
-
-
-/**
- * Returns one selectable contact option for the edit assignee dropdown.
- *
- * @param {Object} contact - Contact object from the contacts store.
- * @param {string[]|string} assignedTo - Names currently assigned to the task.
- * @returns {string} HTML markup for one dropdown option.
- */
-function getBoardEditAssigneeTemplate(contact, assignedTo) {
-  const checked = getBoardAssigneeNames(assignedTo).includes(contact.name)
-    ? "checked"
-    : "";
-  return `
-    <label class="contact-dropdown__option">
-      <input type="checkbox" value="${escapeBoardText(contact.name)}" ${checked} />
-      <span class="contact-dropdown__avatar" style="background-color: ${escapeBoardText(contact.color || "var(--color-primary-auth)")}">
-        ${getContactInitials(contact.name)}
-      </span>
-      <span>${escapeBoardText(contact.name)}</span>
-    </label>
-  `;
 }
 
 
