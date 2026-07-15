@@ -283,3 +283,16 @@ function escapeBoardText(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
+
+/**
+ * Shows a short feedback popup that hides itself after three seconds.
+ * @param {string} message - The feedback text to display.
+ */
+function showBoardToast(message) {
+  const toast = document.getElementById("boardToast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.hidden = false;
+  setTimeout(() => (toast.hidden = true), 3000);
+}
