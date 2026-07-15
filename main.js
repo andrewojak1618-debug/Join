@@ -51,14 +51,6 @@ const routes = {
   },
 };
 
-const signupTransition = {
-  renderDelay: 240,
-  exitDelay: 600,
-  template: "./components/html/molecules/signup-transition-loader.html",
-};
-
-let pageTransitionRunning = false;
-
 document.addEventListener("DOMContentLoaded", initApp);
 window.addEventListener("popstate", () => renderCurrentPage());
 
@@ -266,75 +258,5 @@ function isInternalLegalDocPage(page) {
 
 window.navigateToPage = navigateToPage;
 
-async function renderSignupWithTransition() {
-  pageTransitionRunning = true;
-  const loader = await createSignupTransitionLoader();
 
-  showTransitionLoader(loader);
 
-  try {
-    await wait(signupTransition.renderDelay);
-    await renderCurrentPage({ animate: true });
-    await wait(signupTransition.exitDelay);
-  } finally {
-    finishSignupTransition(loader);
-  }
-}
-
-function finishSignupTransition(loader) {
-  removeTransitionLoader(loader);
-  cleanSignupTransitionParam();
-  pageTransitionRunning = false;
-}
-
-function showTransitionLoader(loader) {
-  setTransitionOverflow(true);
-  document.body.append(loader);
-  requestAnimationFrame(() => loader.classList.add("is-active"));
-}
-
-function shouldStartWithSignupTransition() {
-  const params = new URLSearchParams(window.location.search);
-  return (
-    params.get("page") === "signup" && params.get("transition") === "signup"
-  );
-}
-
-/**
- * Tells whether the intro transition should run for a fresh login page load.
- */
-function shouldStartWithLoginTransition() {
-  return getValidPage() === "login";
-}
-
-function cleanSignupTransitionParam() {
-  const params = new URLSearchParams(window.location.search);
-
-  if (params.get("transition") !== "signup") {
-    return;
-  }
-
-  params.delete("transition");
-  window.history.replaceState({}, "", `?${params.toString()}`);
-}
-
-function removeTransitionLoader(loader) {
-  loader.classList.add("is-leaving");
-  setTimeout(() => {
-    loader.remove();
-    setTransitionOverflow(false);
-  }, 180);
-}
-
-function setTransitionOverflow(isLocked) {
-  document.documentElement.classList.toggle("is-page-transitioning", isLocked);
-  document.body.classList.toggle("is-page-transitioning", isLocked);
-}
-
-function createSignupTransitionLoader() {
-  return createTemplateElement(signupTransition.template);
-}
-
-function wait(duration) {
-  return new Promise((resolve) => setTimeout(resolve, duration));
-}
