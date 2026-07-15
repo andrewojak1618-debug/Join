@@ -148,6 +148,19 @@ async function createAppLayoutContent(pageContent, route) {
   layoutWrapper.innerHTML = await getHtmlContent(
     "./components/html/organisms/app-layout.html",
   );
+  insertPageIntoLayout(layoutWrapper, pageContent, route);
+  await hydrateHtmlIncludes(layoutWrapper);
+  return layoutWrapper;
+}
+
+
+/**
+ * Fills the layout content slot with the page and applies the layout class.
+ * @param {HTMLElement} layoutWrapper - The wrapper holding the layout markup.
+ * @param {string} pageContent - The raw HTML of the page template.
+ * @param {Object} route - The route config providing the layout class.
+ */
+function insertPageIntoLayout(layoutWrapper, pageContent, route) {
   const pageWrapper = document.createElement("div");
   pageWrapper.innerHTML = pageContent;
   const slot = layoutWrapper.querySelector("[data-layout-content]");
@@ -156,8 +169,6 @@ async function createAppLayoutContent(pageContent, route) {
   if (route.layoutClass) {
     layout.classList.add(route.layoutClass);
   }
-  await hydrateHtmlIncludes(layoutWrapper);
-  return layoutWrapper;
 }
 
 

@@ -70,17 +70,44 @@ function fillContactEditForm(contact) {
  */
 async function handleContactEditSubmit(event) {
   event.preventDefault();
-  const values = getContactFormValues("contactEdit");
+  if (!getValidatedContactValues("contactEdit")) return;
+  await submitContactForm(
+    event.target,
+    "contactEditError",
+    "Contact could not be saved.",
+    saveEditedContact,
+  );
+}
+
+
+/**
+ * Reads the form values, shows a validation error and returns the values.
+ * @param {string} prefix - The form field id prefix, e.g. "contactEdit".
+ * @returns {Object|null} The entered values, or null when they are invalid.
+ */
+function getValidatedContactValues(prefix) {
+  const values = getContactFormValues(prefix);
   const errorMessage = getContactErrorMessage(values);
-  document.getElementById("contactEditError").textContent = errorMessage;
-  if (errorMessage) return;
-  setSubmitButtonDisabled(event.target, true);
+  document.getElementById(`${prefix}Error`).textContent = errorMessage;
+  return errorMessage ? null : values;
+}
+
+
+/**
+ * Runs a save action with the submit button disabled and shows save errors.
+ * @param {HTMLFormElement} form - The submitted contact form.
+ * @param {string} errorId - The id of the error output element.
+ * @param {string} failMessage - The message shown when saving fails.
+ * @param {Function} action - The async save action to run.
+ */
+async function submitContactForm(form, errorId, failMessage, action) {
+  setSubmitButtonDisabled(form, true);
   try {
-    await saveEditedContact();
+    await action();
   } catch (error) {
-    document.getElementById("contactEditError").textContent = "Contact could not be saved.";
+    document.getElementById(errorId).textContent = failMessage;
   } finally {
-    setSubmitButtonDisabled(event.target, false);
+    setSubmitButtonDisabled(form, false);
   }
 }
 
@@ -147,18 +174,14 @@ function handleContactAddOverlayClick(event) {
  */
 async function handleContactAddSubmit(event) {
   event.preventDefault();
-  const values = getContactFormValues("contactAdd");
-  const errorMessage = getContactErrorMessage(values);
-  document.getElementById("contactAddError").textContent = errorMessage;
-  if (errorMessage) return;
-  setSubmitButtonDisabled(event.target, true);
-  try {
-    await createContact(values);
-  } catch (error) {
-    document.getElementById("contactAddError").textContent = "Contact could not be created.";
-  } finally {
-    setSubmitButtonDisabled(event.target, false);
-  }
+  const values = getValidatedContactValues("contactAdd");
+  if (!values) return;
+  await submitContactForm(
+    event.target,
+    "contactAddError",
+    "Contact could not be created.",
+    () => createContact(values),
+  );
 }
 
 

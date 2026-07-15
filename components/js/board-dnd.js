@@ -8,18 +8,26 @@ let draggedBoardTaskId = "";
 function initBoardDropZones(taskLists) {
   taskLists.forEach((taskList) => {
     if (taskList.dataset.dropEventsReady === "true") return;
-
-    taskList.addEventListener("dragover", (event) =>
-      handleBoardDragOver(event, taskList),
-    );
-    taskList.addEventListener("dragleave", (event) =>
-      handleBoardDragLeave(event, taskList),
-    );
-    taskList.addEventListener("drop", (event) =>
-      handleBoardDrop(event, taskList),
-    );
+    addBoardDropListeners(taskList);
     taskList.dataset.dropEventsReady = "true";
   });
+}
+
+
+/**
+ * Attaches the dragover, dragleave and drop listeners to one column.
+ * @param {HTMLElement} taskList - The task list element of the column.
+ */
+function addBoardDropListeners(taskList) {
+  taskList.addEventListener("dragover", (event) =>
+    handleBoardDragOver(event, taskList),
+  );
+  taskList.addEventListener("dragleave", (event) =>
+    handleBoardDragLeave(event, taskList),
+  );
+  taskList.addEventListener("drop", (event) =>
+    handleBoardDrop(event, taskList),
+  );
 }
 
 
