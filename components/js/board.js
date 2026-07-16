@@ -98,7 +98,6 @@ function initBoardDetailControls() {
 function initBoardDetailActionControls() {
   getBoardEditButton().addEventListener("click", showBoardEditMode);
   getBoardDeleteButton().addEventListener("click", handleBoardDeleteClick);
-  getBoardEditCancelButton().addEventListener("click", showBoardDetailViewMode);
   getBoardEditForm().addEventListener("submit", handleBoardEditSubmit);
   initBoardEditValidation();
   getBoardDetailSubtasks().addEventListener(

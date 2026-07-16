@@ -163,6 +163,15 @@
   font-weight: 700;
 }
 
+.add-task-priority__option:has(input:checked) img {
+  filter: brightness(0) invert(1);
+}
+
+.add-task-priority__option--urgent:has(input:checked) {
+  border-color: var(--color-priority-urgent);
+  background: var(--color-priority-urgent);
+}
+
 .add-task-form__footer {
   display: flex;
   align-items: center;

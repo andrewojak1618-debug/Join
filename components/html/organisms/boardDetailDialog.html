@@ -110,147 +110,47 @@
           hidden
         ></span>
       </label>
-      <div class="board-detail-field">
-        <span>Category</span>
-        <div class="contact-dropdown" data-board-edit-dropdown>
-          <button
-            class="contact-dropdown__button"
-            id="boardEditCategoryButton"
-            type="button"
-            aria-expanded="false"
-            aria-controls="boardEditCategoryPanel"
+      <fieldset class="add-task-priority">
+        <legend>Priority</legend>
+        <div class="add-task-priority__options">
+          <label
+            class="add-task-priority__option add-task-priority__option--urgent"
           >
-            Select task category
-          </button>
-          <div
-            class="contact-dropdown__panel"
-            id="boardEditCategoryPanel"
-            role="listbox"
-            aria-label="Task categories"
-            hidden
+            <input type="radio" name="boardEditPriority" value="urgent" />
+            <span
+              >Urgent
+              <img
+                src="./components/assets/img/icons/red_arrow_up.svg"
+                alt=""
+                aria-hidden="true"
+            /></span>
+          </label>
+          <label
+            class="add-task-priority__option add-task-priority__option--medium"
           >
-            <button
-              class="contact-dropdown__option contact-dropdown__option--single"
-              type="button"
-              role="option"
-              data-value="user-story"
-            >
-              User Story
-            </button>
-            <button
-              class="contact-dropdown__option contact-dropdown__option--single"
-              type="button"
-              role="option"
-              data-value="technical-task"
-            >
-              Technical Task
-            </button>
-          </div>
-          <input type="hidden" id="boardTaskEditCategory" />
+            <input type="radio" name="boardEditPriority" value="medium" />
+            <span
+              >Medium
+              <img
+                src="./components/assets/img/icons/medium_even.svg"
+                alt=""
+                aria-hidden="true"
+            /></span>
+          </label>
+          <label
+            class="add-task-priority__option add-task-priority__option--low"
+          >
+            <input type="radio" name="boardEditPriority" value="low" />
+            <span
+              >Low
+              <img
+                src="./components/assets/img/icons/green_arrow_down.svg"
+                alt=""
+                aria-hidden="true"
+            /></span>
+          </label>
         </div>
-      </div>
-      <div class="board-detail-field">
-        <span>Priority</span>
-        <div class="contact-dropdown" data-board-edit-dropdown>
-          <button
-            class="contact-dropdown__button"
-            id="boardEditPriorityButton"
-            type="button"
-            aria-expanded="false"
-            aria-controls="boardEditPriorityPanel"
-          >
-            Select priority
-          </button>
-          <div
-            class="contact-dropdown__panel"
-            id="boardEditPriorityPanel"
-            role="listbox"
-            aria-label="Task priorities"
-            hidden
-          >
-            <button
-              class="contact-dropdown__option contact-dropdown__option--single"
-              type="button"
-              role="option"
-              data-value="urgent"
-            >
-              Urgent
-            </button>
-            <button
-              class="contact-dropdown__option contact-dropdown__option--single"
-              type="button"
-              role="option"
-              data-value="medium"
-            >
-              Medium
-            </button>
-            <button
-              class="contact-dropdown__option contact-dropdown__option--single"
-              type="button"
-              role="option"
-              data-value="low"
-            >
-              Low
-            </button>
-          </div>
-          <input type="hidden" id="boardTaskEditPriority" />
-        </div>
-      </div>
-      <div class="board-detail-field">
-        <span>Status</span>
-        <div class="contact-dropdown" data-board-edit-dropdown>
-          <button
-            class="contact-dropdown__button"
-            id="boardEditStatusButton"
-            type="button"
-            aria-expanded="false"
-            aria-controls="boardEditStatusPanel"
-          >
-            Select status
-          </button>
-          <div
-            class="contact-dropdown__panel"
-            id="boardEditStatusPanel"
-            role="listbox"
-            aria-label="Task statuses"
-            hidden
-          >
-            <button
-              class="contact-dropdown__option contact-dropdown__option--single"
-              type="button"
-              role="option"
-              data-value="todo"
-            >
-              To do
-            </button>
-            <button
-              class="contact-dropdown__option contact-dropdown__option--single"
-              type="button"
-              role="option"
-              data-value="in-progress"
-            >
-              In progress
-            </button>
-            <button
-              class="contact-dropdown__option contact-dropdown__option--single"
-              type="button"
-              role="option"
-              data-value="feedback"
-            >
-              Await feedback
-            </button>
-            <button
-              class="contact-dropdown__option contact-dropdown__option--single"
-              type="button"
-              role="option"
-              data-value="done"
-            >
-              Done
-            </button>
-          </div>
-          <input type="hidden" id="boardTaskEditStatus" />
-        </div>
-      </div>
+      </fieldset>
       <div class="board-detail-field">
         <span>Assigned to</span>
         <div class="contact-dropdown" id="boardEditAssigneesDropdown">
@@ -287,14 +187,14 @@
         ></textarea>
       </label>
       <div class="board-detail-actions">
-        <button
-          class="board-detail-secondary"
-          type="button"
-          id="boardTaskEditCancel"
-        >
-          Cancel
+        <button class="board-detail-primary" type="submit">
+          Ok
+          <img
+            src="./components/assets/img/icons/check.svg"
+            alt=""
+            aria-hidden="true"
+          />
         </button>
-        <button class="board-detail-primary" type="submit">Save</button>
       </div>
     </form>
   </article>
