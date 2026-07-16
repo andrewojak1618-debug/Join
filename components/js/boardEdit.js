@@ -25,9 +25,7 @@ async function fillBoardTaskEditForm(task) {
   getBoardEditField("Title").value = task.title || "";
   getBoardEditField("Description").value = task.description || "";
   getBoardEditField("DueDate").value = normalizeTaskDueDate(task.dueDate);
-  getBoardEditField("Category").value = task.category || "user-story";
-  getBoardEditField("Priority").value = task.priority || "medium";
-  getBoardEditField("Status").value = task.status || "todo";
+  setBoardEditPriority(task.priority || "medium");
   syncBoardEditDropdowns();
   await renderBoardEditAssignees(task.assignedTo);
   getBoardEditField("Subtasks").value = formatBoardSubtasksForEdit(
@@ -197,9 +195,7 @@ function getBoardEditedTask(task) {
     title: getBoardEditField("Title").value.trim(),
     description: getBoardEditField("Description").value.trim(),
     dueDate: normalizeTaskDueDate(getBoardEditField("DueDate").value),
-    category: getBoardEditField("Category").value,
-    priority: getBoardEditField("Priority").value,
-    status: getBoardEditField("Status").value,
+    priority: getBoardEditPriority(),
     assignedTo: getBoardEditedAssignees(),
     subtasks: getBoardEditedSubtasks(),
   };
@@ -237,7 +233,7 @@ function getActiveBoardSubtasks() {
  * @returns {Object[]} Stable references to the selected contacts.
  */
 function getBoardEditedAssignees() {
-  return getBoardEditedAssigneesFromContacts();
+  return getBoardEditedAssigneesFromContacts().map(createTaskAssigneeReference);
 }
 
 
@@ -293,11 +289,28 @@ function getBoardDeleteButton() {
 
 
 /**
- * Returns the cancel button of the task edit form.
- * @returns {HTMLElement} The cancel button.
+ * Checks the priority radio matching the task, falling back to medium.
+ * @param {string} priority - Stored priority of the task.
  */
-function getBoardEditCancelButton() {
-  return document.getElementById("boardTaskEditCancel");
+function setBoardEditPriority(priority) {
+  const radio = document.querySelector(
+    `input[name="boardEditPriority"][value="${priority}"]`,
+  );
+  const fallback = document.querySelector(
+    'input[name="boardEditPriority"][value="medium"]',
+  );
+  (radio || fallback).checked = true;
+}
+
+
+/**
+ * @returns {string} The picked priority from the edit form radios.
+ */
+function getBoardEditPriority() {
+  const checked = document.querySelector(
+    'input[name="boardEditPriority"]:checked',
+  );
+  return checked ? checked.value : "medium";
 }
 
 

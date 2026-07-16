@@ -100,15 +100,14 @@ async function loadBoardDetailContacts() {
 
 
 /**
- * @returns {Object[]} Stable references for all checked contacts.
+ * @returns {Object[]} The full contact objects for all checked contacts.
  */
 function getBoardEditedAssigneesFromContacts() {
   return [
     ...getBoardEditAssigneesPanel().querySelectorAll("input:checked"),
   ]
     .map((input) => getBoardDetailContactById(input.value))
-    .filter(Boolean)
-    .map(createTaskAssigneeReference);
+    .filter(Boolean);
 }
 
 
@@ -168,31 +167,24 @@ function setBoardEditAssigneesOpen(isOpen) {
 
 
 /**
- * Updates the dropdown button text and chips for the checked contacts.
+ * Shows the checked contacts as avatar chips below the dropdown.
  */
 function updateBoardEditAssigneesSelection() {
   const assignees = getBoardEditedAssigneesFromContacts();
-  updateBoardEditAssigneesButtonText(assignees.length);
   renderBoardEditAssigneeChips(assignees);
 }
 
 
 /**
- * @param {number} count - Number of currently selected contacts.
- */
-function updateBoardEditAssigneesButtonText(count) {
-  getBoardEditAssigneesButton().textContent = count
-    ? `${count} contact${count === 1 ? "" : "s"} selected`
-    : "Select contacts to assign";
-}
-
-
-/**
+ * Shows the selected contacts as colored initials avatars.
  * @param {Object[]} assignees - Selected contact references.
  */
 function renderBoardEditAssigneeChips(assignees) {
   const chips = assignees
-    .map((item) => `<span class="contact-dropdown__chip">${escapeBoardText(item.name)}</span>`)
+    .map(
+      (item) =>
+        `<span class="board-detail-assignee__avatar" style="background-color: ${escapeBoardText(item.color || "var(--color-primary-auth)")}">${getBoardInitials(item.name)}</span>`,
+    )
     .join("");
   getBoardEditAssigneesSelected().innerHTML = chips;
 }

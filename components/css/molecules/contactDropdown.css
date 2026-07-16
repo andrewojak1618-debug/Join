@@ -22,15 +22,16 @@
 
 .contact-dropdown__button::after {
   content: "";
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid var(--color-text-main);
-  border-bottom: 2px solid var(--color-text-main);
-  transform: rotate(45deg) translateY(-2px);
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background: url("../../assets/img/icons/arrow_drop_task.svg") center / contain
+    no-repeat;
+  transition: transform 100ms ease;
 }
 
 .contact-dropdown.is-open .contact-dropdown__button::after {
-  transform: rotate(225deg) translateY(-2px);
+  transform: rotate(180deg);
 }
 
 .contact-dropdown__option--single {
