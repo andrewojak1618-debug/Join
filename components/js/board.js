@@ -78,7 +78,7 @@ function addBoardCardListeners(card, tasks) {
 
 
 /**
- * Wires all buttons and events of the task detail dialog once.
+ * Wires the edit, delete and form controls of the detail dialog.
  */
 function initBoardDetailControls() {
   const overlay = getBoardDetailOverlay();
@@ -104,10 +104,6 @@ function initBoardDetailActionControls() {
   getBoardDetailSubtasks().addEventListener(
     "change",
     handleBoardDetailSubtaskChange,
-  );
-  getBoardMobileStatusSelect().addEventListener(
-    "change",
-    handleBoardMobileStatusChange,
   );
   initBoardEditDropdowns();
 }
@@ -264,7 +260,6 @@ function fillBoardDetailMetaFields(task) {
     formatTaskDueDate(task.dueDate) || "-",
   );
   fillBoardDetailPriority(task.priority);
-  syncBoardMobileStatus(task.status);
   renderBoardDetailAssignees(task.assignedTo);
 }
 

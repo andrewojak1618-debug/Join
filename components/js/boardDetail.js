@@ -36,36 +36,6 @@ async function handleBoardDetailSubtaskChange(event) {
 
 
 /**
- * Moves the open task from the mobile detail dialog without drag and drop.
- *
- * @param {Event} event - Change event of the mobile status dropdown input.
- */
-async function handleBoardMobileStatusChange(event) {
-  const task = getActiveBoardTask();
-  const status = event.target.value;
-  if (!task || task.status === status) return;
-  try {
-    await updateTaskInStore({ ...task, status });
-    await refreshBoardAfterEdit(task.id);
-  } catch (error) {
-    event.target.value = task.status;
-    showBoardToast("Task status could not be updated.");
-  }
-}
-
-
-/**
- * Mirrors the open task status into the mobile move-task dropdown.
- *
- * @param {string} status - Current status of the open task.
- */
-function syncBoardMobileStatus(status) {
-  getBoardMobileStatusSelect().value = status || "todo";
-  syncBoardEditDropdowns();
-}
-
-
-/**
  * Returns a task copy with one subtask done state flipped to the checkbox.
  *
  * @param {Object} task - The currently open task.
@@ -265,12 +235,4 @@ function getBoardEditAssigneesButton() {
  */
 function getBoardEditAssigneesSelected() {
   return document.getElementById("boardEditAssigneesSelected");
-}
-
-
-/**
- * @returns {HTMLElement} The hidden input that stores the mobile move-task status.
- */
-function getBoardMobileStatusSelect() {
-  return document.getElementById("boardTaskMobileStatus");
 }
