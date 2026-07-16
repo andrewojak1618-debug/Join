@@ -64,11 +64,14 @@ function getBoardSubtaskTemplate(subtasks) {
   if (!subtaskList.length) return "";
   const doneCount = getBoardDoneSubtaskCount(subtaskList);
   const progressWidth = getBoardSubtaskProgress(subtaskList);
+  const progressDetail = `${doneCount} of ${subtaskList.length} subtasks completed`;
   return `
-    <div class="board-card__subtasks">
+    <button class="board-card__subtasks" type="button"
+      aria-label="${progressDetail}"
+      data-progress-detail="${progressDetail}">
       <span class="board-card__progress"><span style="width: ${progressWidth}%"></span></span>
       <span>${doneCount}/${subtaskList.length} Subtasks</span>
-    </div>
+    </button>
   `;
 }
 
