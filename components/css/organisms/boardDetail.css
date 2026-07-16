@@ -80,10 +80,15 @@
   gap: 12px;
 }
 
-.board-detail-list > div {
+.board-detail-row {
   display: grid;
-  grid-template-columns: 110px minmax(0, 1fr);
-  gap: 16px;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.board-detail-row--stacked {
+  grid-template-columns: 1fr;
+  gap: 12px;
 }
 
 .board-detail-priority {
@@ -290,11 +295,6 @@
 
   .board-detail-card h2 {
     font-size: 32px;
-  }
-
-  .board-detail-list > div {
-    grid-template-columns: 1fr;
-    gap: 4px;
   }
 
   .board-detail-mobile-status {
