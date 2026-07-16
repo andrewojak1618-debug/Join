@@ -167,6 +167,19 @@ function getBoardAvatarTemplate(name, index) {
 
 
 /**
+ * @param {{name: string, color: string}} assignee - Resolved display data.
+ * @returns {string} HTML markup for one assignee row with avatar.
+ */
+function getBoardDetailAssigneeTemplate(assignee) {
+  return `
+    <div class="board-detail-assignee">
+      <span class="board-detail-assignee__avatar" style="background-color: ${escapeBoardText(assignee.color)}">${getBoardInitials(assignee.name)}</span>
+      <span>${escapeBoardText(assignee.name)}</span>
+    </div>`;
+}
+
+
+/**
  * @param {string} name - Full contact name.
  * @returns {string} Up to two uppercase initials.
  */
