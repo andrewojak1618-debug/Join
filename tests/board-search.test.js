@@ -6,7 +6,7 @@ const {
   toPlainValue,
 } = require("./helpers/scriptContext");
 
-const BOARD_SEARCH_SCRIPT = "components/js/board-search.js";
+const boardSearchScript = "components/js/boardSearch.js";
 
 /**
  * Loads the board search logic with a minimal board and DOM test setup.
@@ -17,7 +17,7 @@ function createBoardSearchContext(tasks) {
   const elements = createBoardSearchElements();
   const state = { renderedTasks: [], detailTasks: [] };
   const globals = createBoardSearchGlobals(tasks, elements, state);
-  const context = loadBrowserScripts([BOARD_SEARCH_SCRIPT], globals);
+  const context = loadBrowserScripts([boardSearchScript], globals);
   return { ...elements, context, state };
 }
 
@@ -66,40 +66,40 @@ function createBoardSearchDocument(elements) {
   };
 }
 
-const TASKS = [
+const tasks = [
   { id: "1", title: "Design login", description: "Create the page" },
   { id: "2", title: "Connect board", description: "Load Firestore tasks" },
   { id: "3", title: "Review contacts", description: "Check long names" },
 ];
 
 test("returns all board tasks for an empty search term", () => {
-  const { context } = createBoardSearchContext(TASKS);
-  assert.deepEqual(toPlainValue(context.getBoardSearchResults("")), TASKS);
+  const { context } = createBoardSearchContext(tasks);
+  assert.deepEqual(toPlainValue(context.getBoardSearchResults("")), tasks);
 });
 
 test("finds title matches from the first character", () => {
-  const { context } = createBoardSearchContext(TASKS);
+  const { context } = createBoardSearchContext(tasks);
   const result = context.getBoardSearchResults("v");
-  assert.deepEqual(toPlainValue(result), [TASKS[2]]);
+  assert.deepEqual(toPlainValue(result), [tasks[2]]);
 });
 
 test("finds tasks by description and handles missing text fields", () => {
-  const tasks = [...TASKS, { id: "4" }];
-  const { context } = createBoardSearchContext(tasks);
+  const tasksWithMissingText = [...tasks, { id: "4" }];
+  const { context } = createBoardSearchContext(tasksWithMissingText);
   const result = context.getBoardSearchResults("firestore");
-  assert.deepEqual(toPlainValue(result), [TASKS[1]]);
-  assert.equal(context.taskMatchesSearch(tasks[3], "firestore"), false);
+  assert.deepEqual(toPlainValue(result), [tasks[1]]);
+  assert.equal(context.taskMatchesSearch(tasksWithMissingText[3], "firestore"), false);
 });
 
 test("normalizes whitespace and letter case before filtering", () => {
-  const { context, state } = createBoardSearchContext(TASKS);
+  const { context, state } = createBoardSearchContext(tasks);
   context.handleBoardSearchInput({ target: { value: "  LOGIN  " } });
-  assert.deepEqual(toPlainValue(state.renderedTasks), [TASKS[0]]);
-  assert.deepEqual(toPlainValue(state.detailTasks), [TASKS[0]]);
+  assert.deepEqual(toPlainValue(state.renderedTasks), [tasks[0]]);
+  assert.deepEqual(toPlainValue(state.detailTasks), [tasks[0]]);
 });
 
 test("shows the no-results notice only for an unsuccessful search", () => {
-  const setup = createBoardSearchContext(TASKS);
+  const setup = createBoardSearchContext(tasks);
   setup.context.handleBoardSearchInput({ target: { value: "missing" } });
   assert.equal(setup.noResultsElement.hidden, false);
   assert.equal(setup.columnsElement.hidden, true);

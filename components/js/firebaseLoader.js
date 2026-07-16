@@ -6,12 +6,12 @@ window.joinFirebaseReady = loadFirebaseConfig();
  */
 async function loadFirebaseConfig() {
   try {
-    const response = await fetch("./components/js/firebase-config.js");
+    const response = await fetch("./components/js/firebaseConfig.js");
     if (!response.ok) return handleFirebaseLoadFailure();
-    await loadScript("./components/js/firebase-config.js");
-    await import("./firebase-auth.mjs");
-    await import("./firebase-contacts.mjs");
-    await import("./firebase-tasks.mjs");
+    await loadScript("./components/js/firebaseConfig.js");
+    await import("./firebaseAuth.mjs");
+    await import("./firebaseContacts.mjs");
+    await import("./firebaseTasks.mjs");
     return window.joinFirebaseAuth.waitForAuthReady();
   } catch {
     return handleFirebaseLoadFailure();
@@ -29,7 +29,7 @@ function handleFirebaseLoadFailure() {
 
 
 /**
- * Adds a script tag dynamically so the ignored firebase-config.js can load.
+ * Adds a script tag dynamically so the ignored firebaseConfig.js can load.
  */
 function loadScript(src) {
   return new Promise((resolve, reject) => {

@@ -1,4 +1,4 @@
-const ADD_TASK_FIELD_VALIDATORS = {
+const addTaskFieldValidators = {
   taskTitle: {
     errorId: "taskTitleError",
     getMessage: getAddTaskTitleError,
@@ -64,7 +64,7 @@ function shouldRevalidateAddTaskField(fieldId) {
  */
 function validateAddTaskForm() {
   addTaskValidationAttempted = true;
-  const isValid = Object.keys(ADD_TASK_FIELD_VALIDATORS)
+  const isValid = Object.keys(addTaskFieldValidators)
     .map(validateAddTaskField)
     .every(Boolean);
   if (!isValid) focusFirstInvalidAddTaskField();
@@ -114,14 +114,14 @@ function setAddTaskFieldError(fieldId, errorId, message) {
  * @returns {Object|undefined} Validator entry, if the field is required.
  */
 function getAddTaskFieldValidator(fieldId) {
-  return ADD_TASK_FIELD_VALIDATORS[fieldId];
+  return addTaskFieldValidators[fieldId];
 }
 
 
 /**
  * Returns the error message element for a validator entry.
  *
- * @param {Object} validator - Entry from ADD_TASK_FIELD_VALIDATORS.
+ * @param {Object} validator - Entry from addTaskFieldValidators.
  * @returns {HTMLElement} The matching error message element.
  */
 function getAddTaskError(validator) {
@@ -172,7 +172,7 @@ function setAddTaskSubmitPending(isPending) {
  */
 function resetAddTaskFieldValidation() {
   addTaskValidationAttempted = false;
-  Object.entries(ADD_TASK_FIELD_VALIDATORS).forEach(([fieldId, validator]) => {
+  Object.entries(addTaskFieldValidators).forEach(([fieldId, validator]) => {
     setAddTaskFieldError(fieldId, validator.errorId, "");
   });
 }
