@@ -84,13 +84,42 @@ test("restores a subtask checkbox and reports a failed update", async () => {
 });
 
 
-test("restores mobile status and reports a failed update", async () => {
+function createBoardMoveContext() {
+  const state = {
+    targetStatus: "",
+    toast: { hidden: true, textContent: "" },
+  };
+  const context = loadBrowserScripts(["components/js/board.js"], {
+    document: { getElementById: () => state.toast },
+    moveBoardTaskToStatus: (_task, status) =>
+      rejectBoardMove(state, status),
+    setTimeout: () => 0,
+  });
+  return { context, state };
+}
+
+
+/**
+ * Records the requested status and simulates an unavailable task store.
+ */
+async function rejectBoardMove(state, status) {
+  state.targetStatus = status;
+  throw new Error("offline");
+}
+
+
+test("reports a failed mobile card move", async () => {
   const task = { id: "task-1", status: "todo" };
-  const { context, messages } = createBoardActionContext(task);
-  const select = { value: "done" };
+  const { context, state } = createBoardMoveContext();
+  const event = {
+    currentTarget: { dataset: { moveStatus: "done" } },
+    stopPropagation() {},
+  };
+  const card = { dataset: { taskId: "task-1" } };
 
-  await context.handleBoardMobileStatusChange({ target: select });
+  await context.handleBoardCardMoveOption(event, card, [task]);
 
-  assert.equal(select.value, "todo");
-  assert.deepEqual(messages, ["Task status could not be updated."]);
+  assert.equal(state.targetStatus, "done");
+  assert.equal(state.toast.textContent, "Task status could not be updated.");
+  assert.equal(state.toast.hidden, false);
 });
