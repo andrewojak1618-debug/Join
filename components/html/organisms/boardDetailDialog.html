@@ -132,7 +132,7 @@
             <span
               >Medium
               <img
-                src="./components/assets/img/icons/medium_even.svg"
+                src="./components/assets/img/icons/medium_even_orange.svg"
                 alt=""
                 aria-hidden="true"
             /></span>
@@ -178,14 +178,55 @@
         </div>
       </div>
 
-      <label>
+      <div class="board-detail-field">
         <span>Subtasks</span>
-        <textarea
-          id="boardTaskEditSubtasks"
-          rows="3"
-          placeholder="One subtask per line"
-        ></textarea>
-      </label>
+        <div class="add-task-subtask-input" id="boardEditSubtaskInputWrapper">
+          <input
+            id="boardTaskEditSubtaskInput"
+            type="text"
+            placeholder="Add new subtask"
+            autocomplete="off"
+          />
+          <span class="add-task-subtask-controls">
+            <button
+              class="add-task-subtask-icon add-task-subtask-add"
+              id="boardEditSubtaskAdd"
+              type="button"
+              aria-label="Add subtask"
+            >
+              +
+            </button>
+            <span class="add-task-subtask-confirm">
+              <button
+                class="add-task-subtask-icon"
+                id="boardEditSubtaskClear"
+                type="button"
+                aria-label="Clear subtask input"
+              >
+                <img
+                  src="./components/assets/img/icons/cancel_icon.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+              <span class="add-task-subtask__divider" aria-hidden="true"></span>
+              <button
+                class="add-task-subtask-icon"
+                id="boardEditSubtaskConfirm"
+                type="button"
+                aria-label="Add subtask"
+              >
+                <img
+                  src="./components/assets/img/icons/check_icon.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+            </span>
+          </span>
+        </div>
+        <ul class="add-task-subtask-list" id="boardTaskEditSubtaskList"></ul>
+      </div>
       <div class="board-detail-actions">
         <button class="board-detail-primary" type="submit">
           Ok

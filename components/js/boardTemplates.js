@@ -98,33 +98,6 @@ function getBoardDoneSubtaskCount(subtasks) {
 
 
 /**
- * Reads the title from a subtask in object or legacy string form.
- *
- * @param {Object|string} subtask - Stored subtask entry.
- * @returns {string} The subtask title, or an empty string.
- */
-function getBoardSubtaskTitle(subtask) {
-  if (typeof subtask === "string") return subtask;
-  return subtask && subtask.title ? subtask.title : "";
-}
-
-
-/**
- * Builds a subtask object and keeps the done state from a previous version.
- *
- * @param {string} title - Edited subtask title.
- * @param {Array} previousSubtasks - Subtasks before the edit.
- * @returns {Object} Subtask with title and preserved done flag.
- */
-function toBoardSubtask(title, previousSubtasks) {
-  const match = previousSubtasks.find(
-    (subtask) => getBoardSubtaskTitle(subtask) === title,
-  );
-  return { title, done: Boolean(match && match.done) };
-}
-
-
-/**
  * Returns the avatar group for a card, or a placeholder without assignees.
  *
  * @param {Array|string} assignedTo - Current or legacy task assignments.

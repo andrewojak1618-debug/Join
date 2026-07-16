@@ -28,9 +28,7 @@ async function fillBoardTaskEditForm(task) {
   setBoardEditPriority(task.priority || "medium");
   syncBoardEditDropdowns();
   await renderBoardEditAssignees(task.assignedTo);
-  getBoardEditField("Subtasks").value = formatBoardSubtasksForEdit(
-    task.subtasks,
-  );
+  initBoardEditSubtasks(task.subtasks);
 }
 
 
@@ -197,34 +195,8 @@ function getBoardEditedTask(task) {
     dueDate: normalizeTaskDueDate(getBoardEditField("DueDate").value),
     priority: getBoardEditPriority(),
     assignedTo: getBoardEditedAssignees(),
-    subtasks: getBoardEditedSubtasks(),
+    subtasks: getBoardEditSubtaskItems(),
   };
-}
-
-
-/**
- * Reads the subtasks from the edit form, keeping the done state of existing ones.
- * @returns {Object[]} The edited subtasks.
- */
-function getBoardEditedSubtasks() {
-  const previousSubtasks = getActiveBoardSubtasks();
-  return getBoardEditField("Subtasks")
-    .value.split("\n")
-    .map(getTrimmedText)
-    .filter(Boolean)
-    .map((title) => toBoardSubtask(title, previousSubtasks));
-}
-
-
-/**
- * Returns the subtasks of the active task or an empty array.
- * @returns {Object[]} The subtasks of the active task.
- */
-function getActiveBoardSubtasks() {
-  const activeTask = getActiveBoardTask();
-  return activeTask && Array.isArray(activeTask.subtasks)
-    ? activeTask.subtasks
-    : [];
 }
 
 
@@ -238,16 +210,6 @@ function getBoardEditedAssignees() {
 
 
 /**
- * Removes leading and trailing whitespace from a text.
- * @param {string} text - The text to trim.
- * @returns {string} The trimmed text.
- */
-function getTrimmedText(text) {
-  return text.trim();
-}
-
-
-/**
  * Reloads the board after an edit and reopens the edited task's detail view.
  * @param {string} taskId - The id of the edited task.
  */
@@ -256,17 +218,6 @@ async function refreshBoardAfterEdit(taskId) {
   renderBoardColumns(activeBoardTasks);
   initBoardTaskDetails(activeBoardTasks);
   openBoardTaskDetail(taskId, activeBoardTasks);
-}
-
-
-/**
- * Converts the subtasks into the line-based text used by the edit form.
- * @param {Object[]} subtasks - The subtasks of the task.
- * @returns {string} One subtask title per line.
- */
-function formatBoardSubtasksForEdit(subtasks) {
-  if (!subtasks || !subtasks.length) return "";
-  return subtasks.map(getBoardSubtaskTitle).filter(Boolean).join("\n");
 }
 
 
