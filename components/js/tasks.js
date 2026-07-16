@@ -1,11 +1,11 @@
-const TASK_STORAGE_KEY = "joinTasks";
+const taskStorageKey = "joinTasks";
 
 
 /**
  * Reads the locally saved task list for the temporary localStorage step.
  */
 function getStoredTasks() {
-  const storedTasks = localStorage.getItem(TASK_STORAGE_KEY);
+  const storedTasks = localStorage.getItem(taskStorageKey);
   return storedTasks ? JSON.parse(storedTasks) : [];
 }
 
@@ -14,7 +14,7 @@ function getStoredTasks() {
  * Saves the complete task list in localStorage.
  */
 function saveStoredTasks(tasks) {
-  localStorage.setItem(TASK_STORAGE_KEY, JSON.stringify(tasks));
+  localStorage.setItem(taskStorageKey, JSON.stringify(tasks));
 }
 
 

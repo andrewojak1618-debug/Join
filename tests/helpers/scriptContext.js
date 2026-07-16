@@ -2,7 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 
-const PROJECT_ROOT = path.resolve(__dirname, "..", "..");
+const projectRoot = path.resolve(__dirname, "..", "..");
 
 /**
  * Executes classic browser scripts in an isolated context for unit tests.
@@ -10,7 +10,7 @@ const PROJECT_ROOT = path.resolve(__dirname, "..", "..");
 function loadBrowserScripts(relativePaths, globals = {}) {
   const context = vm.createContext({ console, ...globals });
   relativePaths.forEach((relativePath) => {
-    const absolutePath = path.join(PROJECT_ROOT, relativePath);
+    const absolutePath = path.join(projectRoot, relativePath);
     const source = fs.readFileSync(absolutePath, "utf8");
     vm.runInContext(source, context, { filename: absolutePath });
   });

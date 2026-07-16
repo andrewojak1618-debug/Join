@@ -6,16 +6,16 @@ const {
   toPlainValue,
 } = require("./helpers/scriptContext");
 
-const SHARED_SCRIPT = "components/js/shared.js";
-const TASK_STORE_SCRIPT = "components/js/tasks-store.js";
-const CONTACTS_SCRIPT = "components/js/contacts.js";
+const sharedScript = "components/js/shared.js";
+const taskStoreScript = "components/js/tasksStore.js";
+const contactsScript = "components/js/contacts.js";
 
 /**
  * Loads the shared assignee helpers in isolation.
  * @returns {Object} Context exposing the shared helper functions.
  */
 function createSharedContext() {
-  return loadBrowserScripts([SHARED_SCRIPT]);
+  return loadBrowserScripts([sharedScript]);
 }
 
 
@@ -43,7 +43,7 @@ function createMigrationContext(contacts) {
   const window = { joinFirebaseTasks: createFirebaseTaskAdapter(updates) };
   const loadContactsFromStore = async () => contacts;
   const context = loadBrowserScripts(
-    [SHARED_SCRIPT, TASK_STORE_SCRIPT],
+    [sharedScript, taskStoreScript],
     { loadContactsFromStore, window },
   );
   return { context, updates };
@@ -55,7 +55,7 @@ function createMigrationContext(contacts) {
  * @returns {Object} Context exposing contact task cleanup functions.
  */
 function createContactContext() {
-  return loadBrowserScripts([SHARED_SCRIPT, CONTACTS_SCRIPT]);
+  return loadBrowserScripts([sharedScript, contactsScript]);
 }
 
 

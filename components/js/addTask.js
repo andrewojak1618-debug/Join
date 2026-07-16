@@ -1,5 +1,5 @@
-const ADD_TASK_REDIRECT_DELAY = 900;
-const ADD_TASK_STATUSES = ["todo", "in-progress", "feedback", "done"];
+const addTaskRedirectDelay = 900;
+const addTaskStatuses = ["todo", "in-progress", "feedback", "done"];
 let addTaskRedirectTimer;
 
 
@@ -135,7 +135,7 @@ function hideAddTaskErrorMessage() {
  */
 function redirectToBoardAfterSuccess() {
   clearAddTaskRedirect();
-  addTaskRedirectTimer = setTimeout(() => navigateToPage("board"), ADD_TASK_REDIRECT_DELAY);
+  addTaskRedirectTimer = setTimeout(() => navigateToPage("board"), addTaskRedirectDelay);
 }
 
 
@@ -179,7 +179,7 @@ function getAddTaskData() {
  */
 function getAddTaskStatus() {
   const status = new URLSearchParams(window.location.search).get("status");
-  return ADD_TASK_STATUSES.includes(status) ? status : "todo";
+  return addTaskStatuses.includes(status) ? status : "todo";
 }
 
 

@@ -201,7 +201,7 @@ async function createContact(values) {
  * Picks a random avatar color for a new contact.
  */
 function getRandomContactColor() {
-  return CONTACT_COLORS[Math.floor(Math.random() * CONTACT_COLORS.length)];
+  return contactColors[Math.floor(Math.random() * contactColors.length)];
 }
 
 
