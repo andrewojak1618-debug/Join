@@ -1,4 +1,4 @@
-const BOARD_EDIT_FIELD_NAMES = {
+const boardEditFieldNames = {
   boardTaskEditTitle: "Title",
   boardTaskEditDueDate: "DueDate",
 };
@@ -97,7 +97,7 @@ function initBoardEditValidation() {
  * @param {Event} event - Input or focusout event from the edit form.
  */
 function handleBoardEditValidationEvent(event) {
-  const fieldName = BOARD_EDIT_FIELD_NAMES[event.target.id];
+  const fieldName = boardEditFieldNames[event.target.id];
   if (!fieldName) return;
   const shouldValidate =
     event.type === "focusout" || event.target.getAttribute("aria-invalid") === "true";
@@ -110,7 +110,7 @@ function handleBoardEditValidationEvent(event) {
  * @returns {boolean} True when every required field is valid.
  */
 function validateBoardEditForm() {
-  const isValid = Object.values(BOARD_EDIT_FIELD_NAMES)
+  const isValid = Object.values(boardEditFieldNames)
     .map(validateBoardEditField)
     .every(Boolean);
   if (!isValid) focusFirstInvalidBoardEditField();
@@ -162,7 +162,7 @@ function setBoardEditFieldError(fieldName, message) {
  * Clears both board edit validation messages.
  */
 function resetBoardEditValidation() {
-  Object.values(BOARD_EDIT_FIELD_NAMES).forEach((fieldName) => {
+  Object.values(boardEditFieldNames).forEach((fieldName) => {
     setBoardEditFieldError(fieldName, "");
   });
 }

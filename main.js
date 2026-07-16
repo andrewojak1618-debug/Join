@@ -1,34 +1,28 @@
 const routes = {
   login: {
     title: "Join | Log in",
-    file: "./index.html",
     template: "./components/html/pages/login.html",
   },
   signup: {
     title: "Join | Sign up",
-    file: "./signup.html",
     template: "./components/html/pages/signup.html",
   },
   "privacy-policy": {
     title: "Join | Privacy Policy",
-    file: "./privacy-policy.html",
     template: "./components/html/pages/privacy-policy.html",
   },
   "legal-notice": {
     title: "Join | Legal Notice",
-    file: "./legal-notice.html",
     template: "./components/html/pages/legal-notice.html",
   },
   summary: {
     title: "Join | Summary",
-    file: "./summary.html",
     template: "./components/html/pages/summary.html",
     protected: true,
     usesLayout: true,
   },
   "add-task": {
     title: "Join | Add Task",
-    file: "./add-task.html",
     template: "./components/html/pages/add-task.html",
     protected: true,
     usesLayout: true,
@@ -36,7 +30,6 @@ const routes = {
   },
   board: {
     title: "Join | Board",
-    file: "./board.html",
     template: "./components/html/pages/board.html",
     protected: true,
     usesLayout: true,
@@ -44,7 +37,6 @@ const routes = {
   },
   contacts: {
     title: "Join | Contacts",
-    file: "./contacts.html",
     template: "./components/html/pages/contacts.html",
     protected: true,
     usesLayout: true,
@@ -52,7 +44,6 @@ const routes = {
   },
   help: {
     title: "Join | Help",
-    file: "./help.html",
     template: "./components/html/pages/help.html",
     protected: true,
     usesLayout: true,
@@ -68,6 +59,7 @@ document.addEventListener("DOMContentLoaded", initApp);
  */
 async function initApp() {
   document.addEventListener("click", handlePageLinkClick);
+  window.addEventListener("popstate", handleBrowserNavigation);
   if (shouldStartWithSignupTransition() || shouldStartWithLoginTransition()) {
     await renderSignupWithTransition();
     warmHtmlCache();
@@ -87,6 +79,7 @@ async function renderCurrentPage(options = {}) {
   const page = getAuthorizedPage();
   const route = routes[page];
   const content = await getHtmlContent(route.template);
+  document.body.dataset.page = page;
   document.title = route.title;
   await renderPageContent(content, options.animate, page);
   await initPage(page);
@@ -206,7 +199,7 @@ function showRenderedPage(app, animatePage) {
  * @returns {string} The route key declared by the current HTML document.
  */
 function getValidPage() {
-  const page = document.body.dataset.page;
+  const page = new URLSearchParams(window.location.search).get("page");
   return routes[page] ? page : "login";
 }
 
@@ -251,7 +244,7 @@ function isProtectedPage(page) {
  * Replaces the URL with the login page when access is not allowed.
  */
 function redirectToLoginPage() {
-  window.location.replace(routes.login.file);
+  window.history.replaceState({}, "", createPageUrl("login"));
   return "login";
 }
 
@@ -261,12 +254,14 @@ function redirectToLoginPage() {
  * @param {MouseEvent} event - The document click event.
  */
 function handlePageLinkClick(event) {
+  if (event.defaultPrevented || event.button !== 0) return;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
   const target =
     event.target.nodeType === Node.ELEMENT_NODE
       ? event.target
       : event.target.parentElement;
   const link = target.closest("a[data-page], button[data-page]");
-  if (!link || link.matches("a[href]")) return;
+  if (!link || link.matches('a[target="_blank"], a[download]')) return;
   event.preventDefault();
   navigateToPage(link.dataset.page, getLinkParams(link));
 }
@@ -290,18 +285,45 @@ function getLinkParams(link) {
 
 
 /**
- * Opens the HTML document belonging to a route with optional URL parameters.
+ * Renders a route and records its URL without reloading the document.
  * @param {string} page - The route key of the target page.
  * @param {Object} [params] - Extra URL parameters for the target page.
  */
-function navigateToPage(page, params = {}) {
-  const route = routes[page];
-  if (!route || pageTransitionRunning) return;
-  const target = new URL(route.file, window.location.href);
+async function navigateToPage(page, params = {}) {
+  if (!routes[page] || pageTransitionRunning) return;
+  window.history.pushState({}, "", createPageUrl(page, params));
+  if (page === "signup" && params.transition === "signup") {
+    await renderSignupWithTransition();
+  } else {
+    await renderCurrentPage();
+  }
+  window.scrollTo({ top: 0, left: 0 });
+}
+
+
+/**
+ * Builds the index URL for a route and optional page parameters.
+ * @param {string} page - The route key for the requested page.
+ * @param {Object} [params] - Additional query parameters.
+ * @returns {string} The relative application URL.
+ */
+function createPageUrl(page, params = {}) {
+  const target = new URL("./index.html", window.location.href);
+  if (page !== "login") target.searchParams.set("page", page);
   Object.entries(params).forEach(([key, value]) => {
     target.searchParams.set(key, value);
   });
-  window.location.assign(target.href);
+  return target.pathname + target.search;
+}
+
+
+/**
+ * Renders the route selected by the browser Back or Forward action.
+ */
+async function handleBrowserNavigation() {
+  if (pageTransitionRunning) return;
+  await renderCurrentPage();
+  window.scrollTo({ top: 0, left: 0 });
 }
 
 

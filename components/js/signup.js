@@ -1,4 +1,4 @@
-const AUTH_EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const authEmailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 let signupSubmitPending = false;
 
 
@@ -168,7 +168,7 @@ function getSignupErrorMessage() {
  * @returns {boolean} True when the entered email matches the email pattern.
  */
 function isEmailValid() {
-  return AUTH_EMAIL_PATTERN.test(getSignupEmail());
+  return authEmailPattern.test(getSignupEmail());
 }
 
 

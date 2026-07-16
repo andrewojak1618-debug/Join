@@ -1,4 +1,4 @@
-const AUTH_ERROR_MESSAGES = {
+const authErrorMessages = {
   "auth/firebase-unavailable":
     "Authentication could not be loaded. Please try again later.",
   "auth/invalid-credential": "Please check your email and password.",
@@ -91,5 +91,5 @@ function createFirebaseUnavailableError() {
  */
 function getAuthErrorMessage(error) {
   const code = error && error.code;
-  return AUTH_ERROR_MESSAGES[code] || "Authentication is currently not available.";
+  return authErrorMessages[code] || "Authentication is currently not available.";
 }

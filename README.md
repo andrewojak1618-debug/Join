@@ -7,17 +7,17 @@ Join is a learning project for a Kanban project management tool.
 The app expects a local Firebase web config file at:
 
 ```text
-components/js/firebase-config.js
+components/js/firebaseConfig.js
 ```
 
 This file is intentionally ignored by Git. To run Firebase features locally,
 copy the example file:
 
 ```powershell
-copy components\js\firebase-config.example.js components\js\firebase-config.js
+copy components\js\firebaseConfig.example.js components\js\firebaseConfig.js
 ```
 
-Then replace the placeholder values in `firebase-config.js` with the Firebase
+Then replace the placeholder values in `firebaseConfig.js` with the Firebase
 web app config from the project.
 
 Without this local file, Firebase cannot initialize. Email/password login,
@@ -60,16 +60,16 @@ $config = (
 ).Trim()
 
 "window.joinFirebaseConfig = $config;`r`n" |
-  Set-Content -Encoding utf8 .\components\js\firebase-config.js
+  Set-Content -Encoding utf8 .\components\js\firebaseConfig.js
 ```
 
 Verify the generated file without printing its complete contents:
 
 ```powershell
-Test-Path .\components\js\firebase-config.js
-node --check .\components\js\firebase-config.js
-Select-String -Path .\components\js\firebase-config.js -Pattern "projectId|authDomain"
-git check-ignore -v .\components\js\firebase-config.js
+Test-Path .\components\js\firebaseConfig.js
+node --check .\components\js\firebaseConfig.js
+Select-String -Path .\components\js\firebaseConfig.js -Pattern "projectId|authDomain"
+git check-ignore -v .\components\js\firebaseConfig.js
 ```
 
 The selected config must point to the Firebase project `join-teamjob`. Start

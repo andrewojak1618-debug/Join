@@ -5,8 +5,8 @@ const {
   loadBrowserScripts,
 } = require("./helpers/scriptContext");
 
-const CONTACT_TEMPLATES_SCRIPT = "components/js/contacts-templates.js";
-const SHARED_SCRIPT = "components/js/shared.js";
+const contactTemplatesScript = "components/js/contactsTemplates.js";
+const sharedScript = "components/js/shared.js";
 
 
 /**
@@ -14,7 +14,7 @@ const SHARED_SCRIPT = "components/js/shared.js";
  * @returns {Object} Context exposing the abbreviation function.
  */
 function createContactNameContext() {
-  return loadBrowserScripts([CONTACT_TEMPLATES_SCRIPT]);
+  return loadBrowserScripts([contactTemplatesScript]);
 }
 
 
@@ -24,7 +24,7 @@ function createContactNameContext() {
  */
 function createContactTemplateContext() {
   return loadBrowserScripts(
-    [SHARED_SCRIPT, CONTACT_TEMPLATES_SCRIPT],
+    [sharedScript, contactTemplatesScript],
     { getContactInitials: () => "VR" },
   );
 }

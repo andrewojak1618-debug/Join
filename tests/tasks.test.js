@@ -7,9 +7,9 @@ const {
   toPlainValue,
 } = require("./helpers/scriptContext");
 
-const TASKS_SCRIPT = "components/js/tasks.js";
-const TASK_STORE_SCRIPT = "components/js/tasks-store.js";
-const TASK_STORAGE_KEY = "joinTasks";
+const tasksScript = "components/js/tasks.js";
+const taskStoreScript = "components/js/tasksStore.js";
+const taskStorageKey = "joinTasks";
 
 /**
  * Loads the local task logic with optional tasks in memory.
@@ -18,10 +18,10 @@ const TASK_STORAGE_KEY = "joinTasks";
  */
 function createTaskContext(initialTasks) {
   const initialEntries = initialTasks
-    ? { [TASK_STORAGE_KEY]: JSON.stringify(initialTasks) }
+    ? { [taskStorageKey]: JSON.stringify(initialTasks) }
     : {};
   const localStorage = createMemoryStorage(initialEntries);
-  const context = loadBrowserScripts([TASKS_SCRIPT], { localStorage });
+  const context = loadBrowserScripts([tasksScript], { localStorage });
   return { context, localStorage };
 }
 
@@ -35,7 +35,7 @@ function createFirebaseTaskContext(firebaseTasks) {
   const localStorage = createMemoryStorage();
   const window = { joinFirebaseTasks: firebaseTasks };
   const context = loadBrowserScripts(
-    [TASKS_SCRIPT, TASK_STORE_SCRIPT], { localStorage, window }
+    [tasksScript, taskStoreScript], { localStorage, window }
   );
   return { context, localStorage };
 }
@@ -102,5 +102,5 @@ test("uses the Firebase adapter when it is available", async () => {
   const task = { id: "task-1", title: "Move me", status: "done" };
   await context.updateTaskInStore(task);
   assert.deepEqual(calls, [{ taskId: task.id, task }]);
-  assert.equal(localStorage.getItem(TASK_STORAGE_KEY), null);
+  assert.equal(localStorage.getItem(taskStorageKey), null);
 });
