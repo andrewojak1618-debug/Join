@@ -126,7 +126,8 @@ function openBoardTaskDetail(taskId, tasks) {
   fillBoardTaskDetail(task);
   showBoardDetailViewMode();
   getBoardDetailOverlay().hidden = false;
-  document.body.classList.add("no-scroll");    
+  getBoardDetailCard().scrollTop = 0;
+  lockPageScroll();   
 }
 
 
@@ -135,7 +136,7 @@ function openBoardTaskDetail(taskId, tasks) {
  */
 function closeBoardTaskDetail() {
   getBoardDetailOverlay().hidden = true;
-  document.body.classList.remove("no-scroll");
+  unlockPageScroll();
   activeBoardTaskId = "";
   showBoardDetailViewMode();
 }
@@ -249,6 +250,14 @@ function getBoardDetailCloseButton() {
  */
 function getBoardDetailView() {
   return document.getElementById("boardTaskDetailView");
+}
+
+
+/**
+ * @returns {HTMLElement} The scrollable card inside the task detail dialog.
+ */
+function getBoardDetailCard() {
+  return document.getElementById("boardTaskDetailCard");
 }
 
 
