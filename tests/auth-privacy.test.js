@@ -6,8 +6,8 @@ const {
   loadBrowserScripts,
 } = require("./helpers/scriptContext");
 
-const AUTH_SCRIPT = "components/js/auth.js";
-const SIGNUP_SCRIPT = "components/js/signup.js";
+const authScript = "components/js/auth.js";
+const signupScript = "components/js/signup.js";
 
 /**
  * Creates the signup controls used by the auth validation helpers.
@@ -50,7 +50,7 @@ function createAuthContext() {
   const openedPages = [];
   const window = { open: (...args) => openedPages.push(args) };
   const document = createAuthDocument(elements);
-  const context = loadBrowserScripts([AUTH_SCRIPT, SIGNUP_SCRIPT], {
+  const context = loadBrowserScripts([authScript, signupScript], {
     document, sessionStorage, window,
   });
   return { context, elements, openedPages, sessionStorage };
@@ -63,7 +63,7 @@ function createAuthContext() {
  */
 function createPrivacyOpenEvent() {
   return {
-    currentTarget: { href: "http://localhost/privacy-policy.html" },
+    currentTarget: { href: "http://localhost/index.html?page=privacy-policy" },
     prevented: false,
     preventDefault() { this.prevented = true; },
   };

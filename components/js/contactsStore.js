@@ -1,7 +1,7 @@
-const CONTACT_STORAGE_KEY = "joinContacts";
-const ACCOUNT_CONTACT_PREFIX = "account-";
-const GUEST_USER_TYPES = ["firebase-guest", "guest"];
-const CONTACT_COLORS = [
+const contactStorageKey = "joinContacts";
+const accountContactPrefix = "account-";
+const guestUserTypes = ["firebase-guest", "guest"];
+const contactColors = [
   "#FF7A00", "#9327FF", "#6E52FF", "#FC71FF", "#FFBB2B",
   "#1FD7C1", "#FF4646", "#00BEE8", "#FF745E", "#0038FF",
 ];
@@ -95,7 +95,7 @@ function canCreateAccountContact(user) {
   return Boolean(
     user?.uid &&
     user?.email &&
-    !GUEST_USER_TYPES.includes(user.type),
+    !guestUserTypes.includes(user.type),
   );
 }
 
@@ -106,7 +106,7 @@ function canCreateAccountContact(user) {
  * @returns {string} The prefixed account contact id.
  */
 function getAccountContactId(uid) {
-  return ACCOUNT_CONTACT_PREFIX + uid;
+  return accountContactPrefix + uid;
 }
 
 
@@ -174,7 +174,7 @@ function getAccountContactColor(uid) {
     (total, character) => total + character.charCodeAt(0),
     0,
   );
-  return CONTACT_COLORS[colorIndex % CONTACT_COLORS.length];
+  return contactColors[colorIndex % contactColors.length];
 }
 
 
@@ -297,7 +297,7 @@ function isContactFirestoreReady() {
  * Reads and parses the stored contacts from localStorage.
  */
 function getLocalContacts() {
-  const storedContact = localStorage.getItem(CONTACT_STORAGE_KEY);
+  const storedContact = localStorage.getItem(contactStorageKey);
   return storedContact ? JSON.parse(storedContact) : [];
 }
 
@@ -306,5 +306,5 @@ function getLocalContacts() {
  * Writes the given contact list as JSON into localStorage.
  */
 function saveLocalContacts(contacts) {
-  localStorage.setItem(CONTACT_STORAGE_KEY, JSON.stringify(contacts));
+  localStorage.setItem(contactStorageKey, JSON.stringify(contacts));
 }
