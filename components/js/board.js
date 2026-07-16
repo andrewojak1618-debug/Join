@@ -115,7 +115,7 @@ function handleBoardCardKey(event, card, tasks) {
 
 
 /**
- * Opens the detail dialog for the task with the given id.
+ * Opens the detail dialog for the task with the given id and locks page scrolling.
  * @param {string} taskId - The id of the task to show.
  * @param {Object[]} tasks - All tasks shown on the board.
  */
@@ -126,14 +126,16 @@ function openBoardTaskDetail(taskId, tasks) {
   fillBoardTaskDetail(task);
   showBoardDetailViewMode();
   getBoardDetailOverlay().hidden = false;
+  document.body.classList.add("no-scroll");    
 }
 
 
 /**
- * Closes the detail dialog and resets it to view mode.
+ * Closes the detail dialog, restores page scrolling and resets it to view mode.
  */
 function closeBoardTaskDetail() {
   getBoardDetailOverlay().hidden = true;
+  document.body.classList.remove("no-scroll");
   activeBoardTaskId = "";
   showBoardDetailViewMode();
 }
