@@ -25,6 +25,19 @@
   box-shadow: var(--shadow-soft);
 }
 
+.board-detail-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.board-detail-card::-webkit-scrollbar-track {
+  margin: 24px 0;
+}
+
+.board-detail-card::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: 4px;
+}
+
 .board-detail-close {
   position: absolute;
   top: 18px;
