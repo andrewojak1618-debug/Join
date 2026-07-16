@@ -265,8 +265,8 @@ function handlePageLinkClick(event) {
     event.target.nodeType === Node.ELEMENT_NODE
       ? event.target
       : event.target.parentElement;
-  const link = target.closest("[data-page]");
-  if (!link || link === document.body || link.matches("a[href]")) return;
+  const link = target.closest("a[data-page], button[data-page]");
+  if (!link || link.matches("a[href]")) return;
   event.preventDefault();
   navigateToPage(link.dataset.page, getLinkParams(link));
 }
@@ -306,12 +306,24 @@ function navigateToPage(page, params = {}) {
 
 
 /**
+ * Runs synchronous startup code for public and static pages.
+ * @param {string} page - The route key of the rendered page.
+ */
+function initStaticPage(page) {
+  if (page === "login") initLoginValidation();
+  if (page === "signup") initSignupValidation();
+  if (page === "help") initHelpPage();
+  if (page === "privacy-policy") initPrivacyLanguageSwitch();
+  if (page === "legal-notice") initLegalNoticeLanguageSwitch();
+}
+
+
+/**
  * Runs the page-specific startup code after the markup was rendered.
  * @param {string} page - The route key of the rendered page.
  */
 async function initPage(page) {
-  if (page === "login") initLoginValidation();
-  if (page === "signup") initSignupValidation();
+  initStaticPage(page);
   if (page === "contacts") await initContacts();
   if (usesAppShell(page) || isInternalLegalDocPage(page)) {
     initSummaryUser();
@@ -320,9 +332,6 @@ async function initPage(page) {
   if (page === "summary") await initSummaryMetrics();
   if (page === "add-task") await initAddTaskValidation();
   if (page === "board") await initBoardTasks();
-  if (page === "help") initHelpPage();
-  if (page === "privacy-policy") initPrivacyLanguageSwitch();
-  if (page === "legal-notice") initLegalNoticeLanguageSwitch();
 }
 
 
