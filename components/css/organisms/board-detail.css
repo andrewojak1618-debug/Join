@@ -227,6 +227,11 @@
   color: var(--color-accent-light);
 }
 
+.board-detail-action img {
+  width: 20px;
+  height: 20px;
+}
+
 .board-detail-actions__divider {
   width: 1px;
   align-self: stretch;

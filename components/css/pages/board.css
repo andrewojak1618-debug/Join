@@ -131,6 +131,41 @@
   gap: 10px;
 }
 
+.board-card__subtasks {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  border: unset;
+  background: transparent;
+  text-align: left;
+}
+
+.board-card__subtasks::after {
+  content: attr(data-progress-detail);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 2;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 4px);
+  transition: opacity 80ms ease, transform 80ms ease;
+  pointer-events: none;
+}
+
+.board-card__subtasks:hover::after,
+.board-card__subtasks:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
 .board-card__progress {
   width: 112px;
   height: 8px;
