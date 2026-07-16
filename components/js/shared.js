@@ -1,4 +1,7 @@
-﻿/**
+﻿let lockedScrollY = 0;
+
+
+/**
  * @returns {Object|null} The signed-in user from localStorage, or null.
  */
 function getStoredUser() {
@@ -89,4 +92,24 @@ function isTaskAssigneeContact(assignee, contact) {
   const reference = normalizeTaskAssigneeReference(assignee);
   if (reference.id && contact.id) return reference.id === String(contact.id);
   return reference.name === contact.name;
+}
+
+
+/**
+ * Locks page scrolling while a dialog is open and stores the scroll position.
+ */
+function lockPageScroll() {
+  lockedScrollY = window.scrollY;
+  document.body.style.top = `-${lockedScrollY}px`;
+  document.body.classList.add("no-scroll");
+}
+
+
+/**
+ * Restores page scrolling at the previously stored scroll position.
+ */
+function unlockPageScroll() {
+  document.body.classList.remove("no-scroll");
+  document.body.style.top = "";
+  window.scrollTo({ top: lockedScrollY, behavior: "instant" });
 }
