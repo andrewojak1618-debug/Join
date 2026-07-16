@@ -214,6 +214,18 @@
   gap: 12px;
 }
 
+.board-detail-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.board-detail-actions img {
+  width: 20px;
+  height: 20px;
+}
+
 .board-detail-primary,
 .board-detail-secondary {
   min-height: 44px;
