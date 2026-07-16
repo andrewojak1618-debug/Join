@@ -12,9 +12,11 @@ function getBoardTaskTemplate(task) {
         draggable="true"
         tabindex="0"
        >
+      ${getBoardCardMoveTemplate(task)}
       <span class="board-card__category board-card__category--${getBoardCategoryClass(task.category)}">
         ${formatBoardCategory(task.category)}
       </span>
+
       <h3>${escapeBoardText(task.title)}</h3>
       <p>${getBoardShortText(task.description || "No description")}</p>
       ${getBoardSubtaskTemplate(task.subtasks)}
@@ -257,4 +259,44 @@ function getBoardEditAssigneeTemplate(contact, assignedTo) {
       <span>${escapeBoardText(contact.name)}</span>
     </label>
   `;
+}
+
+
+/**
+ * @param {Object} task - Task rendered on the card.
+ * @returns {string} HTML markup for the mobile move button and its menu.
+ */
+function getBoardCardMoveTemplate(task) {
+  const options = getBoardMoveTargets(task.status)
+    .map((target) => `
+      <button type="button" class="board-card-move__option" data-move-status="${target.value}">
+        <img src="./components/assets/img/icons/${target.icon}.svg" alt="" aria-hidden="true" />
+        ${target.label}
+      </button>`)
+    .join("");
+  return `
+    <div class="board-card-move">
+      <button type="button" class="board-card-move__toggle" aria-haspopup="true" aria-expanded="false" aria-label="Move task to another column">
+        <img src="./components/assets/img/icons/change_task_mobile.svg" alt="" aria-hidden="true" />
+      </button>
+      <div class="board-card-move__menu" hidden>
+        <span class="board-card-move__title">Move to</span>
+        ${options}
+      </div>
+    </div>`;
+}
+
+
+/**
+ * @param {string} currentStatus - Status of the task's current column.
+ * @returns {{value: string, label: string, icon: string}[]} Neighbor columns as targets.
+ */
+function getBoardMoveTargets(currentStatus) {
+  const order = ["todo", "in-progress", "feedback", "done"];
+  const labels = { todo: "To do", "in-progress": "In progress", feedback: "Await feedback", done: "Done" };
+  const index = order.indexOf(currentStatus);
+  const targets = [];
+  if (index > 0) targets.push({ value: order[index - 1], label: labels[order[index - 1]], icon: "arrow_upward" });
+  if (index < order.length - 1) targets.push({ value: order[index + 1], label: labels[order[index + 1]], icon: "arrow_downward" });
+  return targets;
 }

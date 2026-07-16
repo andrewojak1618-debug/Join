@@ -69,6 +69,7 @@ function addBoardCardListeners(card, tasks) {
     handleBoardDragStart(event, card),
   );
   card.addEventListener("dragend", handleBoardDragEnd);
+  addBoardCardMoveListeners(card, tasks);
 }
 
 
@@ -81,6 +82,7 @@ function initBoardDetailControls() {
   getBoardDetailCloseButton().addEventListener("click", closeBoardTaskDetail);
   overlay.addEventListener("click", handleBoardDetailBackdrop);
   document.addEventListener("keydown", handleBoardDetailEscape);
+  document.addEventListener("click", closeAllBoardCardMoveMenus);
   initBoardDetailActionControls();
   overlay.dataset.eventsReady = "true";
 }
@@ -114,9 +116,72 @@ function initBoardDetailActionControls() {
  * @param {Object[]} tasks - All tasks shown on the board.
  */
 function handleBoardCardKey(event, card, tasks) {
+  if (event.target !== card) return;
   if (event.key !== "Enter" && event.key !== " ") return;
   event.preventDefault();
   openBoardTaskDetail(card.dataset.taskId, tasks);
+}
+
+
+/**
+ * Wires the mobile move menu controls of one board card.
+ * @param {HTMLElement} card - The board card element.
+ * @param {Object[]} tasks - All tasks shown on the board.
+ */
+function addBoardCardMoveListeners(card, tasks) {
+  const toggle = card.querySelector(".board-card-move__toggle");
+  if (!toggle) return;
+  toggle.addEventListener("click", (event) => toggleBoardCardMoveMenu(event, card));
+  card.querySelectorAll("[data-move-status]").forEach((option) => {
+    option.addEventListener("click", (event) => handleBoardCardMoveOption(event, card, tasks));
+  });
+}
+
+
+/**
+ * Opens or closes the move menu of one card and closes all other menus.
+ * @param {MouseEvent} event - The toggle button click event.
+ * @param {HTMLElement} card - The board card element.
+ */
+function toggleBoardCardMoveMenu(event, card) {
+  event.stopPropagation();
+  const menu = card.querySelector(".board-card-move__menu");
+  const shouldOpen = menu.hidden;
+  closeAllBoardCardMoveMenus();
+  menu.hidden = !shouldOpen;
+  card.querySelector(".board-card-move__toggle").setAttribute("aria-expanded", String(shouldOpen));
+}
+
+
+/**
+ * Closes every open move menu on the board.
+ */
+function closeAllBoardCardMoveMenus() {
+  document.querySelectorAll(".board-card-move__menu:not([hidden])").forEach((menu) => {
+    menu.hidden = true;
+  });
+  document.querySelectorAll('.board-card-move__toggle[aria-expanded="true"]').forEach((toggle) => {
+    toggle.setAttribute("aria-expanded", "false");
+  });
+}
+
+
+/**
+ * Moves the card's task to the picked column and re-renders the board.
+ * @param {MouseEvent} event - The option button click event.
+ * @param {HTMLElement} card - The board card element.
+ * @param {Object[]} tasks - All tasks shown on the board.
+ */
+async function handleBoardCardMoveOption(event, card, tasks) {
+  event.stopPropagation();
+  const status = event.currentTarget.dataset.moveStatus;
+  const task = tasks.find((currentTask) => currentTask.id === card.dataset.taskId);
+  if (!task) return;
+  try {
+    await moveBoardTaskToStatus(task, status);
+  } catch (error) {
+    showBoardToast("Task status could not be updated.");
+  }
 }
 
 
