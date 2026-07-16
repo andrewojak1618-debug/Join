@@ -1,6 +1,7 @@
 let activeBoardTasks = [];
 let activeBoardTaskId = "";
 
+
 /**
  * Loads tasks from the task store and wires the board interactions.
  */
@@ -15,6 +16,7 @@ async function initBoardTasks() {
   initBoardSearch();
 }
 
+
 /**
  * Renders every board column with the tasks matching its status.
  * @param {Object[]} tasks - All tasks shown on the board.
@@ -24,6 +26,7 @@ function renderBoardColumns(tasks) {
     renderBoardColumn(taskList, tasks);
   });
 }
+
 
 /**
  * Fills one column with its task cards or an empty-state message.
@@ -38,6 +41,7 @@ function renderBoardColumn(taskList, tasks) {
     : getBoardEmptyTemplate(status);
 }
 
+
 /**
  * Adds click and keyboard handling for opening, closing and editing task details.
  */
@@ -47,6 +51,7 @@ function initBoardTaskDetails(tasks) {
     .forEach((card) => addBoardCardListeners(card, tasks));
   initBoardDetailControls();
 }
+
 
 /**
  * Wires the click, keyboard and drag events of one board card.
@@ -66,6 +71,7 @@ function addBoardCardListeners(card, tasks) {
   card.addEventListener("dragend", handleBoardDragEnd);
 }
 
+
 /**
  * Wires all buttons and events of the task detail dialog once.
  */
@@ -78,6 +84,7 @@ function initBoardDetailControls() {
   initBoardDetailActionControls();
   overlay.dataset.eventsReady = "true";
 }
+
 
 /**
  * Wires the edit, delete, form and status controls of the detail dialog.
@@ -99,6 +106,7 @@ function initBoardDetailActionControls() {
   initBoardEditDropdowns();
 }
 
+
 /**
  * Opens the task detail when a card is activated via Enter or Space.
  * @param {KeyboardEvent} event - The keydown event.
@@ -110,6 +118,7 @@ function handleBoardCardKey(event, card, tasks) {
   event.preventDefault();
   openBoardTaskDetail(card.dataset.taskId, tasks);
 }
+
 
 /**
  * Opens the detail dialog for the task with the given id and locks page scrolling.
@@ -127,6 +136,7 @@ function openBoardTaskDetail(taskId, tasks) {
   lockPageScroll();
 }
 
+
 /**
  * Closes the detail dialog, restores page scrolling and resets it to view mode.
  */
@@ -137,6 +147,7 @@ function closeBoardTaskDetail() {
   showBoardDetailViewMode();
 }
 
+
 /**
  * Closes the detail dialog when the backdrop is clicked.
  * @param {MouseEvent} event - The click event.
@@ -145,6 +156,7 @@ function handleBoardDetailBackdrop(event) {
   if (event.target === getBoardDetailOverlay()) closeBoardTaskDetail();
 }
 
+
 /**
  * Closes the detail dialog when the Escape key is pressed.
  * @param {KeyboardEvent} event - The keydown event.
@@ -152,6 +164,7 @@ function handleBoardDetailBackdrop(event) {
 function handleBoardDetailEscape(event) {
   if (event.key === "Escape") closeBoardTaskDetail();
 }
+
 
 /**
  * Fills the task detail dialog with the content of the given task.
@@ -171,6 +184,7 @@ function fillBoardTaskDetail(task) {
   renderBoardDetailSubtasks(task);
 }
 
+
 /**
  * Fills the meta fields (due date, priority, assignee) of the task detail dialog.
  * @param {Object} task - The task providing the meta information.
@@ -182,10 +196,7 @@ function fillBoardDetailMetaFields(task) {
   );
   fillBoardDetailPriority(task.priority);
   syncBoardMobileStatus(task.status);
-  setBoardDetailText(
-    "boardTaskDetailAssignee",
-    getBoardAssigneeNames(task.assignedTo).join(", ") || "Not assigned",
-  );
+  renderBoardDetailAssignees(task.assignedTo);
 }
 
 
@@ -200,6 +211,40 @@ function fillBoardDetailPriority(priority) {
   icon.hidden = !priority;
 }
 
+
+/**
+ * Renders the assignees as avatar rows in the task detail dialog.
+ * @param {Array|string} assignedTo - Stored task assignment value.
+ */
+async function renderBoardDetailAssignees(assignedTo) {
+  const references = getTaskAssigneeReferences(assignedTo);
+  const target = document.getElementById("boardTaskDetailAssignee");
+  if (!references.length) {
+    target.textContent = "Not assigned";
+    return;
+  }
+  const contacts = await loadBoardDetailContacts();
+  target.innerHTML = references
+    .map((reference) => getBoardDetailAssigneeTemplate(resolveAssigneeDisplay(reference, contacts)))
+    .join("");
+}
+
+
+/**
+ * Combines an assignee reference with the color of its matching contact.
+ * @param {Object} reference - Stored assignee reference with id and name.
+ * @param {Object[]} contacts - All known contacts.
+ * @returns {{name: string, color: string}} Display data for the avatar row.
+ */
+function resolveAssigneeDisplay(reference, contacts) {
+  const contact = contacts.find((item) => isTaskAssigneeContact(reference, item));
+  return {
+    name: reference.name,
+    color: (contact && contact.color) || "var(--color-primary-auth)",
+  };
+}
+
+
 /**
  * Switches the detail dialog back to the read-only view.
  */
@@ -208,6 +253,7 @@ function showBoardDetailViewMode() {
   getBoardEditForm().hidden = true;
 }
 
+
 /**
  * Returns the task currently shown in the detail dialog.
  * @returns {Object|undefined} The active task, if any.
@@ -215,6 +261,7 @@ function showBoardDetailViewMode() {
 function getActiveBoardTask() {
   return activeBoardTasks.find((task) => task.id === activeBoardTaskId);
 }
+
 
 /**
  * Sets the text content of a detail dialog element.
@@ -225,6 +272,7 @@ function setBoardDetailText(elementId, text) {
   document.getElementById(elementId).textContent = text;
 }
 
+
 /**
  * Returns the overlay element of the task detail dialog.
  * @returns {HTMLElement} The detail overlay.
@@ -232,6 +280,7 @@ function setBoardDetailText(elementId, text) {
 function getBoardDetailOverlay() {
   return document.getElementById("boardTaskDetail");
 }
+
 
 /**
  * Returns the close button of the task detail dialog.
@@ -241,6 +290,7 @@ function getBoardDetailCloseButton() {
   return document.getElementById("boardTaskDetailClose");
 }
 
+
 /**
  * Returns the read-only view container of the task detail dialog.
  * @returns {HTMLElement} The detail view container.
@@ -249,12 +299,14 @@ function getBoardDetailView() {
   return document.getElementById("boardTaskDetailView");
 }
 
+
 /**
  * @returns {HTMLElement} The scrollable card inside the task detail dialog.
  */
 function getBoardDetailCard() {
   return document.getElementById("boardTaskDetailCard");
 }
+
 
 /**
  * Maps a category key to its readable display label.
@@ -268,6 +320,7 @@ function formatBoardCategory(category) {
   };
   return categoryLabels[category] || "Task";
 }
+
 
 /**
  * Maps a status key to its readable display label.
@@ -284,6 +337,7 @@ function formatBoardStatus(status) {
   return statusLabels[status] || "here";
 }
 
+
 /**
  * Escapes HTML special characters to prevent markup injection.
  * @param {string} value - The raw text value.
@@ -297,6 +351,7 @@ function escapeBoardText(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
 
 /**
  * Shows a short feedback popup that hides itself after three seconds.
