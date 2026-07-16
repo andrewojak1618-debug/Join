@@ -86,6 +86,17 @@
   gap: 16px;
 }
 
+.board-detail-priority {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: capitalize;
+}
+
+.board-detail-priority img {
+  width: 18px;
+}
+
 .board-detail-list dt {
   color: var(--color-muted);
 }
