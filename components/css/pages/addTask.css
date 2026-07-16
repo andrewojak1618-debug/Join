@@ -172,6 +172,11 @@
   background: var(--color-priority-urgent);
 }
 
+.add-task-priority__option--low:has(input:checked) {
+  border-color: var(--color-priority-low);
+  background: var(--color-priority-low);
+}
+
 .add-task-form__footer {
   display: flex;
   align-items: center;
