@@ -77,6 +77,7 @@
   min-height: 218px;
   padding: 16px;
   cursor: grab;
+  user-select: none;
   transition:
     opacity 120ms ease,
     transform 120ms ease,
@@ -94,6 +95,15 @@
   transform: rotate(4deg);
   pointer-events: none;
   box-shadow: var(--shadow-soft);
+}
+
+.board-card:active {
+  cursor: grabbing;
+}
+
+body.board-dragging,
+body.board-dragging * {
+  cursor: grabbing;
 }
 
 .board-card:focus-visible {

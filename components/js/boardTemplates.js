@@ -9,7 +9,6 @@ function getBoardTaskTemplate(task) {
       <article
         class="board-card"
         data-task-id="${escapeBoardText(task.id)}"
-        draggable="true"
         tabindex="0"
        >
       ${getBoardCardMoveTemplate(task)}

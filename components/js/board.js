@@ -13,7 +13,6 @@ async function initBoardTasks() {
     activeBoardTasks = await loadTasksFromStore();
     renderBoardColumns(activeBoardTasks);
     initBoardTaskDetails(activeBoardTasks);
-    initBoardDropZones(taskLists);
     initBoardSearch();
   } catch (error) {
     showBoardToast("Board tasks could not be loaded.");
@@ -69,10 +68,10 @@ function addBoardCardListeners(card, tasks) {
   card.addEventListener("keydown", (event) =>
     handleBoardCardKey(event, card, tasks),
   );
-  card.addEventListener("dragstart", (event) =>
-    handleBoardDragStart(event, card),
+  card.addEventListener("pointerdown", (event) =>
+    handleBoardCardPointerDown(event, card),
   );
-  card.addEventListener("dragend", handleBoardDragEnd);
+  card.addEventListener("dragstart", (event) => event.preventDefault());
   addBoardCardMoveListeners(card, tasks);
 }
 
