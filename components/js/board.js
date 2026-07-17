@@ -1,5 +1,6 @@
 let activeBoardTasks = [];
 let activeBoardTaskId = "";
+let activeBoardContacts = [];
 
 
 /**
@@ -11,6 +12,7 @@ async function initBoardTasks() {
 
   try {
     activeBoardTasks = await loadTasksFromStore();
+    activeBoardContacts = await loadBoardDetailContacts();
     renderBoardColumns(activeBoardTasks);
     initBoardTaskDetails(activeBoardTasks);
     initBoardSearch();
@@ -278,16 +280,15 @@ function fillBoardDetailPriority(priority) {
  * Renders the assignees as avatar rows in the task detail dialog.
  * @param {Array|string} assignedTo - Stored task assignment value.
  */
-async function renderBoardDetailAssignees(assignedTo) {
+function renderBoardDetailAssignees(assignedTo) {
   const references = getTaskAssigneeReferences(assignedTo);
   const target = document.getElementById("boardTaskDetailAssignee");
   if (!references.length) {
     target.textContent = "Not assigned";
     return;
   }
-  const contacts = await loadBoardDetailContacts();
   target.innerHTML = references
-    .map((reference) => getBoardDetailAssigneeTemplate(resolveAssigneeDisplay(reference, contacts)))
+    .map((reference) => getBoardDetailAssigneeTemplate(resolveAssigneeDisplay(reference, activeBoardContacts)))
     .join("");
 }
 

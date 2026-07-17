@@ -233,18 +233,6 @@ body.board-dragging * {
   font-size: 13px;
 }
 
-.board-card__avatar--1 {
-  background: var(--color-avatar-orange);
-}
-
-.board-card__avatar--2 {
-  background: var(--color-avatar-mint);
-}
-
-.board-card__avatar--3 {
-  background: var(--color-avatar-purple);
-}
-
 .board-card__priority-icon {
   width: 18px;
   height: 18px;

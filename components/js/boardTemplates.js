@@ -111,32 +111,22 @@ function getBoardAssigneeTemplate(assignedTo) {
 
 
 /**
- * Returns display names from current references and legacy assignments.
- *
  * @param {Array|string} assignedTo - Current or legacy task assignments.
- * @returns {string[]} All cleaned assignee names.
- */
-function getBoardAssigneeNames(assignedTo) {
-  return getTaskAssigneeReferences(assignedTo).map((assignee) => assignee.name);
-}
-
-
-/**
- * @param {Array|string} assignedTo - Current or legacy task assignments.
- * @returns {string[]} Up to three names for the card avatars.
+ * @returns {{name: string, color: string}[]} Up to three resolved assignees.
  */
 function getBoardAssignees(assignedTo) {
-  return getBoardAssigneeNames(assignedTo).slice(0, 3);
+  return getTaskAssigneeReferences(assignedTo)
+    .slice(0, 3)
+    .map((reference) => resolveAssigneeDisplay(reference, activeBoardContacts));
 }
 
 
 /**
- * @param {string} name - Assignee name.
- * @param {number} index - Position in the avatar group, used for the color.
+ * @param {{name: string, color: string}} assignee - Resolved display data.
  * @returns {string} HTML markup for one initials avatar.
  */
-function getBoardAvatarTemplate(name, index) {
-  return `<span class="board-card__avatar board-card__avatar--${index + 1}">${getBoardInitials(name)}</span>`;
+function getBoardAvatarTemplate(assignee) {
+  return `<span class="board-card__avatar" style="background-color: ${escapeBoardText(assignee.color)}">${getBoardInitials(assignee.name)}</span>`;
 }
 
 
