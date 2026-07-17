@@ -234,4 +234,44 @@ body[data-page="legal-notice"]
   .privacy-internal-content .privacy-copy h3 {
     font-size: 24px;
   }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--internal
+    .privacy-internal-content {
+    padding-top: 48px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--internal
+    .privacy-internal-content
+    h1 {
+    margin-bottom: 32px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--internal
+    .privacy-copy {
+    gap: 24px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--internal
+    .privacy-copy
+    h3 {
+    font-size: 27px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--internal
+    .summary-topbar__logo {
+    width: 32px;
+    height: 39px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--internal
+    .summary-avatar {
+    width: 40px;
+    height: 40px;
+  }
 }
