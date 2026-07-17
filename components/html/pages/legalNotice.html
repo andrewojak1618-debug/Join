@@ -1,10 +1,43 @@
-<main class="legal-page legal-page--legal legal-view legal-view--external" id="legalExternalView">
-  <a class="legal-page__back" href="./index.html" data-page="login">
-    Back to log in
-  </a>
+<main class="summary-shell legal-view legal-view--external privacy-public-shell" id="legalExternalView">
+  <aside class="summary-sidebar privacy-public-sidebar" aria-label="Public navigation">
+    <a class="summary-sidebar__logo" href="./index.html" data-page="login" aria-label="Go to login">
+      <img src="./components/assets/img/icons/Join logo vector.svg" alt="" />
+    </a>
 
-  <header class="legal-page__header">
-    <h1>Legal Notice</h1>
+    <nav class="summary-nav privacy-public-nav">
+      <a class="summary-nav__item" href="./index.html" data-page="login">
+        <span class="summary-nav__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M10.09 15.59 11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59ZM19 3h-8v2h8v14h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Z" />
+          </svg>
+        </span>
+        <span>Log In</span>
+      </a>
+    </nav>
+
+    <footer class="summary-sidebar__footer">
+      <a href="./privacyPolicy.html" data-page="privacy-policy">Privacy Policy</a>
+      <a class="summary-nav__item--active" href="./legalNotice.html" data-page="legal-notice">
+        Legal notice
+      </a>
+    </footer>
+  </aside>
+
+  <section class="summary-main">
+    <header class="summary-topbar privacy-public-topbar">
+      <img
+        class="summary-topbar__logo"
+        src="./components/assets/img/icons/Logo for Favicon construction.svg"
+        alt=""
+      />
+      <p>Kanban Project Management Tool</p>
+    </header>
+
+    <section class="privacy-internal-content legal-page--legal privacy-public-content"
+      aria-labelledby="legalExternalTitle">
+
+  <header class="privacy-internal-header">
+    <h1 id="legalExternalTitle">Legal Notice</h1>
 
     <label class="language-switch" for="legalLanguageToggle">
       <span>DE</span>
@@ -167,6 +200,8 @@
         business platform.
       </p>
     </article>
+  </section>
+    </section>
   </section>
 </main>
 

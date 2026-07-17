@@ -1,5 +1,37 @@
-/* Legal Notice reuses the shared legal-page styling; only the view toggle is
-   page specific because the internal app-shell sets its own display. */
 .legal-view[hidden] {
   display: none;
+}
+
+@media (min-width: 1280px) {
+  .privacy-internal-content.legal-page--legal {
+    width: 100%;
+    padding-right: 96px;
+    padding-left: 96px;
+  }
+
+  .privacy-internal-content.legal-page--legal h1 {
+    margin-bottom: 26px;
+  }
+
+  .privacy-internal-content.legal-page--legal .privacy-copy h3 {
+    font-size: 27px;
+  }
+
+  .privacy-internal-content.legal-page--legal .privacy-copy {
+    gap: 35px;
+  }
+
+  body[data-page="legal-notice"] .legal-view--internal .summary-topbar,
+  body[data-page="legal-notice"] .privacy-public-topbar {
+    padding-right: 96px;
+    padding-left: 96px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--internal
+    .summary-avatar {
+    width: 56px;
+    height: 56px;
+    border-width: 3px;
+  }
 }

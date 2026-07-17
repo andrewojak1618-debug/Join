@@ -75,6 +75,49 @@
   color: #e7e7e7;
 }
 
+.privacy-public-sidebar .summary-sidebar__footer {
+  gap: 0;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.privacy-public-sidebar .summary-sidebar__footer a,
+.privacy-public-sidebar
+  .summary-sidebar__footer
+  .summary-nav__item--active {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 48px;
+}
+
+body[data-page="privacy-policy"]
+  .privacy-view--internal
+  .summary-sidebar__footer,
+body[data-page="legal-notice"]
+  .legal-view--internal
+  .summary-sidebar__footer {
+  gap: 0;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+body[data-page="privacy-policy"]
+  .privacy-view--internal
+  .summary-sidebar__footer
+  a,
+body[data-page="legal-notice"]
+  .legal-view--internal
+  .summary-sidebar__footer
+  a {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 48px;
+}
+
 .privacy-internal-content {
   width: min(100%, 1120px);
   padding: 112px 48px 80px 84px;
