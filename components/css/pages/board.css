@@ -63,8 +63,7 @@
     box-shadow 120ms ease;
 }
 
-.board-card,
-.board-empty-state {
+.board-card {
   border: 0;
   border-radius: 18px;
   background: var(--color-white);
@@ -248,7 +247,10 @@ body.board-dragging * {
 
 .board-empty-state {
   padding: 18px;
-  color: var(--color-muted);
+  border: 1px dashed var(--color-border-auth);
+  border-radius: 10px;
+  background: var(--color-empty-state);
+  color: var(--color-text-hint);
   text-align: center;
 }
 
