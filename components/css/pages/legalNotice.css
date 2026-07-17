@@ -35,3 +35,53 @@
     border-width: 3px;
   }
 }
+
+@media (max-width: 767px) {
+  body[data-page="legal-notice"]
+    .legal-view--internal
+    .privacy-internal-content {
+    padding-top: 48px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--internal
+    .privacy-internal-content
+    h1 {
+    margin-bottom: 32px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--internal
+    .privacy-copy {
+    gap: 24px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--internal
+    .privacy-copy
+    h3 {
+    font-size: 27px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--internal
+    .privacy-copy
+    p {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--internal
+    .summary-topbar__logo {
+    width: 32px;
+    height: 39px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--internal
+    .summary-avatar {
+    width: 40px;
+    height: 40px;
+  }
+}
