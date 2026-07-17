@@ -152,7 +152,9 @@
   font-size: 21px;
   font-weight: 700;
   white-space: nowrap;
-  transition: color 100ms ease, border-color 100ms ease;
+  transition:
+    color 100ms ease,
+    border-color 100ms ease;
 }
 
 .auth-page--login .auth-form__guest:hover {
@@ -163,35 +165,59 @@
 @media (max-width: 767px) {
   .auth-page--login {
     align-content: start;
-    padding: clamp(16px, 2svh, 32px) 16px clamp(64px, 10svh, 96px);
+    padding: 37px 16px clamp(64px, 10svh, 96px);
+  }
+
+  .auth-logo img {
+    width: 64px;
+    height: 78px;
   }
 
   .auth-signup-hint {
-    position: static;
-    order: 2;
-    margin-top: clamp(16px, 2svh, 32px);
+    position: absolute;
+    top: calc(50% + 315px);
+    left: 50%;
+    right: auto;
+    margin-top: 0;
+    transform: translateX(-50%);
   }
 
   .auth-page--login .auth-card {
-    width: 100%;
-    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    width: min(calc(100% - 32px), 396px);
+    height: 475px;
+    margin-top: 0;
     padding: clamp(20px, 3svh, 36px) 24px;
+    transform: translate(-50%, -50%);
   }
 
   .auth-page--login .auth-form {
     width: 100%;
   }
-}
 
-@media (max-width: 479px) {
+  .auth-page--login .auth-footer {
+    bottom: 30px;
+  }
+
   .auth-form__actions {
+    position: absolute;
+    left: 50%;
+    bottom: 32px;
     width: 100%;
     flex-direction: column;
-    gap: 16px;
+    align-items: center;
+    gap: 21px;
+    margin-top: 0;
+    transform: translateX(-50%);
   }
 
   .auth-page--login .auth-form__submit,
   .auth-page--login .auth-form__guest {
-    width: 100%;
+    width: 180px;
+    min-width: 180px;
+    height: 51px;
   }
 }
