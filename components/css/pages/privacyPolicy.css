@@ -212,7 +212,7 @@ body[data-page="legal-notice"]
   line-height: 1.35;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1279px) {
   .privacy-public-sidebar {
     height: 80px;
     min-height: 80px;
@@ -262,7 +262,9 @@ body[data-page="legal-notice"]
     border-radius: 16px;
     background-color: #091931;
   }
+}
 
+@media (max-width: 767px) {
   .legal-page__header {
     align-items: flex-start;
     flex-direction: column;
