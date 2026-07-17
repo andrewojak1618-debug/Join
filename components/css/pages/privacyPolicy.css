@@ -178,6 +178,10 @@ body[data-page="legal-notice"]
   gap: 24px;
 }
 
+.privacy-mobile-back {
+  display: none;
+}
+
 .privacy-internal-content .privacy-copy {
   max-width: 1040px;
   gap: 36px;
@@ -323,6 +327,25 @@ body[data-page="legal-notice"]
     .summary-avatar {
     width: 40px;
     height: 40px;
+  }
+
+  body[data-page="privacy-policy"] .privacy-mobile-back,
+  body[data-page="legal-notice"] .privacy-mobile-back {
+    position: fixed;
+    top: 130px;
+    right: 19px;
+    z-index: 10;
+    width: 37px;
+    height: 37px;
+    display: grid;
+    place-items: center;
+  }
+
+  body[data-page="privacy-policy"] .privacy-mobile-back img,
+  body[data-page="legal-notice"] .privacy-mobile-back img {
+    width: 37px;
+    height: 37px;
+    display: block;
   }
 
   body[data-page="privacy-policy"]
