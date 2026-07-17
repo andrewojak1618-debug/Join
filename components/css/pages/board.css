@@ -20,6 +20,7 @@
 
 .board-add-task {
   min-height: 48px;
+  gap: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -29,6 +30,11 @@
   color: var(--color-white);
   font-weight: 700;
   text-decoration: none;
+}
+
+.board-add-task img {
+  width: 26px;
+  height: 26px;
 }
 
 .board-columns {
