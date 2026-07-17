@@ -204,13 +204,23 @@ function clearActiveBoardDragCard() {
 
 
 /**
- * Saves the task with its new status and refreshes the board columns.
+ * Moves the task on the board immediately and saves it in the background.
+ * Rolls the move back when saving fails and rethrows for the caller's toast.
+ *
  * @param {Object} task - The task being moved.
  * @param {string} status - The status of the target column.
  */
 async function moveBoardTaskToStatus(task, status) {
-  await updateTaskInStore({ ...task, status });
-  await refreshBoardAfterDrop();
+  const previousStatus = task.status;
+  task.status = status;
+  renderBoardFromLocalTasks();
+  try {
+    await updateTaskInStore(task);
+  } catch (error) {
+    task.status = previousStatus;
+    renderBoardFromLocalTasks();
+    throw error;
+  }
 }
 
 
@@ -243,10 +253,9 @@ function clearAllBoardDropFeedback() {
 
 
 /**
- * Reloads all tasks and re-renders the board after a drop.
+ * Re-renders the board columns from the local task state.
  */
-async function refreshBoardAfterDrop() {
-  activeBoardTasks = await loadTasksFromStore();
+function renderBoardFromLocalTasks() {
   renderBoardColumns(activeBoardTasks);
   initBoardTaskDetails(activeBoardTasks);
 }
