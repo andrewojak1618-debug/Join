@@ -209,6 +209,56 @@ body[data-page="legal-notice"]
 }
 
 @media (max-width: 767px) {
+  .privacy-public-sidebar {
+    height: 80px;
+    min-height: 80px;
+  }
+
+  .privacy-public-nav {
+    width: 80px;
+    grid-template-columns: 80px;
+    margin: 2px 0 2px 16px;
+  }
+
+  .privacy-public-nav .summary-nav__item {
+    width: 80px;
+    min-height: 76px;
+    height: 76px;
+  }
+
+  .privacy-public-sidebar .summary-sidebar__footer {
+    position: absolute;
+    right: 16px;
+    bottom: 0;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 2px 0;
+  }
+
+  .privacy-public-sidebar .summary-sidebar__footer a,
+  .privacy-public-sidebar
+    .summary-sidebar__footer
+    .summary-nav__item--active {
+    width: auto;
+    min-height: 76px;
+    height: 76px;
+    flex: 0 0 auto;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .privacy-public-sidebar
+    .summary-sidebar__footer
+    .summary-nav__item--active {
+    border-radius: 16px;
+    background-color: #091931;
+  }
+
   .legal-page__header {
     align-items: flex-start;
     flex-direction: column;
@@ -273,5 +323,46 @@ body[data-page="legal-notice"]
     .summary-avatar {
     width: 40px;
     height: 40px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--external
+    .privacy-internal-content {
+    padding-top: 48px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--external
+    .privacy-internal-content
+    h1 {
+    margin-bottom: 32px;
+    font-size: 47px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--external
+    .privacy-copy {
+    gap: 35px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--external
+    .privacy-copy
+    h3 {
+    font-size: 27px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--external
+    .privacy-copy
+    p {
+    font-size: 16px;
+  }
+
+  body[data-page="privacy-policy"]
+    .privacy-view--external
+    .summary-topbar__logo {
+    width: 32px;
+    height: 39px;
   }
 }

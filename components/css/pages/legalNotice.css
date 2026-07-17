@@ -84,4 +84,45 @@
     width: 40px;
     height: 40px;
   }
+
+  body[data-page="legal-notice"]
+    .legal-view--external
+    .privacy-internal-content {
+    padding-top: 48px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--external
+    .privacy-internal-content
+    h1 {
+    margin-bottom: 32px;
+    font-size: 47px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--external
+    .privacy-copy {
+    gap: 35px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--external
+    .privacy-copy
+    h3 {
+    font-size: 27px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--external
+    .privacy-copy
+    p {
+    font-size: 16px;
+  }
+
+  body[data-page="legal-notice"]
+    .legal-view--external
+    .summary-topbar__logo {
+    width: 32px;
+    height: 39px;
+  }
 }
