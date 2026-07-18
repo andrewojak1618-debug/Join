@@ -1,6 +1,6 @@
 .summary-content {
-  width: min(100%, 920px);
-  padding: 96px 36px 48px 84px;
+  width: min(100%, 1080px);
+  padding: 126px 24px 48px 96px;
 }
 
 .summary-heading {
@@ -26,12 +26,13 @@
 
 .summary-dashboard {
   display: grid;
-  grid-template-columns: minmax(0, 492px) minmax(240px, 1fr);
+  grid-template-columns: minmax(0, 560px) minmax(0, 320px);
   align-items: center;
-  gap: 68px;
+  gap: 80px;
 }
 
 .summary-metrics {
+  width: min(100%, 560px);
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 24px;
@@ -169,6 +170,10 @@
   margin: 0;
 }
 
+.summary-greeting {
+  min-width: 0;
+}
+
 .summary-greeting p {
   font-size: 24px;
 }
@@ -177,12 +182,13 @@
   color: 	var(--color-greeting);
   font-size: 56px;
   line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #summaryUserType {
-  margin-top: 16px;
-  color: 	var(--color-muted);
-  font-size: 16px;
+  display: none;
 }
 
 @media (max-width: 1279px) {
@@ -193,10 +199,11 @@
 
   .summary-dashboard {
     grid-template-columns: 1fr;
+    gap: 48px;
   }
 }
 
-@media (max-width: 585px) {
+@media (max-width: 767px) {
   .summary-heading {
     display: grid;
     gap: 16px;
@@ -210,11 +217,18 @@
     padding-left: 0;
     border-left: 0;
   }
+
+  .summary-greeting h2 {
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
 }
 
 @media (max-width: 479px) {
   .summary-content {
-    padding-top: 48px;
+    padding-top: 78px;
   }
 
   .summary-heading h1,
