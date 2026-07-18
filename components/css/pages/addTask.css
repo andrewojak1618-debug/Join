@@ -1,6 +1,6 @@
 .add-task-content {
   position: relative;
-  width: 100%;
+  width: min(100%, var(--content-max-width));
   padding: 140px 116px 72px;
 }
 
