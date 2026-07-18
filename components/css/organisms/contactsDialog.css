@@ -4,7 +4,6 @@
   width: min(90vw, 900px);
   border-radius: 30px;
   background: var(--color-surface);
-  overflow: hidden;
   --avatar-size: clamp(90px, 24vw, 120px);
 }
 
@@ -24,6 +23,7 @@
   justify-content: center;
   gap: clamp(16px, 3vw, 32px);
   padding: clamp(24px, 4vw, 40px);
+  border-radius: 30px 0 0 30px;
   background: var(--color-primary-auth);
   color: var(--color-white);
 }
@@ -59,6 +59,7 @@
   display: flex;
   align-items: center;
   padding: 48px clamp(24px, 4vw, 48px) clamp(24px, 4vw, 48px);
+  border-radius: 0 30px 30px 0;
 }
 
 .contacts-dialog-form {
@@ -201,6 +202,7 @@
   .contacts-dialog-side {
     flex: 0 0 auto;
     padding-bottom: calc(var(--avatar-size) * 0.5 + 16px);
+    border-radius: 30px 30px 0 0;
   }
   .contacts-dialog-side img {
     display: none;
@@ -208,6 +210,7 @@
   .contacts-dialog-body {
     flex-direction: column;
     align-items: center;
+    border-radius: 0 0 30px 30px;
   }
   .contacts-dialog-close {
     color: var(--color-white);
