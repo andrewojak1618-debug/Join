@@ -25,6 +25,7 @@ async function fillBoardTaskEditForm(task) {
   getBoardEditField("Description").value = task.description || "";
   getBoardEditField("DueDate").value = normalizeTaskDueDate(task.dueDate);
   setBoardEditPriority(task.priority || "medium");
+  getBoardEditField("Category").value = task.category || "technical-task";
   syncBoardEditDropdowns();
   await renderBoardEditAssignees(task.assignedTo);
   initBoardEditSubtasks(task.subtasks);
@@ -194,6 +195,7 @@ function getBoardEditedTask(task) {
     description: getBoardEditField("Description").value.trim(),
     dueDate: normalizeTaskDueDate(getBoardEditField("DueDate").value),
     priority: getBoardEditPriority(),
+    category: getBoardEditField("Category").value,
     assignedTo: getBoardEditedAssignees(),
     subtasks: getBoardEditSubtaskItems(),
   };

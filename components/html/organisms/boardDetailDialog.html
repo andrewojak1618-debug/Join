@@ -152,6 +152,45 @@
         </div>
       </fieldset>
       <div class="board-detail-field">
+        <span>Category</span>
+        <div class="contact-dropdown" data-board-edit-dropdown>
+          <button
+            class="contact-dropdown__button"
+            id="boardTaskEditCategoryButton"
+            type="button"
+            aria-expanded="false"
+            aria-controls="boardTaskEditCategoryPanel"
+          >
+            Select task category
+          </button>
+          <div
+            class="contact-dropdown__panel"
+            id="boardTaskEditCategoryPanel"
+            role="listbox"
+            aria-label="Task categories"
+            hidden
+          >
+            <button
+              class="contact-dropdown__option contact-dropdown__option--single"
+              type="button"
+              role="option"
+              data-value="technical-task"
+            >
+              Technical Task
+            </button>
+            <button
+              class="contact-dropdown__option contact-dropdown__option--single"
+              type="button"
+              role="option"
+              data-value="user-story"
+            >
+              User Story
+            </button>
+          </div>
+          <input id="boardTaskEditCategory" type="hidden" />
+        </div>
+      </div>
+      <div class="board-detail-field">
         <span>Assigned to</span>
         <div class="contact-dropdown" id="boardEditAssigneesDropdown">
           <button
