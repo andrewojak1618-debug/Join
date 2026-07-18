@@ -57,6 +57,11 @@ test("shows feedback when initial board loading fails", async () => {
 });
 
 
+/**
+ * Creates an isolated board action context with captured feedback messages.
+ * @param {Object} task - Task returned as the active board task.
+ * @returns {Object} Browser context and its collected messages.
+ */
 function createBoardActionContext(task) {
   const messages = [];
   const context = loadBrowserScripts(["components/js/boardDetail.js"], {
@@ -84,6 +89,10 @@ test("restores a subtask checkbox and reports a failed update", async () => {
 });
 
 
+/**
+ * Creates an isolated board move context with observable state.
+ * @returns {Object} Browser context and move state.
+ */
 function createBoardMoveContext() {
   const state = {
     targetStatus: "",

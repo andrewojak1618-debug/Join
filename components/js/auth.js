@@ -55,8 +55,8 @@ async function loginGuestUser() {
 async function handleLogout() {
   try {
     if (isFirebaseAuthReady()) await window.joinFirebaseAuth.logoutFirebaseUser();
-  } catch (error) {
-    console.error("Firebase logout failed; continuing with local logout.", error);
+  } catch {
+    // A remote sign-out failure must not block clearing the local session.
   } finally {
     clearStoredUser();
     navigateToPage("login");

@@ -183,7 +183,7 @@ function renderBoardEditAssigneeChips(assignees) {
   const chips = assignees
     .map(
       (item) =>
-        `<span class="board-detail-assignee__avatar" style="background-color: ${escapeBoardText(item.color || "var(--color-primary-auth)")}">${getBoardInitials(item.name)}</span>`,
+        `<span class="board-detail-assignee__avatar" style="background-color: ${escapeHtmlText(item.color || "var(--color-primary-auth)")}">${getBoardInitials(item.name)}</span>`,
     )
     .join("");
   getBoardEditAssigneesSelected().innerHTML = chips;

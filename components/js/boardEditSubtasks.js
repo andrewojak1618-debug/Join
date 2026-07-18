@@ -24,16 +24,19 @@ function bindBoardEditSubtaskControls() {
   if (input.dataset.eventsReady === "true") return;
   input.addEventListener("keydown", handleBoardEditSubtaskInputKey);
   input.addEventListener("input", updateBoardEditSubtaskAddState);
-  getBoardEditSubtaskList().addEventListener(
-    "click",
-    handleBoardEditSubtaskListClick,
-  );
-  getBoardEditSubtaskList().addEventListener(
-    "keydown",
-    handleBoardEditSubtaskListKey,
-  );
+  bindBoardEditSubtaskListEvents();
   bindBoardEditSubtaskAddButton();
   input.dataset.eventsReady = "true";
+}
+
+
+/**
+ * Wires click and keyboard events of the editable subtask list.
+ */
+function bindBoardEditSubtaskListEvents() {
+  const list = getBoardEditSubtaskList();
+  list.addEventListener("click", handleBoardEditSubtaskListClick);
+  list.addEventListener("keydown", handleBoardEditSubtaskListKey);
 }
 
 
@@ -170,7 +173,7 @@ function getBoardEditSubtaskTemplate(subtask, index) {
   }
   return `
     <li class="add-task-subtask" data-subtask-index="${index}">
-      <span class="add-task-subtask__title">${escapeBoardText(subtask.title)}</span>
+      <span class="add-task-subtask__title">${escapeHtmlText(subtask.title)}</span>
       <span class="add-task-subtask__actions">
         <button type="button" class="add-task-subtask__action" data-subtask-action="edit" aria-label="Edit subtask">
           <img src="./components/assets/img/icons/edit.svg" alt="" />
@@ -193,7 +196,7 @@ function getBoardEditSubtaskTemplate(subtask, index) {
 function getBoardEditSubtaskEditTemplate(subtask, index) {
   return `
     <li class="add-task-subtask add-task-subtask--editing" data-subtask-index="${index}">
-      <input class="add-task-subtask__edit" type="text" value="${escapeBoardText(subtask.title)}" data-subtask-edit aria-label="Edit subtask" />
+      <input class="add-task-subtask__edit" type="text" value="${escapeHtmlText(subtask.title)}" data-subtask-edit aria-label="Edit subtask" />
       <span class="add-task-subtask__actions">
         <button type="button" class="add-task-subtask__action" data-subtask-action="delete" aria-label="Delete subtask">
           <img src="./components/assets/img/icons/delete.svg" alt="" />

@@ -9,7 +9,6 @@ let activeBoardContacts = [];
 async function initBoardTasks() {
   const taskLists = document.querySelectorAll("[data-board-status]");
   if (!taskLists.length) return;
-
   try {
     activeBoardTasks = await loadTasksFromStore();
     activeBoardContacts = await loadBoardDetailContacts();
@@ -369,51 +368,6 @@ function getBoardDetailView() {
  */
 function getBoardDetailCard() {
   return document.getElementById("boardTaskDetailCard");
-}
-
-
-/**
- * Maps a category key to its readable display label.
- * @param {string} category - The category key of the task.
- * @returns {string} The category label.
- */
-function formatBoardCategory(category) {
-  const categoryLabels = {
-    "technical-task": "Technical Task",
-    "user-story": "User Story",
-  };
-  return categoryLabels[category] || "Task";
-}
-
-
-/**
- * Maps a status key to its readable display label.
- * @param {string} status - The status key of a column or task.
- * @returns {string} The status label.
- */
-function formatBoardStatus(status) {
-  const statusLabels = {
-    todo: "to do",
-    "in-progress": "in progress",
-    feedback: "awaiting feedback",
-    done: "done",
-  };
-  return statusLabels[status] || "here";
-}
-
-
-/**
- * Escapes HTML special characters to prevent markup injection.
- * @param {string} value - The raw text value.
- * @returns {string} The escaped text.
- */
-function escapeBoardText(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
 
 

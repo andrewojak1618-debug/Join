@@ -1,0 +1,32 @@
+@media (hover: none) {
+  .add-task-subtask__actions {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1279px) {
+  .add-task-content {
+    padding: 72px 24px 48px;
+  }
+
+  .add-task-form__fields {
+    grid-template-columns: 1fr;
+  }
+
+  .add-task-form__divider {
+    display: none;
+  }
+}
+
+@media (max-width: 479px) {
+  .add-task-content h1 {
+    font-size: 40px;
+  }
+
+  .add-task-priority__options,
+  .add-task-form__footer,
+  .add-task-form__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}

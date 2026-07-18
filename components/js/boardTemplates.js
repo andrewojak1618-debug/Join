@@ -8,7 +8,7 @@ function getBoardTaskTemplate(task) {
   return `
       <article
         class="board-card"
-        data-task-id="${escapeBoardText(task.id)}"
+        data-task-id="${escapeHtmlText(task.id)}"
         tabindex="0"
        >
       ${getBoardCardMoveTemplate(task)}
@@ -16,18 +16,48 @@ function getBoardTaskTemplate(task) {
         ${formatBoardCategory(task.category)}
       </span>
 
-      <h3>${escapeBoardText(task.title)}</h3>
+      <h3>${escapeHtmlText(task.title)}</h3>
       <p>${getBoardShortText(task.description || "No description")}</p>
       ${getBoardSubtaskTemplate(task.subtasks)}
       <div class="board-card__footer">
         ${getBoardAssigneeTemplate(task.assignedTo)}
         <img class="board-card__priority-icon"
-          src="${getBoardPriorityIcon(task.priority)}" 
-          alt="${escapeBoardText(task.priority)} priority" 
+          src="${getBoardPriorityIcon(task.priority)}"
+          alt="${escapeHtmlText(task.priority)} priority"
         />
       </div>
     </article>
   `;
+}
+
+
+/**
+ * Maps a category key to its readable display label.
+ * @param {string} category - The category key of the task.
+ * @returns {string} The category label.
+ */
+function formatBoardCategory(category) {
+  const categoryLabels = {
+    "technical-task": "Technical Task",
+    "user-story": "User Story",
+  };
+  return categoryLabels[category] || "Task";
+}
+
+
+/**
+ * Maps a status key to its readable display label.
+ * @param {string} status - The status key of a column or task.
+ * @returns {string} The status label.
+ */
+function formatBoardStatus(status) {
+  const statusLabels = {
+    todo: "to do",
+    "in-progress": "in progress",
+    feedback: "awaiting feedback",
+    done: "done",
+  };
+  return statusLabels[status] || "here";
 }
 
 
@@ -47,7 +77,7 @@ function getBoardCategoryClass(category) {
  * @returns {string} Escaped text, shortened with an ellipsis above 72 characters.
  */
 function getBoardShortText(text) {
-  const cleanedText = escapeBoardText(text);
+  const cleanedText = escapeHtmlText(text);
   return cleanedText.length > 72
     ? `${cleanedText.slice(0, 69)}...`
     : cleanedText;
@@ -126,7 +156,7 @@ function getBoardAssignees(assignedTo) {
  * @returns {string} HTML markup for one initials avatar.
  */
 function getBoardAvatarTemplate(assignee) {
-  return `<span class="board-card__avatar" style="background-color: ${escapeBoardText(assignee.color)}">${getBoardInitials(assignee.name)}</span>`;
+  return `<span class="board-card__avatar" style="background-color: ${escapeHtmlText(assignee.color)}">${getBoardInitials(assignee.name)}</span>`;
 }
 
 
@@ -137,8 +167,8 @@ function getBoardAvatarTemplate(assignee) {
 function getBoardDetailAssigneeTemplate(assignee) {
   return `
     <div class="board-detail-assignee">
-      <span class="board-detail-assignee__avatar" style="background-color: ${escapeBoardText(assignee.color)}">${getBoardInitials(assignee.name)}</span>
-      <span>${escapeBoardText(assignee.name)}</span>
+      <span class="board-detail-assignee__avatar" style="background-color: ${escapeHtmlText(assignee.color)}">${getBoardInitials(assignee.name)}</span>
+      <span>${escapeHtmlText(assignee.name)}</span>
     </div>`;
 }
 
@@ -193,7 +223,7 @@ function getBoardDetailSubtaskTemplate(subtask, index) {
   return `
     <label class="board-detail-subtask">
       <input type="checkbox" data-detail-subtask-index="${index}" ${subtask.done ? "checked" : ""} />
-      <span>${escapeBoardText(subtask.title)}</span>
+      <span>${escapeHtmlText(subtask.title)}</span>
     </label>
   `;
 }
@@ -214,11 +244,11 @@ function getBoardEditAssigneeTemplate(contact, assignedTo) {
     : "";
   return `
     <label class="contact-dropdown__option">
-      <input type="checkbox" value="${escapeBoardText(contact.id)}" ${checked} />
-      <span class="contact-dropdown__avatar" style="background-color: ${escapeBoardText(contact.color || "var(--color-primary-auth)")}">
+      <input type="checkbox" value="${escapeHtmlText(contact.id)}" ${checked} />
+      <span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color || "var(--color-primary-auth)")}">
         ${getContactInitials(contact.name)}
       </span>
-      <span>${escapeBoardText(contact.name)}</span>
+      <span>${escapeHtmlText(contact.name)}</span>
     </label>
   `;
 }
