@@ -12,3 +12,6 @@
   line-height: 16px;
 }
 
+.add-task-field__error:empty {
+  display: none;
+}

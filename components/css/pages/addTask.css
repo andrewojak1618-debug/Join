@@ -1,13 +1,13 @@
 .add-task-content {
   position: relative;
-  width: min(100%, 980px);
-  padding: 120px 36px 48px 84px;
+  width: 100%;
+  padding: 140px 116px 72px;
 }
 
 .add-task-content h1 {
   margin: 0 0 48px;
   color: var(--color-text-dark);
-  font-size: 56px;
+  font-size: 64px;
   line-height: 1;
 }
 
@@ -54,7 +54,7 @@
 }
 .add-task-form {
   display: grid;
-  gap: 80px;
+  gap: 136px;
 }
 
 .add-task-form__fields {
@@ -221,10 +221,19 @@
 
 .add-task-button {
   min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 0 18px;
   border-radius: 8px;
   font-size: 18px;
   font-weight: 700;
+}
+
+.add-task-button img {
+  width: 24px;
+  height: 24px;
 }
 
 .add-task-button--secondary {
