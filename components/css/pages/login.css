@@ -162,6 +162,11 @@
   border-color: var(--color-primary-hover);
 }
 
+.auth-page--login .auth-form__guest:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 @media (max-width: 767px) {
   .auth-page--login {
     align-content: start;

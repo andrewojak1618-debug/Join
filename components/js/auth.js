@@ -30,11 +30,26 @@ async function loginWithFirebase(email, password) {
  * Starts the guest login and shows a login message if Firebase rejects it.
  */
 async function handleGuestLogin() {
+  setGuestLoginPending(true);
   try {
     await loginGuestUser();
   } catch (error) {
     showLoginError(getAuthErrorMessage(error));
+  } finally {
+    setGuestLoginPending(false);
   }
+}
+
+
+/**
+ * Locks the guest button while Firebase processes the sign-in request.
+ * @param {boolean} isPending - True while the guest login is pending.
+ */
+function setGuestLoginPending(isPending) {
+  const button = document.getElementById("guestLoginButton");
+  if (!button) return;
+  button.disabled = isPending;
+  button.setAttribute("aria-busy", String(isPending));
 }
 
 
