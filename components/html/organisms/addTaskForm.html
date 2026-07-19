@@ -63,7 +63,7 @@
         <legend>Priority</legend>
         <div class="add-task-priority__options">
           <label
-            class="add-task-priority__option add-task-priority__option--urgent"
+            class="add-task-priority__option add-task-priority__option--urgent button-hover button-hover--raised"
           >
             <input type="radio" name="taskPriority" value="urgent" />
             <span
@@ -75,7 +75,7 @@
             /></span>
           </label>
           <label
-            class="add-task-priority__option add-task-priority__option--medium"
+            class="add-task-priority__option add-task-priority__option--medium button-hover button-hover--raised"
           >
             <input type="radio" name="taskPriority" value="medium" checked />
             <span
@@ -87,7 +87,7 @@
             /></span>
           </label>
           <label
-            class="add-task-priority__option add-task-priority__option--low"
+            class="add-task-priority__option add-task-priority__option--low button-hover button-hover--raised"
           >
             <input type="radio" name="taskPriority" value="low" />
             <span
@@ -241,7 +241,10 @@
   <div class="add-task-form__footer">
     <p><strong>*</strong>This field is required</p>
     <div class="add-task-form__actions">
-      <button class="add-task-button add-task-button--secondary" type="reset">
+      <button
+        class="add-task-button add-task-button--secondary button-hover button-hover--secondary"
+        type="reset"
+      >
         <span>Clear</span>
         <img
           src="./components/assets/img/icons/cancel_icon.svg"
@@ -250,7 +253,7 @@
         />
       </button>
       <button
-        class="add-task-button add-task-button--primary"
+        class="add-task-button add-task-button--primary button-hover button-hover--primary"
         id="createTaskButton"
         type="submit"
       >
