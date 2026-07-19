@@ -1,14 +1,32 @@
 .auth-page--login {
+  --login-card-height: clamp(410px, calc(100svh - 151px), 449px);
+  --login-card-half-height: clamp(
+    205px,
+    calc(50svh - 75.5px),
+    224.5px
+  );
+  --login-card-top: min(
+    calc(50svh - var(--login-card-half-height)),
+    clamp(296px, calc(4.6vw + 249px), 315px)
+  );
+
   position: relative;
   min-height: 100svh;
   display: grid;
   place-items: center;
-  padding: 96px 24px 64px;
+  padding:
+    clamp(82px, 9.375svh, 96px) 24px
+    clamp(48px, 6.25svh, 64px);
+}
+
+.auth-page--login .auth-logo {
+  top: clamp(24px, calc(10svh - 36px), 67px);
+  width: clamp(56px, calc(10svh - 4px), 100px);
 }
 
 .auth-signup-hint {
   position: absolute;
-  top: 64px;
+  top: clamp(24px, calc(9.5svh - 33px), 64px);
   right: 72px;
   width: 279px;
   height: 49px;
@@ -48,15 +66,32 @@
   font-weight: 400;
 }
 
+.auth-page--login .auth-footer {
+  bottom: max(
+    clamp(20px, calc(7svh - 22px), 64px),
+    min(
+      calc(
+        100svh - var(--login-card-top) - var(--login-card-height) - 58px
+      ),
+      calc(150svh - 150vw + 96px)
+    ),
+    calc(env(safe-area-inset-bottom) + 8px)
+  );
+}
+
 .auth-page--login .auth-card {
+  position: absolute;
+  top: var(--login-card-top);
+  left: 50%;
   width: min(100%, 652px);
-  height: 449px;
+  height: var(--login-card-height);
   padding: 48px 72px;
   display: grid;
   align-content: start;
   background-color: var(--color-surface);
   border-radius: 30px;
   box-shadow: var(--shadow-soft);
+  transform: translateX(-50%);
 }
 
 .auth-page--login .auth-card__title {
@@ -169,25 +204,48 @@
 
 @media (max-width: 767px) {
   .auth-page--login {
+    --login-card-height: clamp(360px, calc(100svh - 267px), 475px);
+    --login-card-half-height: clamp(
+      180px,
+      calc(50svh - 133.5px),
+      237.5px
+    );
+    --login-card-center: min(50svh, 410px);
+    --login-hint-gap: clamp(8px, calc(27svh - 154px), 24px);
+    --login-footer-offset: max(
+      clamp(8px, calc(12svh - 60px), 48px),
+      calc(
+        100svh - var(--login-card-center) -
+          var(--login-card-half-height) - var(--login-hint-gap) - 99px
+      ),
+      calc(env(safe-area-inset-bottom) + 8px)
+    );
+
     align-content: start;
-    padding: 37px 16px clamp(64px, 10svh, 96px);
+    padding: clamp(24px, 4.3svh, 37px) 16px clamp(64px, 10svh, 96px);
   }
 
   .auth-page--login .auth-logo {
     position: static;
     justify-self: start;
-    width: clamp(56px, 9svh, 82px);
+    width: clamp(48px, 8svh, 64px);
     margin: 0 0 29px 22px;
   }
 
-  .auth-logo img {
-    width: 64px;
-    height: 78px;
+  .auth-page--login .auth-logo img {
+    width: 100%;
+    height: auto;
   }
 
   .auth-signup-hint {
     position: absolute;
-    top: calc(50% + 315px);
+    top: min(
+      calc(
+        var(--login-card-center) + var(--login-card-half-height) +
+          var(--login-hint-gap)
+      ),
+      calc(100% - var(--login-footer-offset) - 91px)
+    );
     left: 50%;
     right: auto;
     width: 290px;
@@ -202,18 +260,19 @@
 
   .auth-page--login .auth-card {
     position: absolute;
-    top: 50%;
+    top: var(--login-card-center);
     left: 50%;
     right: auto;
     width: min(calc(100% - 32px), 396px);
-    height: 475px;
+    height: var(--login-card-height);
     margin-top: 0;
     padding: clamp(20px, 3svh, 36px) 24px;
     transform: translate(-50%, -50%);
   }
 
   .auth-page--login .auth-card__title {
-    margin-bottom: 48px;
+    margin-bottom: clamp(34px, 5.6svh, 48px);
+    font-size: clamp(40px, min(13vw, 7.5svh), 61px);
   }
 
   .auth-page--login .auth-card__title::after {
@@ -224,18 +283,32 @@
     width: 100%;
   }
 
-  .auth-page--login .auth-footer {
-    bottom: 23px;
+  .auth-page--login .form-field + .form-field {
+    margin-top: clamp(8px, 1.7svh, 15px);
   }
 
-  .auth-form__actions {
+  .auth-page--login .form-field__input {
+    height: clamp(42px, 7svh, 48px);
+  }
+
+  .auth-page--login .form-field__icon--mail,
+  .auth-page--login .form-field__icon--lock {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .auth-page--login .auth-footer {
+    bottom: var(--login-footer-offset);
+  }
+
+  .auth-page--login .auth-form__actions {
     position: absolute;
     left: 50%;
-    bottom: 32px;
+    bottom: clamp(18px, 3.6svh, 32px);
     width: 100%;
     flex-direction: column;
     align-items: center;
-    gap: 21px;
+    gap: clamp(10px, 2.4svh, 21px);
     margin-top: 0;
     transform: translateX(-50%);
   }
@@ -244,6 +317,6 @@
   .auth-page--login .auth-form__guest {
     width: 180px;
     min-width: 180px;
-    height: 51px;
+    height: clamp(42px, 6svh, 51px);
   }
 }
