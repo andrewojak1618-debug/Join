@@ -108,7 +108,7 @@
     padding: 37px 16px 96px;
   }
 
-  .auth-logo {
+  .auth-page--signup .auth-logo {
     position: static;
     justify-self: start;
     width: clamp(56px, 9svh, 82px);
@@ -134,7 +134,7 @@
     font-size: 47px;
   }
 
-  .auth-card__title::after {
+  .auth-page--signup .auth-card__title::after {
     width: 88px;
   }
 
@@ -142,7 +142,7 @@
     gap: 20px;
   }
 
-  .auth-form > .form-field + .form-field {
+  .auth-page--signup .auth-form > .form-field + .form-field {
     margin-top: 4px;
   }
 
