@@ -10,15 +10,31 @@ async function initBoardTasks() {
   const taskLists = document.querySelectorAll("[data-board-status]");
   if (!taskLists.length) return;
   try {
-    activeBoardTasks = await loadTasksFromStore();
-    activeBoardContacts = await loadBoardDetailContacts();
+    await loadBoardData();
     renderBoardColumns(activeBoardTasks);
     playBoardIntroAnimation();
     initBoardTaskDetails(activeBoardTasks);
     initBoardSearch();
+    migrateBoardAssigneesInBackground();
   } catch (error) {
     showBoardToast("Board tasks could not be loaded.");
   }
+}
+
+
+/** Loads tasks and contacts in parallel for a faster first render. */
+async function loadBoardData() {
+  const boardRequests = [loadTasksFromStore(), loadBoardDetailContacts()];
+  [activeBoardTasks, activeBoardContacts] =
+    await Promise.all(boardRequests);
+}
+
+
+/** Persists legacy assignee references without delaying the visible board. */
+function migrateBoardAssigneesInBackground() {
+  migrateTaskAssigneeReferences(activeBoardTasks, activeBoardContacts).catch(() => {
+    // Migration failure must not make an already loaded board unusable.
+  });
 }
 
 

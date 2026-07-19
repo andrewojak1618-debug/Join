@@ -2,26 +2,42 @@
  * Loads tasks from Firestore when available, otherwise from localStorage.
  */
 async function loadTasksFromStore() {
-  const tasks = isTaskFirestoreReady()
+  return isTaskFirestoreReady()
     ? await window.joinFirebaseTasks.loadTasks()
     : getStoredTasks();
-  return migrateTaskAssigneeReferences(tasks);
 }
 
 
 /**
  * Replaces legacy assignee names with stable contact references where possible.
  * @param {Object[]} tasks - Tasks loaded from the active store.
+ * @param {Object[]} [contacts] - Contacts already loaded by the caller.
  * @returns {Promise<Object[]>} Tasks with normalized assignments.
  */
-async function migrateTaskAssigneeReferences(tasks) {
-  const contacts = await loadTaskMigrationContacts();
-  const migratedTasks = tasks.map((task) => migrateTaskAssignees(task, contacts));
+async function migrateTaskAssigneeReferences(tasks, contacts) {
+  const migrationContacts = contacts || await loadTaskMigrationContacts();
+  const migratedTasks = tasks.map((task) =>
+    migrateTaskAssignees(task, migrationContacts),
+  );
   const changedTasks = migratedTasks.filter((task, index) =>
     hasTaskAssignmentsChanged(tasks[index], task),
   );
-  await Promise.all(changedTasks.map(updateTaskInStore));
+  await Promise.all(changedTasks.map(updateTaskAssigneesInStore));
   return migratedTasks;
+}
+
+
+/**
+ * Persists only migrated assignments so concurrent task edits stay intact.
+ * @param {Object} task - Task containing the normalized assignments.
+ */
+async function updateTaskAssigneesInStore(task) {
+  const adapter = window.joinFirebaseTasks;
+  if (isTaskFirestoreReady() && adapter.updateTaskAssignees) {
+    await adapter.updateTaskAssignees(task.id, task.assignedTo);
+    return;
+  }
+  await updateTaskInStore(task);
 }
 
 

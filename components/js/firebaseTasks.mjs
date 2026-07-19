@@ -50,6 +50,18 @@ async function updateTask(taskId, task) {
 
 
 /**
+ * Updates only assignee references during a background data migration.
+ */
+async function updateTaskAssignees(taskId, assignedTo) {
+  const db = window.joinFirestore;
+  await updateDoc(doc(db, "tasks", taskId), {
+    assignedTo: normalizeTaskAssignees(assignedTo),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+
+/**
  * Deletes one task from Firestore.
  */
 async function deleteTask(taskId) {
@@ -83,5 +95,6 @@ window.joinFirebaseTasks = {
   loadTasks,
   createTask,
   updateTask,
+  updateTaskAssignees,
   deleteTask,
 };
