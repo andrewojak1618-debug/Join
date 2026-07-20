@@ -1,3 +1,8 @@
+.auth-page {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+}
+
 .auth-logo {
   position: absolute;
   top: 65px;
