@@ -92,6 +92,19 @@ test("keeps privacy consent locked while a required field is invalid", () => {
 });
 
 
+test("rejects signup email addresses containing umlauts", () => {
+  const { context, elements } = createAuthContext();
+  const invalidEmails = ["jürgen@example.com", "user@exämple.com", "user@example.öe"];
+  invalidEmails.forEach((email) => {
+    elements.signupEmail.value = email;
+    context.syncPrivacyConsent();
+    assert.equal(context.isEmailValid(), false);
+    assert.equal(elements.privacyAccepted.disabled, true);
+    assert.equal(elements.signupButton.disabled, true);
+  });
+});
+
+
 test("opens Privacy separately and preserves signup values in memory", () => {
   const { context, elements, openedPages } = createAuthContext();
   const event = createPrivacyOpenEvent();
