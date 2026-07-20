@@ -90,7 +90,7 @@ function syncPrivacyConsent() {
  */
 function updatePrivacyConsentHint(fieldsValid) {
   getPrivacyConsentHint().textContent = fieldsValid
-    ? "All required fields are valid. You can now accept the Privacy Policy."
+    ? "You can now accept the Privacy Policy."
     : "Complete all required fields to enable this checkbox.";
 }
 
