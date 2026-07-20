@@ -28,10 +28,18 @@
   z-index: 1;
   top: 56px;
   left: 64px;
+  width: 37px;
+  height: 37px;
+  display: inline-grid;
+  place-items: center;
   color: var(--color-accent-light);
-  font-size: 42px;
-  line-height: 1;
   text-decoration: none;
+}
+
+.auth-card__back img {
+  width: 32px;
+  height: 32px;
+  display: block;
 }
 
 .auth-card__title {
