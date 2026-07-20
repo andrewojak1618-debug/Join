@@ -1,10 +1,69 @@
+const tasksCacheKey = "joinTasksCache";
+let tasksLoadPromise = null;
+
+
 /**
  * Loads tasks from Firestore when available, otherwise from localStorage.
+ * Reuses one in-flight request so concurrent callers share a single fetch.
  */
 async function loadTasksFromStore() {
-  return isTaskFirestoreReady()
+  if (!tasksLoadPromise) {
+    tasksLoadPromise = fetchAndCacheTasks().finally(() => {
+      tasksLoadPromise = null;
+    });
+  }
+  return tasksLoadPromise;
+}
+
+
+/**
+ * Fetches tasks from the active store and refreshes the session cache.
+ */
+async function fetchAndCacheTasks() {
+  const tasks = isTaskFirestoreReady()
     ? await window.joinFirebaseTasks.loadTasks()
     : getStoredTasks();
+  cacheTasksSnapshot(tasks);
+  return tasks;
+}
+
+
+/**
+ * Returns the last cached task snapshot for instant rendering, if any.
+ * @returns {Object[]|null} Cached tasks, or null without a usable cache.
+ */
+function getCachedTasksSnapshot() {
+  try {
+    const cached = sessionStorage.getItem(tasksCacheKey);
+    return cached ? JSON.parse(cached) : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+
+/**
+ * Saves the given tasks as the session's cached snapshot.
+ * @param {Object[]} tasks - Tasks to cache for instant rendering next time.
+ */
+function cacheTasksSnapshot(tasks) {
+  try {
+    sessionStorage.setItem(tasksCacheKey, JSON.stringify(tasks));
+  } catch (error) {
+    // Caching is a nice-to-have; ignore quota or availability errors.
+  }
+}
+
+
+/**
+ * Clears the cached task snapshot after it no longer reflects the store.
+ */
+function clearTasksCache() {
+  try {
+    sessionStorage.removeItem(tasksCacheKey);
+  } catch (error) {
+    // Ignore storage errors; the next load will simply refetch.
+  }
 }
 
 
@@ -35,6 +94,7 @@ async function updateTaskAssigneesInStore(task) {
   const adapter = window.joinFirebaseTasks;
   if (isTaskFirestoreReady() && adapter.updateTaskAssignees) {
     await adapter.updateTaskAssignees(task.id, task.assignedTo);
+    clearTasksCache();
     return;
   }
   await updateTaskInStore(task);
@@ -101,7 +161,18 @@ function hasTaskAssignmentsChanged(originalTask, migratedTask) {
  * Creates one task in Firestore or localStorage and returns it with an id.
  */
 async function createTaskInStore(task) {
-  if (isTaskFirestoreReady()) return window.joinFirebaseTasks.createTask(task);
+  const createdTask = isTaskFirestoreReady()
+    ? await window.joinFirebaseTasks.createTask(task)
+    : saveAndReturnCreatedTask(task);
+  clearTasksCache();
+  return createdTask;
+}
+
+
+/**
+ * Saves a task locally and returns it, keeping createTaskInStore short.
+ */
+function saveAndReturnCreatedTask(task) {
   saveCreatedTask(task);
   return task;
 }
@@ -113,9 +184,10 @@ async function createTaskInStore(task) {
 async function updateTaskInStore(task) {
   if (isTaskFirestoreReady()) {
     await window.joinFirebaseTasks.updateTask(task.id, task);
-    return;
+  } else {
+    updateStoredTask(task);
   }
-  updateStoredTask(task);
+  clearTasksCache();
 }
 
 
@@ -125,9 +197,10 @@ async function updateTaskInStore(task) {
 async function deleteTaskFromStore(taskId) {
   if (isTaskFirestoreReady()) {
     await window.joinFirebaseTasks.deleteTask(taskId);
-    return;
+  } else {
+    deleteStoredTask(taskId);
   }
-  deleteStoredTask(taskId);
+  clearTasksCache();
 }
 
 

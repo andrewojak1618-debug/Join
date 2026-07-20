@@ -28,7 +28,8 @@ test("completes local logout when Firebase logout fails", async () => {
 test("shows feedback when initial summary loading fails", async () => {
   const error = { textContent: "", hidden: true };
   const context = loadBrowserScripts(["components/js/summary.js"], {
-    document: { getElementById: () => error },
+    document: { getElementById: () => error, querySelector: () => null },
+    getCachedTasksSnapshot: () => null,
     loadTasksFromStore: async () => { throw new Error("offline"); },
   });
 
@@ -36,6 +37,36 @@ test("shows feedback when initial summary loading fails", async () => {
 
   assert.equal(error.textContent, "Task overview could not be loaded.");
   assert.equal(error.hidden, false);
+});
+
+
+test("renders cached tasks immediately without waiting for the store", async () => {
+  const cells = {};
+  const metricIds = [
+    "summaryTodoCount", "summaryDoneCount", "summaryUrgentCount",
+    "summaryBoardCount", "summaryProgressCount", "summaryFeedbackCount",
+    "summaryDeadlineDate",
+  ];
+  metricIds.forEach((id) => { cells[id] = { textContent: "" }; });
+  let resolveLoad;
+  const pendingLoad = new Promise((resolve) => { resolveLoad = resolve; });
+
+  const context = loadBrowserScripts(["components/js/summary.js"], {
+    document: { getElementById: (id) => cells[id], querySelector: () => null },
+    getCachedTasksSnapshot: () => [{ status: "todo" }, { status: "done" }],
+    loadTasksFromStore: () => pendingLoad,
+    parseTaskDueDate: () => null,
+  });
+
+  const metricsLoaded = context.initSummaryMetrics();
+  assert.equal(cells.summaryTodoCount.textContent, 1);
+  assert.equal(cells.summaryDoneCount.textContent, 1);
+
+  resolveLoad([{ status: "todo" }, { status: "todo" }]);
+  await metricsLoaded;
+
+  assert.equal(cells.summaryTodoCount.textContent, 2);
+  assert.equal(cells.summaryDoneCount.textContent, 0);
 });
 
 

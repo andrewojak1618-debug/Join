@@ -29,15 +29,16 @@ function createTaskContext(initialTasks) {
 /**
  * Loads the task store with a mocked Firebase adapter.
  * @param {Object} firebaseTasks - Mocked Firebase task methods.
- * @returns {Object} Test context and its memory storage.
+ * @returns {Object} Test context and its memory storages.
  */
 function createFirebaseTaskContext(firebaseTasks) {
   const localStorage = createMemoryStorage();
+  const sessionStorage = createMemoryStorage();
   const window = { joinFirebaseTasks: firebaseTasks };
   const context = loadBrowserScripts(
-    [tasksScript, taskStoreScript], { localStorage, window }
+    [tasksScript, taskStoreScript], { localStorage, sessionStorage, window }
   );
-  return { context, localStorage };
+  return { context, localStorage, sessionStorage };
 }
 
 
@@ -103,4 +104,54 @@ test("uses the Firebase adapter when it is available", async () => {
   await context.updateTaskInStore(task);
   assert.deepEqual(calls, [{ taskId: task.id, task }]);
   assert.equal(localStorage.getItem(taskStorageKey), null);
+});
+
+
+test("reuses one in-flight request for concurrent task loads", async () => {
+  let loadCount = 0;
+  const firebaseTasks = {
+    async loadTasks() {
+      loadCount += 1;
+      return [{ id: "task-1" }];
+    },
+  };
+  const { context } = createFirebaseTaskContext(firebaseTasks);
+  const [first, second] = await Promise.all([
+    context.loadTasksFromStore(),
+    context.loadTasksFromStore(),
+  ]);
+  assert.deepEqual(toPlainValue(first), toPlainValue(second));
+  assert.equal(loadCount, 1);
+});
+
+
+test("caches loaded tasks for instant rendering on the next call", async () => {
+  const firebaseTasks = { async loadTasks() { return [{ id: "task-1" }]; } };
+  const { context } = createFirebaseTaskContext(firebaseTasks);
+  await context.loadTasksFromStore();
+  assert.deepEqual(
+    toPlainValue(context.getCachedTasksSnapshot()), [{ id: "task-1" }],
+  );
+});
+
+
+test("clears the cached tasks after create, update and delete", async () => {
+  const firebaseTasks = {
+    async createTask(task) { return task; },
+    async updateTask() {},
+    async deleteTask() {},
+  };
+  const { context, sessionStorage } = createFirebaseTaskContext(firebaseTasks);
+  sessionStorage.setItem("joinTasksCache", JSON.stringify([{ id: "task-1" }]));
+
+  await context.createTaskInStore({ title: "New task" });
+  assert.equal(sessionStorage.getItem("joinTasksCache"), null);
+
+  sessionStorage.setItem("joinTasksCache", JSON.stringify([{ id: "task-1" }]));
+  await context.updateTaskInStore({ id: "task-1", status: "done" });
+  assert.equal(sessionStorage.getItem("joinTasksCache"), null);
+
+  sessionStorage.setItem("joinTasksCache", JSON.stringify([{ id: "task-1" }]));
+  await context.deleteTaskFromStore("task-1");
+  assert.equal(sessionStorage.getItem("joinTasksCache"), null);
 });

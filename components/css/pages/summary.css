@@ -37,6 +37,12 @@
   grid-template-columns: repeat(6, minmax(0, 1fr));
   column-gap: 24px;
   row-gap: 26px;
+  transition: opacity 150ms ease;
+}
+
+.summary-metrics--loading {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .summary-card {

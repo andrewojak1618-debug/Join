@@ -71,20 +71,59 @@ function setSummaryText(elementId, text) {
 
 /**
  * Loads tasks from the task store and fills the summary metric cards.
+ * Renders a cached snapshot instantly to avoid a flash of empty values.
  */
 async function initSummaryMetrics() {
+  const cachedTasks = getCachedTasksSnapshot();
+  if (cachedTasks) renderSummaryMetrics(cachedTasks);
+  else setSummaryMetricsLoading(true);
+
   try {
-    const tasks = await loadTasksFromStore();
-    setSummaryText("summaryTodoCount", countTasksByStatus(tasks, "todo"));
-    setSummaryText("summaryProgressCount", countTasksByStatus(tasks, "in-progress"));
-    setSummaryText("summaryFeedbackCount", countTasksByStatus(tasks, "feedback"));
-    setSummaryText("summaryDoneCount", countTasksByStatus(tasks, "done"));
-    setSummaryText("summaryBoardCount", tasks.length);
-    setSummaryText("summaryUrgentCount", countTasksByPriority(tasks, "urgent"));
-    setSummaryText("summaryDeadlineDate", getUpcomingDeadlineText(tasks));
+    renderSummaryMetrics(await loadTasksFromStore());
   } catch (error) {
     setSummaryLoadError("Task overview could not be loaded.");
+  } finally {
+    setSummaryMetricsLoading(false);
   }
+}
+
+
+/**
+ * Fills every summary metric card with counts from the given tasks.
+ * @param {Object[]} tasks - Tasks to summarize.
+ */
+function renderSummaryMetrics(tasks) {
+  setSummaryText("summaryTodoCount", countTasksByStatus(tasks, "todo"));
+  setSummaryText("summaryProgressCount", countTasksByStatus(tasks, "in-progress"));
+  setSummaryText("summaryFeedbackCount", countTasksByStatus(tasks, "feedback"));
+  setSummaryText("summaryDoneCount", countTasksByStatus(tasks, "done"));
+  setSummaryText("summaryBoardCount", tasks.length);
+  setSummaryText("summaryUrgentCount", countTasksByPriority(tasks, "urgent"));
+  setSummaryText("summaryDeadlineDate", getUpcomingDeadlineText(tasks));
+}
+
+
+/**
+ * Toggles the loading style and neutral placeholders on the summary metrics.
+ * @param {boolean} isLoading - True while no task data is available yet.
+ */
+function setSummaryMetricsLoading(isLoading) {
+  const metrics = document.querySelector(".summary-metrics");
+  if (metrics) metrics.classList.toggle("summary-metrics--loading", isLoading);
+  if (isLoading) blankSummaryMetricValues();
+}
+
+
+/**
+ * Replaces the static placeholder numbers with a neutral loading marker.
+ */
+function blankSummaryMetricValues() {
+  const metricIds = [
+    "summaryTodoCount", "summaryDoneCount", "summaryUrgentCount",
+    "summaryBoardCount", "summaryProgressCount", "summaryFeedbackCount",
+  ];
+  metricIds.forEach((id) => setSummaryText(id, "–"));
+  setSummaryText("summaryDeadlineDate", "–");
 }
 
 
