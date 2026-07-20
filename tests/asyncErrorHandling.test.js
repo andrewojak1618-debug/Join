@@ -47,6 +47,7 @@ test("shows feedback when initial board loading fails", async () => {
       getElementById: () => toast,
     },
     loadTasksFromStore: async () => { throw new Error("offline"); },
+    loadBoardDetailContacts: async () => [],
     setTimeout: () => 0,
   });
 
