@@ -82,3 +82,27 @@ test("shows a fallback when no upcoming deadline exists", () => {
     context.getUpcomingDeadlineText(tasks, today), "No upcoming deadline"
   );
 });
+
+
+test("shows the mobile greeting after user data was rendered", () => {
+  const classes = new Set();
+  let animationHandler;
+  const greeting = {
+    classList: {
+      add: (className) => classes.add(className),
+      remove: (className) => classes.delete(className),
+    },
+    addEventListener: (eventName, handler) => {
+      if (eventName === "animationend") animationHandler = handler;
+    },
+  };
+  const context = loadBrowserScripts(["components/js/summary.js"], {
+    document: { querySelector: () => greeting },
+  });
+
+  context.showMobileSummaryGreeting();
+  assert.equal(classes.has("summary-greeting--visible"), true);
+
+  animationHandler({ currentTarget: greeting });
+  assert.equal(classes.has("summary-greeting--visible"), false);
+});

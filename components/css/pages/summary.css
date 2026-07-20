@@ -244,8 +244,45 @@
     border-left: 0;
   }
 
+  .summary-greeting {
+    position: fixed;
+    inset: var(--app-topbar-height) 0 var(--app-bottom-nav-height);
+    z-index: 14;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--color-background-soft);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .summary-greeting--visible {
+    display: flex;
+    animation: summaryGreetingFadeOut 2s ease forwards;
+  }
+
   .summary-greeting h2 {
     font-size: 47px;
+  }
+}
+
+@keyframes summaryGreetingFadeOut {
+  0%,
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary-greeting--visible {
+    animation-duration: 1ms;
   }
 }
 
@@ -311,19 +348,9 @@
     font-size: 40px;
   }
 
-  .summary-card span {
-    font-size: 14px;
-  }
-
-  .summary-deadline strong {
-    font-size: 14px;
-  }
-
+  .summary-card span,
+  .summary-deadline strong,
   .summary-deadline span {
-    font-size: 12px;
-  }
-
-  .summary-greeting {
-    display: none;
+    font-size: 16px;
   }
 }

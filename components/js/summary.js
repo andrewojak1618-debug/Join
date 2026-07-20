@@ -9,6 +9,27 @@ function initSummaryUser() {
   setSummaryText("summaryUserType", getSummaryUserTypeText(user));
   setSummaryText("summaryUserInitials", getSummaryInitials(user));
   setSummaryText("summaryGreetingTime", getTimeGreeting());
+  showMobileSummaryGreeting();
+}
+
+
+/**
+ * Shows the filled greeting briefly on mobile and removes its overlay afterwards.
+ */
+function showMobileSummaryGreeting() {
+  const greeting = document.querySelector(".summary-greeting");
+  if (!greeting) return;
+  greeting.classList.add("summary-greeting--visible");
+  greeting.addEventListener("animationend", hideMobileSummaryGreeting, { once: true });
+}
+
+
+/**
+ * Removes the mobile overlay after its entrance greeting has finished.
+ * @param {AnimationEvent} event - Completed CSS animation on the greeting.
+ */
+function hideMobileSummaryGreeting(event) {
+  event.currentTarget.classList.remove("summary-greeting--visible");
 }
 
 
