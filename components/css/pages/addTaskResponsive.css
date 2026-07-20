@@ -58,7 +58,7 @@ body[data-page="add-task"] .summary-topbar {
     min-height: 76px;
     margin: 2px clamp(2px, 3vw, 12px);
     border-radius: 28px;
-    font-size: clamp(12px, 3.75vw, 16px);
+    font-size: 16px;
     white-space: nowrap;
   }
 

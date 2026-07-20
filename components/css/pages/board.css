@@ -189,7 +189,7 @@ body.board-dragging * {
   border-radius: 6px;
   background: var(--color-primary);
   color: var(--color-white);
-  font-size: 12px;
+  font-size: 16px;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;

@@ -178,6 +178,6 @@
   }
 
   .auth-page--signup .privacy-consent__label {
-    font-size: clamp(14px, 4.3vw, 17px);
+    font-size: clamp(16px, 4.3vw, 17px);
   }
 }
