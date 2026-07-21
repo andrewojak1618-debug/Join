@@ -111,6 +111,9 @@ function initContactFormValidation(prefix) {
 function handleContactValidationEvent(event, prefix) {
   const fieldName = getContactFieldName(event.target.id, prefix);
   if (!fieldName) return;
+  if (fieldName === "Phone" && event.type === "input") {
+    event.target.value = sanitizePhoneNumber(event.target.value);
+  }
   if (event.type === "input") setContactFormMessage(prefix, "");
   const shouldValidate = event.type === "focusout" || event.target.getAttribute("aria-invalid") === "true";
   if (shouldValidate) validateContactField(prefix, fieldName);
@@ -132,7 +135,10 @@ function validateContactForm(prefix) {
 /** Validates one contact field and renders its feedback. */
 function validateContactField(prefix, fieldName) {
   const field = document.getElementById(`${prefix}${fieldName}`);
-  const message = getContactFieldError(fieldName, field.value.trim());
+  const message = getContactFieldError(
+    fieldName,
+    getTrimmedInputValue(`${prefix}${fieldName}`),
+  );
   setContactFieldError(prefix, fieldName, message);
   return !message;
 }
@@ -142,8 +148,16 @@ function validateContactField(prefix, fieldName) {
 function getContactFieldError(fieldName, value) {
   if (fieldName === "Name") return value ? "" : "Please enter a name.";
   if (fieldName === "Email") return isEmailAddressValid(value) ? "" : "Please enter a valid email address.";
-  if (fieldName === "Phone") return value ? "" : "Please enter a phone number.";
+  if (fieldName === "Phone") return getPhoneNumberError(value);
   return "";
+}
+
+
+/** @returns {string} Validation feedback for one phone number. */
+function getPhoneNumberError(value) {
+  if (!value) return "Please enter a phone number.";
+  if (!phoneNumberPattern.test(value)) return "Use only numbers and common phone symbols.";
+  return isPhoneNumberValid(value) ? "" : "Enter at least 6 digits.";
 }
 
 
@@ -284,11 +298,10 @@ function getRandomContactColor() {
  * Reads the trimmed form values for the given dialog id prefix.
  */
 function getContactFormValues(idPrefix) {
-  return {
-    name: document.getElementById(idPrefix + "Name").value.trim(),
-    email: document.getElementById(idPrefix + "Email").value.trim(),
-    phone: document.getElementById(idPrefix + "Phone").value.trim(),
-  };
+  return Object.fromEntries(contactFieldNames.map((fieldName) => [
+    fieldName.toLowerCase(),
+    getTrimmedInputValue(idPrefix + fieldName),
+  ]));
 }
 
 

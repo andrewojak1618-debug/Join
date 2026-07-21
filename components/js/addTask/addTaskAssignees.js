@@ -33,7 +33,7 @@ async function loadAddTaskContacts() {
  * Wires dropdown opening once and keeps the document outside-click listener unique.
  */
 function bindAssigneeDropdown() {
-  getAssigneeButton().addEventListener("click", toggleAssigneeDropdown);
+  getElement("taskAssigneesButton").addEventListener("click", toggleAssigneeDropdown);
   if (assigneeOutsideClickReady) return;
   document.addEventListener("click", closeAssigneeDropdownOnOutsideClick);
   assigneeOutsideClickReady = true;
@@ -44,7 +44,7 @@ function bindAssigneeDropdown() {
  * Renders all assignable contacts as checkbox options.
  */
 function renderAssigneeOptions() {
-  const panel = getAssigneePanel();
+  const panel = getElement("taskAssigneesPanel");
   panel.innerHTML = addTaskContacts.length
     ? addTaskContacts.map(getAssigneeOptionTemplate).join("")
     : '<p class="contact-dropdown__empty">No contacts available.</p>';
@@ -68,7 +68,8 @@ function handleAssigneeChange() {
  * @returns {string[]} Ids of all currently checked assignee options.
  */
 function getCheckedAssigneeIds() {
-  return [...getAssigneePanel().querySelectorAll("input:checked")].map((input) => input.value);
+  return [...getElement("taskAssigneesPanel").querySelectorAll("input:checked")]
+    .map((input) => input.value);
 }
 
 
@@ -97,7 +98,9 @@ function updateAssigneeSelection() {
  */
 function updateAssigneeButtonText() {
   const count = selectedTaskAssignees.length;
-  getAssigneeButton().textContent = count ? `${count} contact${count === 1 ? "" : "s"} selected` : "Select contacts to assign";
+  getElement("taskAssigneesButton").textContent = count
+    ? `${count} contact${count === 1 ? "" : "s"} selected`
+    : "Select contacts to assign";
 }
 
 
@@ -113,7 +116,8 @@ function renderSelectedAssigneeChips() {
     selectedTaskAssignees, maxVisibleAssigneeChips,
   );
   const chips = visible.map(getAssigneeChipTemplate).join("");
-  getSelectedAssignees().innerHTML = chips + getAssigneeOverflowChipTemplate(overflowCount);
+  getElement("taskAssigneesSelected").innerHTML =
+    chips + getAssigneeOverflowChipTemplate(overflowCount);
 }
 
 
@@ -121,7 +125,7 @@ function renderSelectedAssigneeChips() {
  * Opens or closes the dropdown from the trigger button.
  */
 function toggleAssigneeDropdown() {
-  setAssigneeDropdownOpen(getAssigneePanel().hidden);
+  setAssigneeDropdownOpen(getElement("taskAssigneesPanel").hidden);
 }
 
 
@@ -131,7 +135,7 @@ function toggleAssigneeDropdown() {
  * @param {MouseEvent} event - Document click event.
  */
 function closeAssigneeDropdownOnOutsideClick(event) {
-  const dropdown = getAssigneeDropdown();
+  const dropdown = getElement("taskAssigneesDropdown");
   if (dropdown && !dropdown.contains(event.target)) setAssigneeDropdownOpen(false);
 }
 
@@ -142,9 +146,9 @@ function closeAssigneeDropdownOnOutsideClick(event) {
  * @param {boolean} isOpen - True to open, false to close the dropdown.
  */
 function setAssigneeDropdownOpen(isOpen) {
-  getAssigneeDropdown().classList.toggle("is-open", isOpen);
-  getAssigneePanel().hidden = !isOpen;
-  getAssigneeButton().setAttribute("aria-expanded", String(isOpen));
+  getElement("taskAssigneesDropdown").classList.toggle("is-open", isOpen);
+  getElement("taskAssigneesPanel").hidden = !isOpen;
+  getElement("taskAssigneesButton").setAttribute("aria-expanded", String(isOpen));
 }
 
 
@@ -153,7 +157,7 @@ function setAssigneeDropdownOpen(isOpen) {
  */
 function resetAddTaskAssignees() {
   selectedTaskAssignees = [];
-  getAssigneePanel().querySelectorAll("input").forEach((input) => {
+  getElement("taskAssigneesPanel").querySelectorAll("input").forEach((input) => {
     input.checked = false;
   });
   setAssigneeDropdownOpen(false);
@@ -161,33 +165,3 @@ function resetAddTaskAssignees() {
 }
 
 
-/**
- * @returns {HTMLElement} The assignee dropdown container.
- */
-function getAssigneeDropdown() {
-  return document.getElementById("taskAssigneesDropdown");
-}
-
-
-/**
- * @returns {HTMLElement} The button that toggles the assignee dropdown.
- */
-function getAssigneeButton() {
-  return document.getElementById("taskAssigneesButton");
-}
-
-
-/**
- * @returns {HTMLElement} The panel that lists all assignable contacts.
- */
-function getAssigneePanel() {
-  return document.getElementById("taskAssigneesPanel");
-}
-
-
-/**
- * @returns {HTMLElement} The container for the selected-contact chips.
- */
-function getSelectedAssignees() {
-  return document.getElementById("taskAssigneesSelected");
-}

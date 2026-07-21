@@ -7,7 +7,7 @@ const { loadBrowserScripts } = require("./helpers/scriptContext");
 test("completes local logout when Firebase logout fails", async () => {
   let cleared = false;
   let destination = "";
-  const context = loadBrowserScripts(["components/js/auth.js"], {
+  const context = loadBrowserScripts(["components/js/auth/auth.js"], {
     console: { error() {} },
     window: {
       joinFirebaseAuth: {
@@ -27,7 +27,7 @@ test("completes local logout when Firebase logout fails", async () => {
 
 test("shows feedback when initial summary loading fails", async () => {
   const error = { textContent: "", hidden: true };
-  const context = loadBrowserScripts(["components/js/summary.js"], {
+  const context = loadBrowserScripts(["components/js/summary/summary.js"], {
     document: { getElementById: () => error, querySelector: () => null },
     getCachedTasksSnapshot: () => null,
     loadTasksFromStore: async () => { throw new Error("offline"); },
@@ -51,7 +51,7 @@ test("renders cached tasks immediately without waiting for the store", async () 
   let resolveLoad;
   const pendingLoad = new Promise((resolve) => { resolveLoad = resolve; });
 
-  const context = loadBrowserScripts(["components/js/summary.js"], {
+  const context = loadBrowserScripts(["components/js/summary/summary.js"], {
     document: { getElementById: (id) => cells[id], querySelector: () => null },
     getCachedTasksSnapshot: () => [{ status: "todo" }, { status: "done" }],
     loadTasksFromStore: () => pendingLoad,
@@ -72,7 +72,7 @@ test("renders cached tasks immediately without waiting for the store", async () 
 
 test("shows feedback when initial board loading fails", async () => {
   const toast = { textContent: "", hidden: true };
-  const context = loadBrowserScripts(["components/js/board.js"], {
+  const context = loadBrowserScripts(["components/js/board/board.js"], {
     document: {
       querySelectorAll: () => [{}],
       getElementById: () => toast,
@@ -96,7 +96,7 @@ test("shows feedback when initial board loading fails", async () => {
  */
 function createBoardActionContext(task) {
   const messages = [];
-  const context = loadBrowserScripts(["components/js/boardDetail.js"], {
+  const context = loadBrowserScripts(["components/js/board/boardDetail.js"], {
     getActiveBoardTask: () => task,
     updateTaskInStore: async () => { throw new Error("offline"); },
     showBoardToast: (message) => messages.push(message),
@@ -130,7 +130,7 @@ function createBoardMoveContext() {
     targetStatus: "",
     toast: { hidden: true, textContent: "" },
   };
-  const context = loadBrowserScripts(["components/js/board.js"], {
+  const context = loadBrowserScripts(["components/js/board/board.js"], {
     document: { getElementById: () => state.toast },
     moveBoardTaskToStatus: (_task, status) =>
       rejectBoardMove(state, status),

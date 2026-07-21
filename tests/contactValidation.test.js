@@ -4,8 +4,8 @@ const test = require("node:test");
 const { loadBrowserScripts } = require("./helpers/scriptContext");
 
 const context = loadBrowserScripts([
-  "components/js/shared.js",
-  "components/js/contactsDialog.js",
+  "components/js/core/shared.js",
+  "components/js/contacts/contactsDialog.js",
 ]);
 
 const validContact = {
@@ -45,6 +45,13 @@ test("rejects obviously invalid email punctuation locally", () => {
 });
 
 
+test("rejects letters and unrealistically short phone numbers", () => {
+  assert.equal(context.isPhoneNumberValid("+49 123 456789"), true);
+  assert.equal(context.isPhoneNumberValid("call me"), false);
+  assert.equal(context.isPhoneNumberValid("123"), false);
+});
+
+
 test("trims every contact form value before validation and storage", () => {
   const elements = {
     contactAddName: { value: "  Ada Lovelace  " },
@@ -53,7 +60,7 @@ test("trims every contact form value before validation and storage", () => {
   };
   const document = { getElementById: (id) => elements[id] };
   const formContext = loadBrowserScripts([
-    "components/js/shared.js", "components/js/contactsDialog.js",
+    "components/js/core/shared.js", "components/js/contacts/contactsDialog.js",
   ], { document });
   assert.deepEqual(JSON.parse(JSON.stringify(formContext.getContactFormValues("contactAdd"))), validContact);
 });
@@ -63,7 +70,7 @@ test("shows and clears contact email feedback after blur", () => {
   const elements = createContactValidationElements();
   const document = { getElementById: (id) => elements[id] };
   const formContext = loadBrowserScripts([
-    "components/js/shared.js", "components/js/contactsDialog.js",
+    "components/js/core/shared.js", "components/js/contacts/contactsDialog.js",
   ], { document });
   formContext.handleContactValidationEvent({ type: "focusout", target: elements.contactAddEmail }, "contactAdd");
   assert.equal(elements.contactAddEmailError.textContent, "Please enter a valid email address.");

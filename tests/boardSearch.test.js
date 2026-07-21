@@ -6,7 +6,7 @@ const {
   toPlainValue,
 } = require("./helpers/scriptContext");
 
-const boardSearchScript = "components/js/boardSearch.js";
+const boardSearchScript = "components/js/board/boardSearch.js";
 
 /**
  * Loads the board search logic with a minimal board and DOM test setup.

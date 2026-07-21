@@ -21,9 +21,9 @@ const document = {
 
 const context = loadBrowserScripts(
   [
-    "components/js/shared.js",
-    "components/js/tasks.js",
-    "components/js/boardEdit.js",
+    "components/js/core/shared.js",
+    "components/js/tasks/tasks.js",
+    "components/js/board/boardEdit.js",
   ],
   {
     document,

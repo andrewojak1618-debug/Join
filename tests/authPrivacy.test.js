@@ -7,10 +7,10 @@ const {
   toPlainValue,
 } = require("./helpers/scriptContext");
 
-const authScript = "components/js/auth.js";
-const loginScript = "components/js/login.js";
-const sharedScript = "components/js/shared.js";
-const signupScript = "components/js/signup.js";
+const authScript = "components/js/auth/auth.js";
+const loginScript = "components/js/auth/login.js";
+const sharedScript = "components/js/core/shared.js";
+const signupScript = "components/js/auth/signup.js";
 
 
 /**
@@ -160,10 +160,13 @@ test("rejects signup email addresses containing umlauts", () => {
 
 test("trims login credentials and rejects invalid email before Firebase", () => {
   const { context, elements } = createLoginContext();
-  assert.equal(context.getLoginEmail(), "qa.user@example.com");
-  assert.equal(context.getLoginPassword(), "Testpass123!");
+  assert.equal(context.getTrimmedInputValue("loginEmail"), "qa.user@example.com");
+  assert.equal(context.getTrimmedInputValue("loginPassword"), "Testpass123!");
   elements.loginEmail.value = "invalid-email";
-  assert.equal(context.isLoginFormValid(context.getLoginEmail(), context.getLoginPassword()), false);
+  assert.equal(context.isLoginFormValid(
+    context.getTrimmedInputValue("loginEmail"),
+    context.getTrimmedInputValue("loginPassword"),
+  ), false);
   assert.equal(elements.loginError.textContent, "");
 });
 

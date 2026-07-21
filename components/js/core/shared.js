@@ -2,6 +2,8 @@
 
 
 const emailAddressPattern = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+const phoneNumberPattern = /^\+?[\d\s()-]+$/;
+const minimumPhoneDigits = 6;
 
 
 /**
@@ -16,6 +18,49 @@ function isEmailAddressValid(email) {
     !localPart.startsWith(".") &&
     !localPart.endsWith(".") &&
     !localPart.includes("..");
+}
+
+
+/**
+ * Reads an input value by id and removes accidental surrounding whitespace.
+ * @param {string} inputId - Id of the input element to read.
+ * @returns {string} The normalized input value.
+ */
+function getTrimmedInputValue(inputId) {
+  return getElement(inputId).value.trim();
+}
+
+
+/**
+ * Returns one DOM element for a caller-supplied id.
+ * @param {string} elementId - Id of the required element.
+ * @returns {HTMLElement|null} The matching element.
+ */
+function getElement(elementId) {
+  return document.getElementById(elementId);
+}
+
+
+/**
+ * Removes characters that cannot be part of a phone number.
+ * @param {string} value - Raw phone input.
+ * @returns {string} Input containing only digits and common phone symbols.
+ */
+function sanitizePhoneNumber(value) {
+  const allowedCharacters = String(value || "").replace(/[^\d+()\s-]/g, "");
+  return allowedCharacters.replace(/(?!^)\+/g, "");
+}
+
+
+/**
+ * Checks the allowed phone characters and requires a realistic digit count.
+ * @param {string} value - Phone number to validate.
+ * @returns {boolean} True for a valid phone number.
+ */
+function isPhoneNumberValid(value) {
+  const normalizedPhone = String(value || "").trim();
+  const digitCount = normalizedPhone.replace(/\D/g, "").length;
+  return phoneNumberPattern.test(normalizedPhone) && digitCount >= minimumPhoneDigits;
 }
 
 

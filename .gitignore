@@ -1,6 +1,5 @@
 CLAUDE.md
-components/js/firebaseConfig.js
-components/js/firebase-config.js
+components/js/firebase/firebaseConfig.js
 firebase-rules-analysis.md
 todo.md
 notes.md

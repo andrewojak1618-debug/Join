@@ -5,7 +5,7 @@ const { loadBrowserScripts } = require("./helpers/scriptContext");
 
 
 test("offers the adjacent board columns as move targets", () => {
-  const context = loadBrowserScripts(["components/js/boardTemplates.js"]);
+  const context = loadBrowserScripts(["components/js/board/boardTemplates.js"]);
 
   assert.deepEqual(
     Array.from(
@@ -18,7 +18,7 @@ test("offers the adjacent board columns as move targets", () => {
 
 
 test("uses directional icons relative to the current board column", () => {
-  const context = loadBrowserScripts(["components/js/boardTemplates.js"]);
+  const context = loadBrowserScripts(["components/js/board/boardTemplates.js"]);
   const targets = context.getBoardMoveTargets("feedback");
 
   assert.deepEqual(
@@ -31,7 +31,7 @@ test("uses directional icons relative to the current board column", () => {
 test("renders a moved task immediately and persists its new status", async () => {
   const task = { id: "task-1", status: "todo" };
   const state = { renders: 0, savedStatus: "" };
-  const context = loadBrowserScripts(["components/js/boardDnd.js"], {
+  const context = loadBrowserScripts(["components/js/board/boardDnd.js"], {
     activeBoardTasks: [task],
     renderBoardColumns: () => { state.renders += 1; },
     initBoardTaskDetails() {},

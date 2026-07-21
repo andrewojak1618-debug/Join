@@ -6,9 +6,9 @@ window.joinFirebaseReady = loadFirebaseConfig();
  */
 async function loadFirebaseConfig() {
   try {
-    const response = await fetch("./components/js/firebaseConfig.js");
+    const response = await fetch("./components/js/firebase/firebaseConfig.js");
     if (!response.ok) return handleFirebaseLoadFailure();
-    await loadScript("./components/js/firebaseConfig.js");
+    await loadScript("./components/js/firebase/firebaseConfig.js");
     await import("./firebaseAuth.mjs");
     await import("./firebaseContacts.mjs");
     await import("./firebaseTasks.mjs");

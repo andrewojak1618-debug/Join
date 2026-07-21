@@ -163,7 +163,7 @@ function getAddTaskError(validator) {
  * @returns {string} Error message for a missing title, or an empty string.
  */
 function getAddTaskTitleError() {
-  return getAddTaskTitle() ? "" : "Please enter a title.";
+  return getTrimmedInputValue("taskTitle") ? "" : "Please enter a title.";
 }
 
 
@@ -171,7 +171,7 @@ function getAddTaskTitleError() {
  * @returns {string} Error message for a missing or invalid due date, or an empty string.
  */
 function getAddTaskDueDateError() {
-  const input = document.getElementById("taskDueDate").value.trim();
+  const input = getTrimmedInputValue("taskDueDate");
   if (!input) return "Please select a due date.";
   return getValidatedAddTaskDueDateError(getAddTaskDueDate());
 }

@@ -147,7 +147,7 @@ Do not open the application directly through a `file://` URL.
 Join expects a local Firebase web configuration file at:
 
 ```text
-components/js/firebaseConfig.js
+components/js/firebase/firebaseConfig.js
 ```
 
 This file is intentionally ignored by Git and must never be committed. Each
@@ -187,16 +187,16 @@ $config = (
 ).Trim()
 
 "window.joinFirebaseConfig = $config;`r`n" |
-  Set-Content -Encoding utf8 .\components\js\firebaseConfig.js
+  Set-Content -Encoding utf8 .\components\js\firebase\firebaseConfig.js
 ```
 
 Verify the generated file without printing all configuration values:
 
 ```powershell
-Test-Path .\components\js\firebaseConfig.js
-node --check .\components\js\firebaseConfig.js
-Select-String -Path .\components\js\firebaseConfig.js -Pattern "projectId|authDomain"
-git check-ignore -v .\components\js\firebaseConfig.js
+Test-Path .\components\js\firebase\firebaseConfig.js
+node --check .\components\js\firebase\firebaseConfig.js
+Select-String -Path .\components\js\firebase\firebaseConfig.js -Pattern "projectId|authDomain"
+git check-ignore -v .\components\js\firebase\firebaseConfig.js
 ```
 
 The configuration must reference the Firebase project `join-teamjob`. If the

@@ -5,8 +5,8 @@ const {
   loadBrowserScripts,
 } = require("./helpers/scriptContext");
 
-const contactTemplatesScript = "components/js/contactsTemplates.js";
-const sharedScript = "components/js/shared.js";
+const contactTemplatesScript = "components/js/contacts/contactsTemplates.js";
+const sharedScript = "components/js/core/shared.js";
 
 
 /**

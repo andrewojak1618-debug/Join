@@ -75,8 +75,8 @@ async function handleLoginSubmit(event) {
   event.preventDefault();
   touchAllLoginFields();
   renderTouchedLoginErrors();
-  const email = getLoginEmail();
-  const password = getLoginPassword();
+  const email = getTrimmedInputValue("loginEmail");
+  const password = getTrimmedInputValue("loginPassword");
 
   if (!isLoginFormValid(email, password)) return;
   await submitLogin(email, password);
@@ -155,8 +155,12 @@ function renderLoginFieldError(fieldId) {
 
 /** @returns {string} Validation feedback for one login field. */
 function getLoginFieldError(fieldId) {
-  if (fieldId === "loginEmail") return getLoginEmailError(getLoginEmail());
-  if (fieldId === "loginPassword") return getLoginPasswordError(getLoginPassword());
+  if (fieldId === "loginEmail") {
+    return getLoginEmailError(getTrimmedInputValue(fieldId));
+  }
+  if (fieldId === "loginPassword") {
+    return getLoginPasswordError(getTrimmedInputValue(fieldId));
+  }
   return "";
 }
 
@@ -171,24 +175,6 @@ function getLoginEmailError(email) {
 /** @returns {string} Validation feedback for the login password. */
 function getLoginPasswordError(password) {
   return password ? "" : "Please enter your password.";
-}
-
-
-/**
- * Reads the email input value without surrounding whitespace.
- * @returns {string} The trimmed email address.
- */
-function getLoginEmail() {
-  return document.getElementById("loginEmail").value.trim();
-}
-
-
-/**
- * Reads the password without accidental surrounding whitespace.
- * @returns {string} The trimmed password.
- */
-function getLoginPassword() {
-  return document.getElementById("loginPassword").value.trim();
 }
 
 

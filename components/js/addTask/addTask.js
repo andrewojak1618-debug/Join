@@ -163,8 +163,8 @@ function getAddTaskSuccessMessage() {
 function getAddTaskData() {
   return {
     id: createTaskId(),
-    title: getAddTaskTitle(),
-    description: getAddTaskDescription(),
+    title: getTrimmedInputValue("taskTitle"),
+    description: getTrimmedInputValue("taskDescription"),
     dueDate: getAddTaskDueDate(),
     priority: getAddTaskPriority(),
     assignedTo: getAddTaskAssignee(),
@@ -207,26 +207,10 @@ function createTaskId() {
 
 
 /**
- * @returns {string} The trimmed task title from the form.
- */
-function getAddTaskTitle() {
-  return document.getElementById("taskTitle").value.trim();
-}
-
-
-/**
- * @returns {string} The trimmed optional description from the form.
- */
-function getAddTaskDescription() {
-  return document.getElementById("taskDescription").value.trim();
-}
-
-
-/**
  * @returns {string} The normalized due date, or an empty string if invalid.
  */
 function getAddTaskDueDate() {
-  const dueDate = document.getElementById("taskDueDate").value.trim();
+  const dueDate = getTrimmedInputValue("taskDueDate");
   return normalizeTaskDueDate(dueDate);
 }
 

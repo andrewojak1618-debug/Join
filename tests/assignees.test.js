@@ -6,9 +6,9 @@ const {
   toPlainValue,
 } = require("./helpers/scriptContext");
 
-const sharedScript = "components/js/shared.js";
-const taskStoreScript = "components/js/tasksStore.js";
-const contactsScript = "components/js/contacts.js";
+const sharedScript = "components/js/core/shared.js";
+const taskStoreScript = "components/js/tasks/tasksStore.js";
+const contactsScript = "components/js/contacts/contacts.js";
 
 /**
  * Loads the shared assignee helpers in isolation.

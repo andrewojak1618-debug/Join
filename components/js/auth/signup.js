@@ -48,9 +48,9 @@ async function registerUser() {
 async function saveSignedUpUser() {
   const auth = getFirebaseAuthAdapter();
   await auth.registerFirebaseUser(
-    getSignupName(),
-    getSignupEmail(),
-    getSignupPassword(),
+    getTrimmedInputValue("signupName"),
+    getTrimmedInputValue("signupEmail"),
+    getTrimmedInputValue("signupPassword"),
   );
   await auth.logoutFirebaseUser();
   clearStoredUser();
@@ -213,28 +213,28 @@ function getSignupFieldError(fieldId) {
 
 /** @returns {string} Name validation feedback. */
 function getSignupNameError() {
-  if (!getSignupName()) return "Please enter your name.";
+  if (!getTrimmedInputValue("signupName")) return "Please enter your name.";
   return isSignupNameValid() ? "" : "Enter at least 2 characters.";
 }
 
 
 /** @returns {string} Password validation feedback. */
 function getSignupPasswordError() {
-  if (!getSignupPassword()) return "Please enter a password.";
+  if (!getTrimmedInputValue("signupPassword")) return "Please enter a password.";
   return isSignupPasswordValid() ? "" : "Use at least 6 characters.";
 }
 
 
 /** @returns {string} Password confirmation feedback. */
 function getSignupConfirmPasswordError() {
-  if (!getSignupConfirmPassword()) return "Please confirm your password.";
+  if (!getTrimmedInputValue("signupConfirmPassword")) return "Please confirm your password.";
   return passwordsMatch() ? "" : "Passwords do not match.";
 }
 
 
 /** @returns {boolean} True when the trimmed name has at least two characters. */
 function isSignupNameValid() {
-  return getSignupName().length >= 2;
+  return getTrimmedInputValue("signupName").length >= 2;
 }
 
 
@@ -242,13 +242,13 @@ function isSignupNameValid() {
  * @returns {boolean} True when the entered email matches the email pattern.
  */
 function isEmailValid() {
-  return isEmailAddressValid(getSignupEmail());
+  return isEmailAddressValid(getTrimmedInputValue("signupEmail"));
 }
 
 
 /** @returns {boolean} True when Firebase's minimum password length is met. */
 function isSignupPasswordValid() {
-  return getSignupPassword().length >= 6;
+  return getTrimmedInputValue("signupPassword").length >= 6;
 }
 
 
@@ -256,39 +256,8 @@ function isSignupPasswordValid() {
  * @returns {boolean} True when both entered passwords are identical.
  */
 function passwordsMatch() {
-  return getSignupPassword() === getSignupConfirmPassword();
-}
-
-
-/**
- * @returns {string} The trimmed name from the signup form.
- */
-function getSignupName() {
-  return document.getElementById("signupName").value.trim();
-}
-
-
-/**
- * @returns {string} The trimmed email from the signup form.
- */
-function getSignupEmail() {
-  return document.getElementById("signupEmail").value.trim();
-}
-
-
-/**
- * @returns {string} The trimmed password from the signup form.
- */
-function getSignupPassword() {
-  return document.getElementById("signupPassword").value.trim();
-}
-
-
-/**
- * @returns {string} The trimmed password confirmation from the signup form.
- */
-function getSignupConfirmPassword() {
-  return document.getElementById("signupConfirmPassword").value.trim();
+  return getTrimmedInputValue("signupPassword") ===
+    getTrimmedInputValue("signupConfirmPassword");
 }
 
 

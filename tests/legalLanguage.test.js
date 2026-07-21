@@ -6,7 +6,7 @@ const {
   loadBrowserScripts,
 } = require("./helpers/scriptContext");
 
-const legalLanguageScript = "components/js/legalLanguage.js";
+const legalLanguageScript = "components/js/legal/legalLanguage.js";
 
 
 /**

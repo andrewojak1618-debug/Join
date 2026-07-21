@@ -7,8 +7,8 @@ const {
   toPlainValue,
 } = require("./helpers/scriptContext");
 
-const tasksScript = "components/js/tasks.js";
-const taskStoreScript = "components/js/tasksStore.js";
+const tasksScript = "components/js/tasks/tasks.js";
+const taskStoreScript = "components/js/tasks/tasksStore.js";
 const taskStorageKey = "joinTasks";
 
 /**

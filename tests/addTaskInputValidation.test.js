@@ -14,13 +14,15 @@ const document = {
   querySelector: () => ({ value: "  urgent  " }),
 };
 const context = loadBrowserScripts([
-  "components/js/tasks.js", "components/js/addTask.js",
+  "components/js/core/shared.js",
+  "components/js/tasks/tasks.js",
+  "components/js/addTask/addTask.js",
 ], { document });
 
 
 test("trims Add Task strings before building the task", () => {
-  assert.equal(context.getAddTaskTitle(), "Prepare release");
-  assert.equal(context.getAddTaskDescription(), "Verify the final build");
+  assert.equal(context.getTrimmedInputValue("taskTitle"), "Prepare release");
+  assert.equal(context.getTrimmedInputValue("taskDescription"), "Verify the final build");
   assert.equal(context.getAddTaskDueDate(), "2026-07-25");
   assert.equal(context.getAddTaskPriority(), "urgent");
   assert.equal(context.getAddTaskCategory(), "technical-task");
@@ -30,7 +32,7 @@ test("trims Add Task strings before building the task", () => {
 test("treats whitespace-only required Add Task strings as empty", () => {
   elements.taskTitle.value = "   ";
   elements.taskCategory.value = "   ";
-  assert.equal(context.getAddTaskTitle(), "");
+  assert.equal(context.getTrimmedInputValue("taskTitle"), "");
   assert.equal(context.getAddTaskCategory(), "");
 });
 
@@ -38,7 +40,8 @@ test("treats whitespace-only required Add Task strings as empty", () => {
 test("maps the custom category button blur to category validation", () => {
   const dropdown = { contains: (target) => target === "inside" };
   const validationContext = loadBrowserScripts([
-    "components/js/addTaskValidation.js",
+    "components/js/core/shared.js",
+    "components/js/addTask/addTaskValidation.js",
   ], { document: { getElementById: () => dropdown } });
   assert.equal(validationContext.getAddTaskBlurFieldId({
     target: { id: "taskCategoryButton" }, relatedTarget: "outside",
@@ -59,7 +62,8 @@ test("marks the visible category button as invalid", () => {
     getElementById: (id) => id === "taskCategoryButton" ? button : error,
   };
   const validationContext = loadBrowserScripts([
-    "components/js/addTaskValidation.js",
+    "components/js/core/shared.js",
+    "components/js/addTask/addTaskValidation.js",
   ], { document });
   validationContext.setAddTaskFieldError(
     "taskCategory", "taskCategoryError", "Please select a category.",

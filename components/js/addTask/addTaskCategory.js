@@ -14,7 +14,7 @@ function initAddTaskCategory() {
  * Wires dropdown opening once and keeps the document outside-click listener unique.
  */
 function bindCategoryDropdown() {
-  getCategoryButton().addEventListener("click", toggleCategoryDropdown);
+  getElement("taskCategoryButton").addEventListener("click", toggleCategoryDropdown);
   if (categoryOutsideClickReady) return;
   document.addEventListener("click", closeCategoryDropdownOnOutsideClick);
   categoryOutsideClickReady = true;
@@ -25,7 +25,7 @@ function bindCategoryDropdown() {
  * Registers the click handling for every static category option.
  */
 function bindCategoryOptions() {
-  getCategoryPanel().querySelectorAll("[data-category-value]").forEach((option) => {
+  getElement("taskCategoryPanel").querySelectorAll("[data-category-value]").forEach((option) => {
     option.addEventListener("click", () => selectAddTaskCategory(option));
   });
 }
@@ -36,8 +36,8 @@ function bindCategoryOptions() {
  * @param {HTMLElement} option - The clicked category option.
  */
 function selectAddTaskCategory(option) {
-  getCategoryInput().value = option.dataset.categoryValue;
-  getCategoryButton().textContent = option.textContent.trim();
+  getElement("taskCategory").value = option.dataset.categoryValue;
+  getElement("taskCategoryButton").textContent = option.textContent.trim();
   markSelectedCategoryOption(option);
   setCategoryDropdownOpen(false);
   handleAddTaskValidationChange("taskCategory");
@@ -50,7 +50,7 @@ function selectAddTaskCategory(option) {
  * @param {HTMLElement|null} selectedOption - The option to mark, or null to clear.
  */
 function markSelectedCategoryOption(selectedOption) {
-  getCategoryPanel().querySelectorAll("[data-category-value]").forEach((option) => {
+  getElement("taskCategoryPanel").querySelectorAll("[data-category-value]").forEach((option) => {
     option.classList.toggle("is-selected", option === selectedOption);
   });
 }
@@ -60,7 +60,7 @@ function markSelectedCategoryOption(selectedOption) {
  * Opens or closes the dropdown from the trigger button.
  */
 function toggleCategoryDropdown() {
-  setCategoryDropdownOpen(getCategoryPanel().hidden);
+  setCategoryDropdownOpen(getElement("taskCategoryPanel").hidden);
 }
 
 
@@ -69,7 +69,7 @@ function toggleCategoryDropdown() {
  * @param {MouseEvent} event - Document click event.
  */
 function closeCategoryDropdownOnOutsideClick(event) {
-  const dropdown = getCategoryDropdown();
+  const dropdown = getElement("taskCategoryDropdown");
   if (dropdown && !dropdown.contains(event.target)) setCategoryDropdownOpen(false);
 }
 
@@ -79,9 +79,9 @@ function closeCategoryDropdownOnOutsideClick(event) {
  * @param {boolean} isOpen - True to open, false to close the dropdown.
  */
 function setCategoryDropdownOpen(isOpen) {
-  getCategoryDropdown().classList.toggle("is-open", isOpen);
-  getCategoryPanel().hidden = !isOpen;
-  getCategoryButton().setAttribute("aria-expanded", String(isOpen));
+  getElement("taskCategoryDropdown").classList.toggle("is-open", isOpen);
+  getElement("taskCategoryPanel").hidden = !isOpen;
+  getElement("taskCategoryButton").setAttribute("aria-expanded", String(isOpen));
 }
 
 
@@ -89,40 +89,10 @@ function setCategoryDropdownOpen(isOpen) {
  * Clears the category selection after form reset or successful task creation.
  */
 function resetAddTaskCategory() {
-  getCategoryInput().value = "";
-  getCategoryButton().textContent = "Select task category";
+  getElement("taskCategory").value = "";
+  getElement("taskCategoryButton").textContent = "Select task category";
   markSelectedCategoryOption(null);
   setCategoryDropdownOpen(false);
 }
 
 
-/**
- * @returns {HTMLElement} The category dropdown container.
- */
-function getCategoryDropdown() {
-  return document.getElementById("taskCategoryDropdown");
-}
-
-
-/**
- * @returns {HTMLElement} The button that toggles the category dropdown.
- */
-function getCategoryButton() {
-  return document.getElementById("taskCategoryButton");
-}
-
-
-/**
- * @returns {HTMLElement} The panel that lists the category options.
- */
-function getCategoryPanel() {
-  return document.getElementById("taskCategoryPanel");
-}
-
-
-/**
- * @returns {HTMLElement} The hidden input that stores the picked category.
- */
-function getCategoryInput() {
-  return document.getElementById("taskCategory");
-}
