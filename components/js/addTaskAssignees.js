@@ -101,7 +101,7 @@ function updateAssigneeButtonText() {
 }
 
 
-const maxVisibleAssigneeChips = 9;
+const maxVisibleAssigneeChips = 4;
 
 
 /**

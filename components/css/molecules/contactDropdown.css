@@ -34,6 +34,10 @@
   transform: rotate(180deg);
 }
 
+.contact-dropdown.is-open .contact-dropdown__selected {
+  display: none;
+}
+
 .contact-dropdown__option--single {
   width: 100%;
   border: unset;
