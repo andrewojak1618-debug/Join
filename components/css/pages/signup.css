@@ -96,15 +96,8 @@
   .auth-page--signup {
     align-content: start;
     padding:
-      clamp(20px, calc(6.4svh - 22px), 37px) 16px
+      var(--auth-page-mobile-top) 16px
       clamp(56px, 10svh, 96px);
-  }
-
-  .auth-page--signup .auth-logo {
-    position: static;
-    justify-self: start;
-    width: clamp(48px, calc(13svh - 38px), 82px);
-    margin: 0 0 clamp(12px, calc(6.4svh - 30px), 29px) 22px;
   }
 
   .auth-card--signup {

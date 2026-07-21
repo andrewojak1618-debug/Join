@@ -19,11 +19,6 @@
     clamp(48px, 6.25svh, 64px);
 }
 
-.auth-page--login .auth-logo {
-  top: clamp(24px, calc(10svh - 36px), 67px);
-  width: clamp(56px, calc(10svh - 4px), 100px);
-}
-
 .auth-signup-success {
   position: absolute;
   top: 91px;
@@ -107,7 +102,7 @@
   position: absolute;
   top: var(--login-card-top);
   left: 50%;
-  width: min(100%, 652px);
+  width: min(calc(100% - 192px), 652px);
   height: var(--login-card-height);
   padding: 48px 72px;
   display: grid;
@@ -246,19 +241,9 @@
     );
 
     align-content: start;
-    padding: clamp(24px, 4.3svh, 37px) 16px clamp(64px, 10svh, 96px);
-  }
-
-  .auth-page--login .auth-logo {
-    position: static;
-    justify-self: start;
-    width: clamp(48px, 8svh, 64px);
-    margin: 0 0 29px 22px;
-  }
-
-  .auth-page--login .auth-logo img {
-    width: 100%;
-    height: auto;
+    padding:
+      var(--auth-page-mobile-top) 16px
+      clamp(64px, 10svh, 96px);
   }
 
   .auth-signup-success {
