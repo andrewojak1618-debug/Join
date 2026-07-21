@@ -175,18 +175,37 @@ function updateBoardEditAssigneesSelection() {
 }
 
 
+const maxVisibleBoardEditAssignees = 4;
+
+
 /**
  * Shows the selected contacts as colored initials avatars.
+ * Caps the visible avatars and adds a "+N" chip for the rest.
  * @param {Object[]} assignees - Selected contact references.
  */
 function renderBoardEditAssigneeChips(assignees) {
-  const chips = assignees
+  const { visible, overflowCount } = getVisibleAssigneeChips(
+    assignees, maxVisibleBoardEditAssignees,
+  );
+  const chips = visible
     .map(
       (item) =>
         `<span class="board-detail-assignee__avatar" style="background-color: ${escapeHtmlText(item.color || "var(--color-primary-auth)")}">${getBoardInitials(item.name)}</span>`,
     )
     .join("");
-  getBoardEditAssigneesSelected().innerHTML = chips;
+  getBoardEditAssigneesSelected().innerHTML = chips + getBoardEditAssigneeOverflowTemplate(overflowCount);
+}
+
+
+/**
+ * Returns a muted "+N" avatar for edit-form assignees hidden beyond the visible limit.
+ *
+ * @param {number} overflowCount - Number of assignees not shown directly.
+ * @returns {string} HTML markup for the overflow avatar, or an empty string.
+ */
+function getBoardEditAssigneeOverflowTemplate(overflowCount) {
+  if (!overflowCount) return "";
+  return `<span class="board-detail-assignee__avatar board-detail-assignee__avatar--overflow">+${overflowCount}</span>`;
 }
 
 

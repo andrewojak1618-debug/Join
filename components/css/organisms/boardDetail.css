@@ -119,6 +119,10 @@
   font-size: 16px;
 }
 
+.board-detail-assignee__avatar--overflow {
+  background: var(--color-border-dark);
+}
+
 .board-detail-list dt {
   color: var(--color-muted);
 }

@@ -132,21 +132,26 @@ function getBoardDoneSubtaskCount(subtasks) {
  * @param {Array|string} assignedTo - Current or legacy task assignments.
  * @returns {string} HTML markup for the assignee avatars.
  */
+const maxVisibleBoardCardAssignees = 4;
+
+
 function getBoardAssigneeTemplate(assignedTo) {
   const assignees = getBoardAssignees(assignedTo);
   if (!assignees.length) return "<span></span>";
-  const avatars = assignees.map(getBoardAvatarTemplate).join("");
+  const { visible, overflowCount } = getVisibleAssigneeChips(
+    assignees, maxVisibleBoardCardAssignees,
+  );
+  const avatars = visible.map(getBoardAvatarTemplate).join("") + getBoardAvatarOverflowTemplate(overflowCount);
   return `<div class="board-card__assignees">${avatars}</div>`;
 }
 
 
 /**
  * @param {Array|string} assignedTo - Current or legacy task assignments.
- * @returns {{name: string, color: string}[]} Up to three resolved assignees.
+ * @returns {{name: string, color: string}[]} All resolved assignees of the task.
  */
 function getBoardAssignees(assignedTo) {
   return getTaskAssigneeReferences(assignedTo)
-    .slice(0, 3)
     .map((reference) => resolveAssigneeDisplay(reference, activeBoardContacts));
 }
 
@@ -157,6 +162,18 @@ function getBoardAssignees(assignedTo) {
  */
 function getBoardAvatarTemplate(assignee) {
   return `<span class="board-card__avatar" style="background-color: ${escapeHtmlText(assignee.color)}">${getBoardInitials(assignee.name)}</span>`;
+}
+
+
+/**
+ * Returns a muted "+N" avatar for card assignees hidden beyond the visible limit.
+ *
+ * @param {number} overflowCount - Number of assignees not shown directly.
+ * @returns {string} HTML markup for the overflow avatar, or an empty string.
+ */
+function getBoardAvatarOverflowTemplate(overflowCount) {
+  if (!overflowCount) return "";
+  return `<span class="board-card__avatar board-card__avatar--overflow">+${overflowCount}</span>`;
 }
 
 
