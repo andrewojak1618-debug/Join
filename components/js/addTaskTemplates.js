@@ -18,13 +18,25 @@ function getAssigneeOptionTemplate(contact) {
 
 
 /**
- * Returns a visible chip for one selected contact.
+ * Returns a colored initials avatar for one selected contact.
  *
  * @param {Object} contact - Selected contact object.
- * @returns {string} HTML markup for the selected-contact chip.
+ * @returns {string} HTML markup for the selected-contact avatar chip.
  */
 function getAssigneeChipTemplate(contact) {
-  return `<span class="contact-dropdown__chip">${escapeHtmlText(contact.name)}</span>`;
+  return `<span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color || "var(--color-primary-auth)")}">${getContactInitials(contact.name)}</span>`;
+}
+
+
+/**
+ * Returns a muted "+N" avatar for assignees hidden beyond the visible limit.
+ *
+ * @param {number} overflowCount - Number of assignees not shown directly.
+ * @returns {string} HTML markup for the overflow avatar, or an empty string.
+ */
+function getAssigneeOverflowChipTemplate(overflowCount) {
+  if (!overflowCount) return "";
+  return `<span class="contact-dropdown__avatar contact-dropdown__avatar--overflow">+${overflowCount}</span>`;
 }
 
 

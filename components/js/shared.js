@@ -109,6 +109,20 @@ function isTaskAssigneeContact(assignee, contact) {
 
 
 /**
+ * Splits assignees into a visible slice and an overflow count for chip rows.
+ * @param {Object[]} assignees - All currently selected assignees.
+ * @param {number} maxVisible - Maximum number of avatars to show directly.
+ * @returns {{visible: Object[], overflowCount: number}} Chip row data.
+ */
+function getVisibleAssigneeChips(assignees, maxVisible) {
+  return {
+    visible: assignees.slice(0, maxVisible),
+    overflowCount: Math.max(0, assignees.length - maxVisible),
+  };
+}
+
+
+/**
  * Locks page scrolling while a dialog is open and stores the scroll position.
  */
 function lockPageScroll() {

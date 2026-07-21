@@ -78,6 +78,11 @@
   background: var(--color-background-soft);
 }
 
+.contact-dropdown__option:has(input:checked) {
+  background: var(--color-primary-auth);
+  color: var(--color-white);
+}
+
 .contact-dropdown__option input {
   width: 16px;
   height: 16px;
@@ -91,8 +96,13 @@
   border: 2px solid var(--color-white);
   border-radius: 50%;
   color: var(--color-white);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
+}
+
+.contact-dropdown__avatar--overflow {
+  background: var(--color-border-dark);
+  font-size: 16px;
 }
 
 .contact-dropdown__empty {

@@ -101,11 +101,19 @@ function updateAssigneeButtonText() {
 }
 
 
+const maxVisibleAssigneeChips = 9;
+
+
 /**
  * Renders the selected contacts below the dropdown as small chips.
+ * Caps the visible avatars and adds a "+N" chip for the rest.
  */
 function renderSelectedAssigneeChips() {
-  getSelectedAssignees().innerHTML = selectedTaskAssignees.map(getAssigneeChipTemplate).join("");
+  const { visible, overflowCount } = getVisibleAssigneeChips(
+    selectedTaskAssignees, maxVisibleAssigneeChips,
+  );
+  const chips = visible.map(getAssigneeChipTemplate).join("");
+  getSelectedAssignees().innerHTML = chips + getAssigneeOverflowChipTemplate(overflowCount);
 }
 
 
