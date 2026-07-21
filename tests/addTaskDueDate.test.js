@@ -9,11 +9,18 @@ const document = {
   getElementById(id) {
     return id === "taskDueDate" ? dueDateField : null;
   },
+  createElement() {
+    return {
+      dataset: {},
+      classList: { toggle() {} },
+      setAttribute() {},
+    };
+  },
 };
-const context = loadBrowserScripts(["components/js/addTaskValidation.js"], {
-  document,
-  getAddTaskDueDate: () => normalizedDueDate,
-});
+const context = loadBrowserScripts(
+  ["components/js/addTaskValidation.js", "components/js/addTaskDatePicker.js"],
+  { document, getAddTaskDueDate: () => normalizedDueDate },
+);
 
 
 test("formats the local date for the native Add Task date picker", () => {
@@ -22,9 +29,11 @@ test("formats the local date for the native Add Task date picker", () => {
 });
 
 
-test("sets today as the earliest selectable Add Task due date", () => {
-  context.initAddTaskDueDatePicker();
-  assert.equal(dueDateField.min, context.getTodayTaskDueDate());
+test("keeps today selectable in the custom Add Task date picker", () => {
+  const today = new Date();
+  const day = context.createAddTaskDatePickerDay(today.getDate());
+  assert.equal(day.dataset.date, context.getTodayTaskDueDate(today));
+  assert.equal(day.disabled, false);
 });
 
 
