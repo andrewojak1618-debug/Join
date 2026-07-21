@@ -219,7 +219,7 @@ async function refreshBoardAfterEdit(taskId) {
   activeBoardTasks = await loadTasksFromStore();
   renderBoardColumns(activeBoardTasks);
   initBoardTaskDetails(activeBoardTasks);
-  openBoardTaskDetail(taskId, activeBoardTasks);
+  showBoardTaskDetail(taskId, activeBoardTasks);
 }
 
 

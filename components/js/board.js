@@ -207,14 +207,28 @@ async function handleBoardCardMoveOption(event, card, tasks) {
  * @param {Object[]} tasks - All tasks shown on the board.
  */
 function openBoardTaskDetail(taskId, tasks) {
+  if (!showBoardTaskDetail(taskId, tasks)) return;
+  getBoardDetailCard().scrollTop = 0;
+  lockPageScroll();
+}
+
+
+/**
+ * Fills and reveals the detail dialog without touching any scroll state.
+ * Used to refresh an already-open dialog without re-locking the background.
+ *
+ * @param {string} taskId - The id of the task to show.
+ * @param {Object[]} tasks - All tasks shown on the board.
+ * @returns {boolean} True when the task was found and shown.
+ */
+function showBoardTaskDetail(taskId, tasks) {
   const task = tasks.find((currentTask) => currentTask.id === taskId);
-  if (!task) return;
+  if (!task) return false;
   activeBoardTaskId = task.id;
   fillBoardTaskDetail(task);
   showBoardDetailViewMode();
   getBoardDetailOverlay().hidden = false;
-  getBoardDetailCard().scrollTop = 0;
-  lockPageScroll();
+  return true;
 }
 
 
