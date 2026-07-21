@@ -111,7 +111,7 @@
 
 .add-task-form__column {
   display: grid;
-  gap: 24px;
+  gap: 30px;
   align-content: start;
 }
 

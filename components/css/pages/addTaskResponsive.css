@@ -2,10 +2,6 @@ body[data-page="add-task"] .summary-topbar {
   padding-left: 116px;
 }
 
-.add-task-form__column:first-child {
-  gap: 30px;
-}
-
 .add-task-field textarea {
   height: 120px;
 }
@@ -107,7 +103,7 @@ body[data-page="add-task"] .summary-topbar {
     gap: 34px;
   }
 
-  .add-task-form__column:first-child {
+  .add-task-form__column {
     gap: 32px;
   }
 
