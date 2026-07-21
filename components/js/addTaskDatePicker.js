@@ -82,6 +82,7 @@ function setAddTaskDatePickerOpen(isOpen) {
   const input = document.getElementById("taskDueDate");
   const toggle = document.getElementById("taskDueDateToggle");
   if (!calendar || !input || !toggle) return;
+  if (isOpen && !getAddTaskDueDate()) setDefaultAddTaskDueDate();
   calendar.hidden = !isOpen;
   input.setAttribute("aria-expanded", String(isOpen));
   toggle.setAttribute("aria-expanded", String(isOpen));
@@ -242,6 +243,15 @@ function handleAddTaskDateScrollChange() {
 function getStartOfToday() {
   const today = new Date();
   return new Date(today.getFullYear(), today.getMonth(), today.getDate());
+}
+
+
+/** Uses today's local date when the calendar is opened without a value. */
+function setDefaultAddTaskDueDate() {
+  const today = getStartOfToday();
+  setAddTaskDueDate(getTodayTaskDueDate(today));
+  setAddTaskDateScrollValues(today);
+  addTaskDatePickerMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 }
 
 
