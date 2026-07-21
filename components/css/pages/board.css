@@ -126,15 +126,6 @@ body.board-dragging * {
   outline-offset: 3px;
 }
 
-.board-card__category {
-  width: fit-content;
-  padding: 5px 16px;
-  border-radius: 8px;
-  color: var(--color-white);
-  font-size: 16px;
-  line-height: 1.1;
-}
-
 .board-card__category--user-story {
   background: var(--color-category-user-story);
 }

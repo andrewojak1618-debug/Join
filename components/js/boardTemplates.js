@@ -12,7 +12,7 @@ function getBoardTaskTemplate(task) {
         tabindex="0"
        >
       ${getBoardCardMoveTemplate(task)}
-      <span class="board-card__category board-card__category--${getBoardCategoryClass(task.category)}">
+      <span class="board-status-pill board-card__category board-card__category--${getBoardCategoryClass(task.category)}">
         ${formatBoardCategory(task.category)}
       </span>
 

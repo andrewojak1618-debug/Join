@@ -51,11 +51,7 @@
 }
 
 .board-detail-category {
-  width: fit-content;
-  padding: 6px 14px;
-  border-radius: 8px;
   background: var(--color-accent);
-  color: var(--color-white);
 }
 
 .board-detail-card h2,

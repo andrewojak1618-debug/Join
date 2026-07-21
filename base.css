@@ -8,6 +8,7 @@
 @import url("./components/css/molecules/languageSwitch.css");
 @import url("./components/css/molecules/pageTransition.css");
 @import url("./components/css/molecules/orientationNotice.css");
+@import url("./components/css/molecules/boardStatusPill.css");
 @import url("./components/css/organisms/appShell.css");
 @import url("./components/css/organisms/boardDetail.css");
 @import url("./components/css/organisms/contactsDialog.css");
