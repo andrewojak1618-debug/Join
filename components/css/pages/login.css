@@ -24,6 +24,30 @@
   width: clamp(56px, calc(10svh - 4px), 100px);
 }
 
+.auth-signup-success {
+  position: absolute;
+  top: 91px;
+  left: 50%;
+  z-index: 2;
+  min-height: 74px;
+  margin: 0;
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  color: var(--color-white);
+  background-color: var(--color-primary-auth);
+  border-radius: 40px;
+  box-shadow: var(--shadow-soft);
+  font-size: 24px;
+  line-height: 1.4;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.auth-signup-success[hidden] {
+  display: none;
+}
+
 .auth-signup-hint {
   position: absolute;
   top: clamp(24px, calc(9.5svh - 33px), 64px);
@@ -235,6 +259,15 @@
   .auth-page--login .auth-logo img {
     width: 100%;
     height: auto;
+  }
+
+  .auth-signup-success {
+    top: clamp(112px, 14svh, 130px);
+    width: max-content;
+    max-width: calc(100% - 32px);
+    min-height: 64px;
+    padding: 12px 16px;
+    line-height: 1.2;
   }
 
   .auth-signup-hint {

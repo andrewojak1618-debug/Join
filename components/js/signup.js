@@ -33,7 +33,7 @@ async function registerUser() {
   setSignupSubmitPending(true);
   try {
     await saveSignedUpUser();
-    navigateToPage("login");
+    navigateToPage("login", { signup: "success" });
   } catch (error) {
     showSignupMessage(getAuthErrorMessage(error));
   } finally {

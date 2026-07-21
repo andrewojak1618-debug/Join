@@ -12,6 +12,51 @@ function initLoginValidation() {
 
   loginForm.addEventListener("submit", handleLoginSubmit);
   guestLoginButton.addEventListener("click", handleGuestLogin);
+  showSignupSuccessMessage();
+}
+
+
+/** Shows the one-time success feedback after a completed signup. */
+function showSignupSuccessMessage() {
+  const feedback = document.getElementById("signupSuccessMessage");
+  if (!feedback || !hasSignupSuccessParameter()) return;
+  removeSignupSuccessParameter();
+  showSignupSuccessAfterTransition(feedback);
+}
+
+
+/** Waits until the login transition no longer covers the feedback. */
+function showSignupSuccessAfterTransition(feedback) {
+  if (!isSignupTransitionRunning()) return revealSignupSuccessMessage(feedback);
+  const delay = signupTransition.exitDelay + 180;
+  setTimeout(() => revealSignupSuccessMessage(feedback), delay);
+}
+
+
+/** @returns {boolean} True while the login intro transition is visible. */
+function isSignupTransitionRunning() {
+  return typeof pageTransitionRunning !== "undefined" && pageTransitionRunning;
+}
+
+
+/** Displays the signup feedback and schedules its removal. */
+function revealSignupSuccessMessage(feedback) {
+  feedback.hidden = false;
+  setTimeout(() => (feedback.hidden = true), 3000);
+}
+
+
+/** @returns {boolean} True when the login page was opened after signup. */
+function hasSignupSuccessParameter() {
+  return new URLSearchParams(window.location.search).get("signup") === "success";
+}
+
+
+/** Removes the consumed success marker without reloading the login page. */
+function removeSignupSuccessParameter() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("signup");
+  window.history.replaceState({}, "", url.pathname + url.search + url.hash);
 }
 
 

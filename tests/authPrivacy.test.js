@@ -4,6 +4,7 @@ const test = require("node:test");
 const {
   createMemoryStorage,
   loadBrowserScripts,
+  toPlainValue,
 } = require("./helpers/scriptContext");
 
 const authScript = "components/js/auth.js";
@@ -219,13 +220,13 @@ test("logs out after registration and routes the new user to login", async () =>
   const { context, elements } = createAuthContext({
     window: { joinFirebaseAuth },
     localStorage,
-    navigateToPage: (page) => calls.push(["navigate", page]),
+    navigateToPage: (page, params) => calls.push(["navigate", page, params]),
   });
   elements.privacyAccepted.checked = true;
   await context.registerUser();
-  assert.deepEqual(calls, [
+  assert.deepEqual(toPlainValue(calls), [
     ["register", "QA User", "qa.user@example.com", "Testpass123!"],
-    ["logout"], ["navigate", "login"],
+    ["logout"], ["navigate", "login", { signup: "success" }],
   ]);
   assert.equal(localStorage.getItem("joinUser"), null);
 });
