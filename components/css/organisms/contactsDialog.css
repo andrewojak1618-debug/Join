@@ -112,7 +112,6 @@
 .contacts-dialog-actions {
   display: flex;
   gap: 16px;
-  margin-top: 16px;
 }
 
 .contacts-dialog-primary {
@@ -251,11 +250,17 @@
   }
 
   .contacts-dialog-side h2 {
-    font-size: 47px;
+    font-size: clamp(28px, 9vw, 47px);
+    white-space: nowrap;
   }
 
   .contacts-dialog-subtitle {
-    font-size: 20px;
+    font-size: clamp(16px, 4vw, 20px);
+    white-space: nowrap;
+  }
+
+  .contacts-dialog-actions {
+    justify-content: center;
   }
 }
 
