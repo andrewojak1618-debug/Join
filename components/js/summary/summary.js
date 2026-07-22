@@ -34,6 +34,8 @@ function hideMobileSummaryGreeting(event) {
 
 /**
  * Returns the display name for the summary greeting.
+ * @param {Object} user - Stored user shown on the summary page.
+ * @returns {string} User name or the guest fallback.
  */
 function getSummaryDisplayName(user) {
   return user.name || "Guest";
@@ -42,6 +44,7 @@ function getSummaryDisplayName(user) {
 
 /**
  * Returns greeting appropriate to the time of day.
+ * @returns {string} Time-dependent greeting text.
  */
 function getTimeGreeting() {
   const hour = new Date().getHours();
@@ -57,6 +60,8 @@ function getTimeGreeting() {
 
 /**
  * Explains whether the current session belongs to a guest or regular user.
+ * @param {Object} user - Stored user whose session type is described.
+ * @returns {string} User-facing account type explanation.
  */
 function getSummaryUserTypeText(user) {
   if (user.type === "firebase-guest" || user.type === "guest") {
@@ -139,6 +144,9 @@ function setSummaryLoadError(message) {
 
 /**
  * Counts how many tasks are in the given board status.
+ * @param {Object[]} tasks - Tasks included in the metric.
+ * @param {string} status - Board status to count.
+ * @returns {number} Number of matching tasks.
  */
 function countTasksByStatus(tasks, status) {
   return tasks.filter((task) => task.status === status).length;
@@ -147,6 +155,9 @@ function countTasksByStatus(tasks, status) {
 
 /**
  * Counts how many tasks have the given priority.
+ * @param {Object[]} tasks - Tasks included in the metric.
+ * @param {string} priority - Priority value to count.
+ * @returns {number} Number of matching tasks.
  */
 function countTasksByPriority(tasks, priority) {
   return tasks.filter((task) => task.priority === priority).length;
@@ -155,6 +166,9 @@ function countTasksByPriority(tasks, priority) {
 
 /**
  * Returns the closest valid due date from unfinished tasks.
+ * @param {Object[]} tasks - Tasks searched for an upcoming deadline.
+ * @param {Date} [today=new Date()] - Local comparison date.
+ * @returns {string} Formatted deadline or the empty-state message.
  */
 function getUpcomingDeadlineText(tasks, today = new Date()) {
   const upcomingDeadline = getUpcomingDeadline(tasks, today);
@@ -170,6 +184,9 @@ function getUpcomingDeadlineText(tasks, today = new Date()) {
 
 /**
  * Selects the earliest upcoming date from unfinished tasks.
+ * @param {Object[]} tasks - Tasks searched for due dates.
+ * @param {Date} today - Local comparison date.
+ * @returns {Date|undefined} Earliest valid deadline, if one exists.
  */
 function getUpcomingDeadline(tasks, today) {
   const startOfToday = getStartOfDay(today);
@@ -181,6 +198,8 @@ function getUpcomingDeadline(tasks, today) {
 
 /**
  * Returns midnight in the local timezone for date comparisons.
+ * @param {Date} date - Date whose time component is removed.
+ * @returns {Date} Copy representing local midnight.
  */
 function getStartOfDay(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -189,6 +208,8 @@ function getStartOfDay(date) {
 
 /**
  * Collects parsed due dates from tasks that are not done.
+ * @param {Object[]} tasks - Tasks whose open due dates are collected.
+ * @returns {(Date|null)[]} Parsed due dates from unfinished tasks.
  */
 function getOpenTaskDueDates(tasks) {
   return tasks

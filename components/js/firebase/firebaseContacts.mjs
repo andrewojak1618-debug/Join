@@ -14,6 +14,7 @@ const db = getFirestore();
 
 /**
  * Loads all contacts from Firestore with the document id attached.
+ * @returns {Promise<Object[]>} Firestore contacts including document ids.
  */
 async function loadContacts() {
   const snapshot = await getDocs(collection(db, "contacts"));
@@ -23,6 +24,8 @@ async function loadContacts() {
 
 /**
  * Creates one contact in Firestore and adds server timestamps.
+ * @param {Object} contact - Contact data to create.
+ * @returns {Promise<Object>} Created contact including its document id.
  */
 async function createContact(contact) {
   const contactRef = await addDoc(collection(db, "contacts"), {
@@ -36,6 +39,10 @@ async function createContact(contact) {
 
 /**
  * Creates the account contact under a stable id and removes email duplicates.
+ * @param {string} contactId - Stable document id for the account contact.
+ * @param {string[]} duplicateIds - Duplicate contact ids to remove.
+ * @param {Object} contact - Account contact data to store.
+ * @returns {Promise<Object>} Existing or newly created account contact.
  */
 async function upsertAccountContact(contactId, duplicateIds, contact) {
   return runTransaction(db, (transaction) =>
@@ -95,6 +102,10 @@ function getNewContactData(contact) {
 
 /**
  * Updates one contact and affected task references in a single batch.
+ * @param {string} contactId - Id of the contact document to update.
+ * @param {Object} contact - Updated contact data.
+ * @param {Object[]} [updatedTasks=[]] - Tasks with synchronized assignments.
+ * @returns {Promise<void>} Resolves after the batch commits.
  */
 async function updateContact(contactId, contact, updatedTasks = []) {
   const { id, ...contactData } = contact;
@@ -112,6 +123,7 @@ async function updateContact(contactId, contact, updatedTasks = []) {
  * Deletes one contact and updates affected tasks in a single batch.
  * @param {string} contactId - The contact document id.
  * @param {Object[]} updatedTasks - Tasks without the deleted assignee.
+ * @returns {Promise<void>} Resolves after the batch commits.
  */
 async function deleteContact(contactId, updatedTasks) {
   const batch = writeBatch(db);
@@ -123,6 +135,9 @@ async function deleteContact(contactId, updatedTasks) {
 
 /**
  * Adds one cleaned task assignment update to a Firestore batch.
+ * @param {Object} batch - Firestore write batch receiving the update.
+ * @param {Object} db - Firestore database instance.
+ * @param {Object} task - Task containing normalized assignments.
  */
 function queueTaskAssignmentUpdate(batch, db, task) {
   batch.update(doc(db, "tasks", task.id), {

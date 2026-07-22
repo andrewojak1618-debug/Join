@@ -43,7 +43,10 @@ function openAddTaskDatePicker() {
 }
 
 
-/** Toggles the calendar from its icon button. */
+/**
+ * Toggles the calendar from its icon button.
+ * @param {MouseEvent} event - Click event from the calendar toggle.
+ */
 function toggleAddTaskDatePicker(event) {
   event.preventDefault();
   const calendar = document.getElementById("taskDueDateCalendar");
@@ -51,7 +54,10 @@ function toggleAddTaskDatePicker(event) {
 }
 
 
-/** Supports keyboard opening from the readonly date field. */
+/**
+ * Supports keyboard opening from the readonly date field.
+ * @param {KeyboardEvent} event - Keydown event from the date input.
+ */
 function handleAddTaskDatePickerKeydown(event) {
   if (!["Enter", " ", "ArrowDown"].includes(event.key)) return;
   event.preventDefault();
@@ -59,14 +65,20 @@ function handleAddTaskDatePickerKeydown(event) {
 }
 
 
-/** Closes the calendar when the user clicks outside its molecule. */
+/**
+ * Closes the calendar when the user clicks outside its molecule.
+ * @param {MouseEvent} event - Document click used to detect an outside target.
+ */
 function closeAddTaskDatePickerOutside(event) {
   if (event.target.closest("#addTaskDatePicker")) return;
   setAddTaskDatePickerOpen(false);
 }
 
 
-/** Closes the calendar with Escape and returns focus to its input. */
+/**
+ * Closes the calendar with Escape and returns focus to its input.
+ * @param {KeyboardEvent} event - Document keydown event.
+ */
 function closeAddTaskDatePickerOnEscape(event) {
   if (event.key !== "Escape") return;
   const calendar = document.getElementById("taskDueDateCalendar");
@@ -76,7 +88,10 @@ function closeAddTaskDatePickerOnEscape(event) {
 }
 
 
-/** Updates visibility and matching expanded states for the calendar. */
+/**
+ * Updates visibility and matching expanded states for the calendar.
+ * @param {boolean} isOpen - Whether the calendar should be visible.
+ */
 function setAddTaskDatePickerOpen(isOpen) {
   const calendar = document.getElementById("taskDueDateCalendar");
   const input = document.getElementById("taskDueDate");
@@ -99,14 +114,20 @@ function resetAddTaskDatePickerMonth() {
 }
 
 
-/** Returns the selected date or today when the field is still empty. */
+/**
+ * Returns the selected date or today when the field is still empty.
+ * @returns {Date} Selected local date or the current date.
+ */
 function getSelectedAddTaskDate() {
   const value = document.getElementById("taskDueDate").value;
   return parseTaskDueDate(value) || new Date();
 }
 
 
-/** Moves the visible calendar month by the requested offset. */
+/**
+ * Moves the visible calendar month by the requested offset.
+ * @param {number} offset - Number of months to move forward or backward.
+ */
 function moveAddTaskDatePickerMonth(offset) {
   const year = addTaskDatePickerMonth.getFullYear();
   const month = addTaskDatePickerMonth.getMonth() + offset;
@@ -128,7 +149,10 @@ function renderAddTaskDatePicker() {
 }
 
 
-/** Builds blank offsets and all days for the visible month. */
+/**
+ * Builds blank offsets and all days for the visible month.
+ * @returns {DocumentFragment} Calendar offsets and day buttons.
+ */
 function createAddTaskDatePickerDays() {
   const fragment = document.createDocumentFragment();
   const year = addTaskDatePickerMonth.getFullYear();
@@ -141,7 +165,11 @@ function createAddTaskDatePickerDays() {
 }
 
 
-/** Creates one calendar day with past and selected states. */
+/**
+ * Creates one calendar day with past and selected states.
+ * @param {number} day - Day number in the visible month.
+ * @returns {HTMLButtonElement} Configured calendar day button.
+ */
 function createAddTaskDatePickerDay(day) {
   const date = new Date(addTaskDatePickerMonth.getFullYear(), addTaskDatePickerMonth.getMonth(), day);
   const value = getTodayTaskDueDate(date);
@@ -157,7 +185,11 @@ function createAddTaskDatePickerDay(day) {
 }
 
 
-/** Applies today's outline and the active selection to a day button. */
+/**
+ * Applies today's outline and the active selection to a day button.
+ * @param {HTMLButtonElement} button - Calendar day button to update.
+ * @param {string} value - Normalized date stored by the button.
+ */
 function setAddTaskDatePickerDayStates(button, value) {
   const selected = getAddTaskDueDate() === value;
   button.classList.toggle("date-picker__day--today", value === getTodayTaskDueDate());
@@ -175,7 +207,10 @@ function updateAddTaskDatePickerPreviousButton() {
 }
 
 
-/** Stores a selected desktop calendar date. */
+/**
+ * Stores a selected desktop calendar date.
+ * @param {MouseEvent} event - Click event from the calendar grid.
+ */
 function handleAddTaskDateSelection(event) {
   const day = event.target.closest("[data-date]");
   if (!day || day.disabled) return;
@@ -198,7 +233,12 @@ function initAddTaskDateScrollFields() {
 }
 
 
-/** Fills a numeric scroll field inclusively. */
+/**
+ * Fills a numeric scroll field inclusively.
+ * @param {string} id - Id of the select element to populate.
+ * @param {number} start - First numeric option value.
+ * @param {number} end - Last numeric option value.
+ */
 function fillAddTaskDateScrollSelect(id, start, end) {
   const select = document.getElementById(id);
   const options = [];
@@ -218,7 +258,10 @@ function fillAddTaskDateMonthSelect() {
 }
 
 
-/** Synchronizes the mobile scroll positions with a date. */
+/**
+ * Synchronizes the mobile scroll positions with a date.
+ * @param {Date} date - Local date reflected by the scroll fields.
+ */
 function setAddTaskDateScrollValues(date) {
   document.getElementById("taskDueDateDay").value = date.getDate();
   document.getElementById("taskDueDateMonthSelect").value = date.getMonth() + 1;
@@ -239,7 +282,10 @@ function handleAddTaskDateScrollChange() {
 }
 
 
-/** Returns today at local midnight for reliable date comparisons. */
+/**
+ * Returns today at local midnight for reliable date comparisons.
+ * @returns {Date} Current local date without a time component.
+ */
 function getStartOfToday() {
   const today = new Date();
   return new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -255,7 +301,10 @@ function setDefaultAddTaskDueDate() {
 }
 
 
-/** Updates the shared input and triggers the existing validation. */
+/**
+ * Updates the shared input and triggers the existing validation.
+ * @param {string|Date} value - Date value to normalize and store.
+ */
 function setAddTaskDueDate(value) {
   const input = document.getElementById("taskDueDate");
   input.value = formatTaskDueDate(value);

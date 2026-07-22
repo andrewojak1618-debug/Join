@@ -51,6 +51,8 @@ function handleFirebaseLoadFailure() {
 
 /**
  * Adds a script tag dynamically so the ignored firebaseConfig.js can load.
+ * @param {string} src - Script source URL to load.
+ * @returns {Promise<void>} Resolves after the script loads.
  */
 function loadScript(src) {
   return new Promise((resolve, reject) => {

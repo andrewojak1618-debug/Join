@@ -6,6 +6,7 @@ let tasksCacheAvailable = true;
 /**
  * Loads tasks from Firestore when available, otherwise from localStorage.
  * Reuses one in-flight request so concurrent callers share a single fetch.
+ * @returns {Promise<Object[]>} Tasks from the active data store.
  */
 async function loadTasksFromStore() {
   if (!tasksLoadPromise) {
@@ -19,6 +20,7 @@ async function loadTasksFromStore() {
 
 /**
  * Fetches tasks from the active store and refreshes the session cache.
+ * @returns {Promise<Object[]>} Fresh tasks from the active data store.
  */
 async function fetchAndCacheTasks() {
   const tasks = isTaskFirestoreReady()
@@ -171,6 +173,8 @@ function hasTaskAssignmentsChanged(originalTask, migratedTask) {
 
 /**
  * Creates one task in Firestore or localStorage and returns it with an id.
+ * @param {Object} task - Task data to create.
+ * @returns {Promise<Object>} Created task including its store id.
  */
 async function createTaskInStore(task) {
   const createdTask = isTaskFirestoreReady()
@@ -183,6 +187,8 @@ async function createTaskInStore(task) {
 
 /**
  * Saves a task locally and returns it, keeping createTaskInStore short.
+ * @param {Object} task - Task to persist locally.
+ * @returns {Object} The stored task.
  */
 function saveAndReturnCreatedTask(task) {
   saveCreatedTask(task);
@@ -192,6 +198,8 @@ function saveAndReturnCreatedTask(task) {
 
 /**
  * Updates one task in Firestore or localStorage.
+ * @param {Object} task - Complete task data to persist.
+ * @returns {Promise<void>} Resolves after the update completes.
  */
 async function updateTaskInStore(task) {
   if (isTaskFirestoreReady()) {
@@ -205,6 +213,8 @@ async function updateTaskInStore(task) {
 
 /**
  * Deletes one task from Firestore or localStorage.
+ * @param {string} taskId - Id of the task to delete.
+ * @returns {Promise<void>} Resolves after deletion completes.
  */
 async function deleteTaskFromStore(taskId) {
   if (isTaskFirestoreReady()) {

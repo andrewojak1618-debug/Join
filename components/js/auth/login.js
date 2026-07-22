@@ -47,7 +47,10 @@ function showSignupSuccessMessage() {
 }
 
 
-/** Waits until the login transition no longer covers the feedback. */
+/**
+ * Waits until the login transition no longer covers the feedback.
+ * @param {HTMLElement} feedback - Signup success element to reveal.
+ */
 function showSignupSuccessAfterTransition(feedback) {
   if (!isSignupTransitionRunning()) return revealSignupSuccessMessage(feedback);
   const delay = signupTransition.exitDelay + 180;
@@ -61,7 +64,10 @@ function isSignupTransitionRunning() {
 }
 
 
-/** Displays the signup feedback and schedules its removal. */
+/**
+ * Displays the signup feedback and schedules its removal.
+ * @param {HTMLElement} feedback - Signup success element to display.
+ */
 function revealSignupSuccessMessage(feedback) {
   showTimedFeedback(feedback);
 }
@@ -79,7 +85,10 @@ function removeSignupSuccessParameter() {
 }
 
 
-/** Removes one consumed login feedback marker without reloading the page. */
+/**
+ * Removes one consumed login feedback marker without reloading the page.
+ * @param {string} parameter - Query parameter to remove from the current URL.
+ */
 function removeLoginFeedbackParameter(parameter) {
   const url = new URL(window.location.href);
   url.searchParams.delete(parameter);
@@ -137,7 +146,10 @@ function isLoginFormValid(email, password) {
 }
 
 
-/** Validates a login field as soon as it loses focus. */
+/**
+ * Validates a login field as soon as it loses focus.
+ * @param {FocusEvent} event - Blur event from a login field.
+ */
 function handleLoginFieldBlur(event) {
   if (!loginFieldIds.includes(event.target.id)) return;
   touchedLoginFields.add(event.target.id);
@@ -152,7 +164,11 @@ function handleLoginInput() {
 }
 
 
-/** @returns {string} Validation feedback for one login field. */
+/**
+ * Returns validation feedback for one login field.
+ * @param {string} fieldId - Id of the login field to validate.
+ * @returns {string} Validation feedback or an empty string.
+ */
 function getLoginFieldError(fieldId) {
   if (fieldId === "loginEmail") {
     return getLoginEmailError(getTrimmedInputValue(fieldId));
@@ -164,14 +180,22 @@ function getLoginFieldError(fieldId) {
 }
 
 
-/** @returns {string} Validation feedback for the login email. */
+/**
+ * Returns validation feedback for the login email.
+ * @param {string} email - Normalized email input.
+ * @returns {string} Email validation feedback or an empty string.
+ */
 function getLoginEmailError(email) {
   if (!email) return "Please enter your email address.";
   return isEmailAddressValid(email) ? "" : "Please enter a valid email address.";
 }
 
 
-/** @returns {string} Validation feedback for the login password. */
+/**
+ * Returns validation feedback for the login password.
+ * @param {string} password - Password input to validate.
+ * @returns {string} Password validation feedback or an empty string.
+ */
 function getLoginPasswordError(password) {
   return password ? "" : "Please enter your password.";
 }

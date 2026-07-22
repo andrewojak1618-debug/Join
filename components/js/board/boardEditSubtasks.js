@@ -161,7 +161,12 @@ function renderBoardEditSubtasks() {
 }
 
 
-/** Selects the view or edit template for one board-edit subtask. */
+/**
+ * Selects the view or edit template for one board-edit subtask.
+ * @param {Object} subtask - Subtask data to render.
+ * @param {number} index - Position of the subtask in the edited task.
+ * @returns {string} HTML markup for the current edit state.
+ */
 function renderBoardEditSubtaskTemplate(subtask, index) {
   return index === boardEditSubtaskEditingIndex
     ? getSubtaskEditTemplate(subtask, index)

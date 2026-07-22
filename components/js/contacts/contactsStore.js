@@ -38,6 +38,8 @@ async function ensureAccountContactSafely(contacts, onError) {
 
 /**
  * Adds the signed-in account once and reuses a contact with the same email.
+ * @param {Object[]} contacts - Contacts loaded from the active store.
+ * @returns {Promise<Object[]>} Contacts including the account contact when applicable.
  */
 async function ensureAccountContact(contacts) {
   const user = getStoredUser();
@@ -246,6 +248,8 @@ function isOwnAccountContact(contact) {
 
 /**
  * Creates one contact in Firestore or localStorage and returns it with an id.
+ * @param {Object} contact - Contact data to create.
+ * @returns {Promise<Object>} Created contact including its store id.
  */
 async function createContactInStore(contact) {
   if (isContactFirestoreReady())
@@ -258,6 +262,10 @@ async function createContactInStore(contact) {
 
 /**
  * Updates one contact and its affected task references together.
+ * @param {string} contactId - Id of the contact to update.
+ * @param {Object} contact - Updated contact data.
+ * @param {Object[]} [updatedTasks=[]] - Tasks with synchronized assignee references.
+ * @returns {Promise<void>} Resolves after contact and task updates complete.
  */
 async function updateContactInStore(contactId, contact, updatedTasks = []) {
   if (isContactFirestoreReady()) {
@@ -269,7 +277,12 @@ async function updateContactInStore(contactId, contact, updatedTasks = []) {
 }
 
 
-/** Updates a local contact and task references with rollback on failure. */
+/**
+ * Updates a local contact and task references with rollback on failure.
+ * @param {string} contactId - Id of the local contact to update.
+ * @param {Object} contact - Updated contact data.
+ * @param {Object[]} updatedTasks - Tasks with synchronized references.
+ */
 function updateLocalContactWithTasks(contactId, contact, updatedTasks) {
   const contacts = getLocalContacts();
   const tasks = getStoredTasks();
@@ -286,7 +299,11 @@ function updateLocalContactWithTasks(contactId, contact, updatedTasks) {
 }
 
 
-/** Replaces only tasks affected by the contact edit. */
+/**
+ * Replaces only tasks affected by the contact edit.
+ * @param {Object[]} tasks - Complete locally stored task list.
+ * @param {Object[]} updatedTasks - Tasks changed by the contact edit.
+ */
 function saveUpdatedLocalContactTasks(tasks, updatedTasks) {
   const updates = new Map(updatedTasks.map((task) => [task.id, task]));
   saveStoredTasks(tasks.map((task) => updates.get(task.id) || task));
@@ -297,6 +314,7 @@ function saveUpdatedLocalContactTasks(tasks, updatedTasks) {
  * Deletes a contact together with its cleaned task assignments.
  * @param {string} contactId - The contact document id.
  * @param {Object[]} updatedTasks - Tasks without the deleted assignee.
+ * @returns {Promise<void>} Resolves after the atomic deletion completes.
  */
 async function deleteContactFromStore(contactId, updatedTasks) {
   if (isContactFirestoreReady()) {
@@ -309,6 +327,9 @@ async function deleteContactFromStore(contactId, updatedTasks) {
 
 /**
  * Loads and sorts contacts, returning an empty list when the store is unavailable.
+ * @param {Function} [onAccountContactError] - Handles account-contact synchronization errors.
+ * @param {Function} [onLoadError] - Handles failure of the complete contact load.
+ * @returns {Promise<Object[]>} Sorted contacts or an empty fallback.
  */
 async function loadSortedContactsSafely(onAccountContactError, onLoadError) {
   try {
@@ -321,7 +342,11 @@ async function loadSortedContactsSafely(onAccountContactError, onLoadError) {
 }
 
 
-/** Returns an alphabetically sorted contact copy. */
+/**
+ * Returns an alphabetically sorted contact copy.
+ * @param {Object[]} contacts - Contacts to sort by display name.
+ * @returns {Object[]} Alphabetically sorted copy.
+ */
 function sortContactsByName(contacts) {
   return [...contacts].sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -329,6 +354,8 @@ function sortContactsByName(contacts) {
 
 /**
  * Applies local task cleanup before deleting the contact and rolls back on error.
+ * @param {string} contactId - Id of the local contact to delete.
+ * @param {Object[]} updatedTasks - Tasks without the deleted assignee.
  */
 function deleteLocalContactWithTasks(contactId, updatedTasks) {
   const contacts = getLocalContacts();
@@ -346,6 +373,7 @@ function deleteLocalContactWithTasks(contactId, updatedTasks) {
 
 /**
  * Checks whether the Firestore contact API is loaded and available.
+ * @returns {boolean} True when the Firestore contact adapter is ready.
  */
 function isContactFirestoreReady() {
   return Boolean(window.joinFirebaseContacts);
@@ -354,6 +382,7 @@ function isContactFirestoreReady() {
 
 /**
  * Reads and parses the stored contacts from localStorage.
+ * @returns {Object[]} Locally stored contacts or an empty list.
  */
 function getLocalContacts() {
   return getStoredJson(contactStorageKey, []);
@@ -362,6 +391,7 @@ function getLocalContacts() {
 
 /**
  * Writes the given contact list as JSON into localStorage.
+ * @param {Object[]} contacts - Complete contact collection to persist.
  */
 function saveLocalContacts(contacts) {
   saveStoredJson(contactStorageKey, contacts);

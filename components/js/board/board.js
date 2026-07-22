@@ -76,6 +76,7 @@ function renderBoardColumn(taskList, tasks) {
 
 /**
  * Adds click and keyboard handling for opening, closing and editing task details.
+ * @param {Object[]} tasks - All tasks currently shown on the board.
  */
 function initBoardTaskDetails(tasks) {
   document
@@ -208,7 +209,12 @@ async function handleBoardCardMoveOption(event, card, tasks) {
 }
 
 
-/** Moves a task and reports a failed persistence attempt consistently. */
+/**
+ * Moves a task and reports a failed persistence attempt consistently.
+ * @param {Object} task - The task whose status should be changed.
+ * @param {string} status - The target board status.
+ * @returns {Promise<void>} Resolves after the status update attempt finishes.
+ */
 async function moveBoardTaskSafely(task, status) {
   try {
     await moveBoardTaskToStatus(task, status);

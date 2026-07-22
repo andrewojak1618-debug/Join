@@ -13,6 +13,9 @@ const authErrorMessages = {
 };
 /**
  * Signs in through Firebase and opens the protected summary page.
+ * @param {string} email - Email address submitted by the user.
+ * @param {string} password - Password submitted by the user.
+ * @returns {Promise<void>} Resolves after the login flow completes.
  */
 async function handleLogin(email, password) {
   await loginWithFirebase(email, password);
@@ -21,6 +24,9 @@ async function handleLogin(email, password) {
 
 /**
  * Stores the Firebase login result and opens the protected summary page.
+ * @param {string} email - Email address used for Firebase Authentication.
+ * @param {string} password - Password used for Firebase Authentication.
+ * @returns {Promise<void>} Resolves after storing the user and navigating.
  */
 async function loginWithFirebase(email, password) {
   const auth = getFirebaseAuthAdapter();
@@ -96,6 +102,7 @@ async function logoutFirebaseUserSafely() {
 
 /**
  * Checks whether the Firebase adapter finished loading on window.
+ * @returns {boolean} True when Firebase Authentication is ready.
  */
 function isFirebaseAuthReady() {
   return Boolean(window.joinFirebaseAuth);
@@ -104,6 +111,8 @@ function isFirebaseAuthReady() {
 
 /**
  * Returns the Firebase adapter or stops authentication with a clear error.
+ * @returns {Object} Loaded Firebase Authentication adapter.
+ * @throws {Error} When Firebase Authentication is unavailable.
  */
 function getFirebaseAuthAdapter() {
   if (isFirebaseAuthReady()) return window.joinFirebaseAuth;
@@ -113,6 +122,7 @@ function getFirebaseAuthAdapter() {
 
 /**
  * Creates the shared error for an unavailable Firebase Authentication service.
+ * @returns {Error} Error carrying the firebase-unavailable code.
  */
 function createFirebaseUnavailableError() {
   const error = new Error("Firebase Authentication is unavailable.");
@@ -123,6 +133,8 @@ function createFirebaseUnavailableError() {
 
 /**
  * Converts Firebase error codes into short messages for the auth forms.
+ * @param {Object} error - Firebase or application authentication error.
+ * @returns {string} User-facing authentication feedback.
  */
 function getAuthErrorMessage(error) {
   const code = error && error.code;

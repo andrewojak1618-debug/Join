@@ -16,7 +16,11 @@ const addTaskFieldValidators = {
 let addTaskValidationAttempted = false;
 
 
-/** Returns today's local date in the ISO format used for task storage. */
+/**
+ * Returns a local date in the ISO format used for task storage.
+ * @param {Date} [date=new Date()] - Local date to normalize.
+ * @returns {string} Date in YYYY-MM-DD format.
+ */
 function getTodayTaskDueDate(date = new Date()) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -25,7 +29,12 @@ function getTodayTaskDueDate(date = new Date()) {
 }
 
 
-/** Returns whether a normalized due date lies before the given local date. */
+/**
+ * Returns whether a normalized due date lies before the given local date.
+ * @param {string} dueDate - Normalized due date to compare.
+ * @param {string} [today=getTodayTaskDueDate()] - Normalized comparison date.
+ * @returns {boolean} True when the due date lies in the past.
+ */
 function isPastAddTaskDueDate(dueDate, today = getTodayTaskDueDate()) {
   return dueDate < today;
 }
@@ -33,6 +42,7 @@ function isPastAddTaskDueDate(dueDate, today = getTodayTaskDueDate()) {
 
 /**
  * Adds field-level validation without relying on native browser messages.
+ * @param {HTMLFormElement} form - Add Task form that owns the fields.
  */
 function initAddTaskFieldValidation(form) {
   form.addEventListener("focusout", handleAddTaskFieldBlur);
@@ -51,7 +61,11 @@ function handleAddTaskFieldBlur(event) {
 }
 
 
-/** Maps native and custom form controls to the field they validate. */
+/**
+ * Maps native and custom form controls to the field they validate.
+ * @param {FocusEvent} event - Focusout event from a form control.
+ * @returns {string} Id of the field to validate, or an empty string.
+ */
 function getAddTaskBlurFieldId(event) {
   if (event.target.id !== "taskCategoryButton") return event.target.id;
   const dropdown = document.getElementById("taskCategoryDropdown");
@@ -130,7 +144,11 @@ function setAddTaskFieldError(fieldId, errorId, message) {
 }
 
 
-/** Returns the visible control that owns a field's validation state. */
+/**
+ * Returns the visible control that owns a field's validation state.
+ * @param {string} fieldId - Id of the logical form field.
+ * @returns {HTMLElement} Visible control carrying aria-invalid.
+ */
 function getAddTaskValidationControl(fieldId) {
   const controlId = fieldId === "taskCategory" ? "taskCategoryButton" : fieldId;
   return document.getElementById(controlId);
@@ -177,7 +195,11 @@ function getAddTaskDueDateError() {
 }
 
 
-/** Returns validation feedback for a normalized Add Task due date. */
+/**
+ * Returns validation feedback for a normalized Add Task due date.
+ * @param {string} dueDate - Normalized due date to validate.
+ * @returns {string} Validation message or an empty string.
+ */
 function getValidatedAddTaskDueDateError(dueDate) {
   if (!dueDate) return "Please select a valid due date.";
   return isPastAddTaskDueDate(dueDate) ? "Please select today or a future date." : "";

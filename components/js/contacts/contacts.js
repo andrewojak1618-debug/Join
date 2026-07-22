@@ -4,6 +4,7 @@ let activeContacts = [];
 
 /**
  * Renders the alphabetically grouped contact list on the contacts page.
+ * @returns {Promise<void>} Resolves after contacts are loaded and rendered.
  */
 async function initContacts() {
   const contactsList = document.getElementById("contactsList");
@@ -32,6 +33,8 @@ function showAccountContactError() {
 
 /**
  * Groups sorted contacts by the first letter of their name.
+ * @param {Object[]} contacts - Contacts to group alphabetically.
+ * @returns {Object.<string, Object[]>} Contacts keyed by uppercase initial.
  */
 function groupContactsByLetter(contacts) {
   const groups = {};
@@ -46,6 +49,7 @@ function groupContactsByLetter(contacts) {
 
 /**
  * Adds click handling to every contact list entry for opening its details.
+ * @param {Object[]} contacts - Contacts available to the detail view.
  */
 function initContactDetails(contacts) {
   document.querySelectorAll(".contacts-item").forEach((item) => {
@@ -58,6 +62,7 @@ function initContactDetails(contacts) {
 
 /**
  * Writes the contact data into the static detail view elements.
+ * @param {Object} contact - Contact to display.
  */
 function fillContactDetail(contact) {
   const avatar = document.getElementById("contactDetailAvatar");
@@ -84,6 +89,7 @@ function updateAccountContactActions(contact) {
 
 /**
  * Returns the contact that is currently selected in the detail view.
+ * @returns {Object|undefined} Active contact, if one is selected.
  */
 function getActiveContact() {
   return activeContacts.find(
@@ -94,6 +100,8 @@ function getActiveContact() {
 
 /**
  * Looks up the clicked contact and shows its filled detail view.
+ * @param {string} contactId - Id of the contact to open.
+ * @param {Object[]} [contacts=activeContacts] - Contacts available for lookup.
  */
 function openContactDetail(contactId, contacts = activeContacts) {
   const contact = contacts.find(
@@ -164,6 +172,9 @@ async function getTasksWithoutContact(contact) {
 
 /**
  * Checks whether one task is assigned to the given contact.
+ * @param {Object} task - Task whose assignments are inspected.
+ * @param {Object} contact - Contact searched in the task assignments.
+ * @returns {boolean} True when the task references the contact.
  */
 function hasContactAssignment(task, contact) {
   return getTaskAssigneeReferences(task.assignedTo).some((assignee) =>
@@ -174,6 +185,9 @@ function hasContactAssignment(task, contact) {
 
 /**
  * Returns a task copy without the given contact in its assignee list.
+ * @param {Object} task - Task to clean.
+ * @param {Object} contact - Contact to remove from the assignments.
+ * @returns {Object} Task copy without the matching assignee.
  */
 function removeAssigneeFromTask(task, contact) {
   return {
@@ -187,6 +201,9 @@ function removeAssigneeFromTask(task, contact) {
 
 /**
  * Returns tasks whose references must follow an edited contact name.
+ * @param {Object} contact - Contact before editing.
+ * @param {Object} updatedContact - Contact after editing.
+ * @returns {Promise<Object[]>} Tasks containing changed assignee references.
  */
 async function getTasksWithUpdatedContact(contact, updatedContact) {
   if (contact.name === updatedContact.name) return [];
@@ -200,13 +217,24 @@ async function getTasksWithUpdatedContact(contact, updatedContact) {
 }
 
 
-/** Checks whether a legacy name can identify exactly one contact. */
+/**
+ * Checks whether a legacy name can identify exactly one contact.
+ * @param {Object} contact - Contact whose previous name is evaluated.
+ * @returns {boolean} True when the name is unique among active contacts.
+ */
 function hasUniqueContactName(contact) {
   return activeContacts.filter((item) => item.name === contact.name).length === 1;
 }
 
 
-/** Returns an updated task only when one of its assignees changed. */
+/**
+ * Returns an updated task only when one of its assignees changed.
+ * @param {Object} task - Task whose references are updated.
+ * @param {Object} contact - Contact before editing.
+ * @param {Object} updatedContact - Contact after editing.
+ * @param {boolean} canResolveLegacyName - Whether a name-only reference is unique.
+ * @returns {Object|null} Updated task or null when no reference changed.
+ */
 function updateTaskContactReference(task, contact, updatedContact, canResolveLegacyName) {
   const references = getTaskAssigneeReferences(task.assignedTo);
   const assignedTo = references.map((reference) =>
@@ -218,7 +246,14 @@ function updateTaskContactReference(task, contact, updatedContact, canResolveLeg
 }
 
 
-/** Updates an id match, or an unambiguous legacy name without an id. */
+/**
+ * Updates an id match, or an unambiguous legacy name without an id.
+ * @param {Object} reference - Existing task assignee reference.
+ * @param {Object} contact - Contact before editing.
+ * @param {Object} updatedContact - Contact after editing.
+ * @param {boolean} canResolveLegacyName - Whether a name-only match is safe.
+ * @returns {Object} Updated or unchanged assignee reference.
+ */
 function updateContactReference(reference, contact, updatedContact, canResolveLegacyName) {
   const matchesId = reference.id && reference.id === String(contact.id);
   const matchesLegacyName = !reference.id &&
@@ -245,6 +280,7 @@ function initContactActions() {
 
 /**
  * Highlights the selected contact entry in the list.
+ * @param {string} contactId - Id of the active contact.
  */
 function markActiveContactItem(contactId) {
   document.querySelectorAll(".contacts-item").forEach((item) => {
@@ -258,6 +294,7 @@ function markActiveContactItem(contactId) {
 
 /**
  * Switches the mobile layout between list and detail view and closes the actions menu.
+ * @param {boolean} isOpen - Whether the detail view should be active.
  */
 function setMobileDetailView(isOpen) {
   const content = document.querySelector(".contacts-content");

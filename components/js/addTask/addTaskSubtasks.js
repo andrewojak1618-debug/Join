@@ -108,7 +108,12 @@ function renderSubtaskList() {
 }
 
 
-/** Selects the view or edit template for one subtask row. */
+/**
+ * Selects the view or edit template for one subtask row.
+ * @param {Object} subtask - Subtask data to render.
+ * @param {number} index - Position of the subtask in the task.
+ * @returns {string} HTML markup for the current subtask state.
+ */
 function renderSubtaskTemplate(subtask, index) {
   return index === editingSubtaskIndex
     ? getSubtaskEditTemplate(subtask, index)

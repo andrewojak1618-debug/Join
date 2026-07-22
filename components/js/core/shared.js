@@ -33,7 +33,11 @@ function getTrimmedInputValue(inputId) {
 }
 
 
-/** Converts a value into text without surrounding whitespace. */
+/**
+ * Converts a value into text without surrounding whitespace.
+ * @param {*} value - Value to convert and trim.
+ * @returns {string} Normalized text.
+ */
 function normalizeText(value) {
   return String(value ?? "").trim();
 }
@@ -51,7 +55,11 @@ function isPersonNameValid(name) {
 }
 
 
-/** @returns {string} Shared validation feedback for a person's name. */
+/**
+ * Returns shared validation feedback for a person's name.
+ * @param {string} name - Display name to validate.
+ * @returns {string} Validation feedback or an empty string.
+ */
 function getPersonNameError(name) {
   const normalizedName = normalizeText(name);
   if (!normalizedName) return "Please enter a name.";
@@ -60,7 +68,11 @@ function getPersonNameError(name) {
 }
 
 
-/** Reads and trims the value of one form control. */
+/**
+ * Reads and trims the value of one form control.
+ * @param {HTMLInputElement|HTMLTextAreaElement|null} element - Form control to read.
+ * @returns {string} Normalized control value.
+ */
 function getTrimmedElementValue(element) {
   return normalizeText(element?.value);
 }
@@ -78,6 +90,9 @@ function getElement(elementId) {
 
 /**
  * Reads JSON data from localStorage and returns a fallback when no value exists.
+ * @param {string} storageKey - localStorage key to read.
+ * @param {*} [fallback=null] - Value returned when the key is missing.
+ * @returns {*} Parsed stored value or the fallback.
  */
 function getStoredJson(storageKey, fallback = null) {
   const storedValue = localStorage.getItem(storageKey);
@@ -85,13 +100,21 @@ function getStoredJson(storageKey, fallback = null) {
 }
 
 
-/** Persists one serializable value in localStorage. */
+/**
+ * Persists one serializable value in localStorage.
+ * @param {string} storageKey - localStorage key to write.
+ * @param {*} value - Serializable value to store.
+ */
 function saveStoredJson(storageKey, value) {
   localStorage.setItem(storageKey, JSON.stringify(value));
 }
 
 
-/** Returns up to two uppercase initials from a display name. */
+/**
+ * Returns up to two uppercase initials from a display name.
+ * @param {string} name - Display name used to build initials.
+ * @returns {string} Up to two uppercase initials.
+ */
 function getInitials(name) {
   return normalizeText(name)
     .split(/\s+/)
@@ -103,27 +126,43 @@ function getInitials(name) {
 }
 
 
-/** Updates an element's text when the target exists. */
+/**
+ * Updates an element's text when the target exists.
+ * @param {string} elementId - Id of the target element.
+ * @param {*} text - Value assigned as text content.
+ */
 function setElementText(elementId, text) {
   const element = getElement(elementId);
   if (element) element.textContent = text;
 }
 
 
-/** Applies one field error message and its accessibility state. */
+/**
+ * Applies one field error message and its accessibility state.
+ * @param {string} fieldId - Id of the validated field.
+ * @param {string} message - Validation message or an empty string.
+ */
 function setFieldValidationError(fieldId, message) {
   getElement(fieldId)?.setAttribute("aria-invalid", String(Boolean(message)));
   setElementText(`${fieldId}Error`, message);
 }
 
 
-/** Marks a group of field ids as touched. */
+/**
+ * Marks a group of field ids as touched.
+ * @param {string[]} fieldIds - Field ids to mark as touched.
+ * @param {Set<string>} touchedFields - Mutable set tracking touched fields.
+ */
 function touchFields(fieldIds, touchedFields) {
   fieldIds.forEach((fieldId) => touchedFields.add(fieldId));
 }
 
 
-/** Renders every touched field through a caller-provided validator. */
+/**
+ * Renders every touched field through a caller-provided validator.
+ * @param {Set<string>} touchedFields - Field ids currently marked as touched.
+ * @param {Function} getError - Validator returning feedback for one field id.
+ */
 function renderTouchedFieldErrors(touchedFields, getError) {
   touchedFields.forEach((fieldId) => {
     setFieldValidationError(fieldId, getError(fieldId));
@@ -131,7 +170,12 @@ function renderTouchedFieldErrors(touchedFields, getError) {
 }
 
 
-/** Shows feedback temporarily and optionally replaces its text. */
+/**
+ * Shows feedback temporarily and optionally replaces its text.
+ * @param {string|HTMLElement} target - Feedback element or its id.
+ * @param {string|null} [message=null] - Optional replacement text.
+ * @param {number} [duration=3000] - Visible duration in milliseconds.
+ */
 function showTimedFeedback(target, message = null, duration = 3000) {
   const element = typeof target === "string" ? getElement(target) : target;
   if (!element) return;

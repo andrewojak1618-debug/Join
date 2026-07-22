@@ -1,4 +1,8 @@
-/** Creates one prepared contact option for the assignee dropdown. */
+/**
+ * Creates one prepared contact option for the assignee dropdown.
+ * @param {Object} contact - Prepared contact view data.
+ * @returns {string} HTML markup for one contact option.
+ */
 function getAssigneeOptionTemplate(contact) {
   return `
     <label class="contact-dropdown__option">
@@ -11,20 +15,33 @@ function getAssigneeOptionTemplate(contact) {
 }
 
 
-/** Returns one prepared selected-contact avatar chip. */
+/**
+ * Returns one prepared selected-contact avatar chip.
+ * @param {Object} contact - Prepared selected-contact view data.
+ * @returns {string} HTML markup for one avatar chip.
+ */
 function getAssigneeChipTemplate(contact) {
   return `<span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color)}">${contact.initials}</span>`;
 }
 
 
-/** Returns the optional hidden-assignee counter. */
+/**
+ * Returns the optional hidden-assignee counter.
+ * @param {number} overflowCount - Number of selected contacts not shown directly.
+ * @returns {string} Overflow chip markup or an empty string.
+ */
 function getAssigneeOverflowChipTemplate(overflowCount) {
   if (!overflowCount) return "";
   return `<span class="contact-dropdown__avatar contact-dropdown__avatar--overflow">+${overflowCount}</span>`;
 }
 
 
-/** Returns one prepared subtask row in view mode. */
+/**
+ * Returns one prepared subtask row in view mode.
+ * @param {Object} subtask - Subtask data rendered in the row.
+ * @param {number} index - Position of the subtask in the task.
+ * @returns {string} HTML markup for one subtask row.
+ */
 function getSubtaskItemTemplate(subtask, index) {
   return `
     <li class="add-task-subtask" data-subtask-index="${index}">
@@ -42,7 +59,12 @@ function getSubtaskItemTemplate(subtask, index) {
 }
 
 
-/** Returns one prepared subtask row in edit mode. */
+/**
+ * Returns one prepared subtask row in edit mode.
+ * @param {Object} subtask - Subtask data being edited.
+ * @param {number} index - Position of the subtask in the task.
+ * @returns {string} HTML markup for one editable subtask row.
+ */
 function getSubtaskEditTemplate(subtask, index) {
   return `
     <li class="add-task-subtask add-task-subtask--editing" data-subtask-index="${index}">

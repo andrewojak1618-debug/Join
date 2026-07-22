@@ -176,7 +176,11 @@ function getSignupErrorMessage() {
 }
 
 
-/** @returns {string} Validation feedback for one signup input. */
+/**
+ * Returns validation feedback for one signup input.
+ * @param {string} fieldId - Id of the signup field to validate.
+ * @returns {string} Validation feedback or an empty string.
+ */
 function getSignupFieldError(fieldId) {
   const errors = {
     signupName: getPersonNameError(getTrimmedInputValue("signupName")),

@@ -1,4 +1,8 @@
-/** Returns the list item markup for one prepared contact. */
+/**
+ * Returns the list item markup for one prepared contact.
+ * @param {Object} contact - Prepared contact view data.
+ * @returns {string} HTML markup for one contact item.
+ */
 function getContactItemTemplate(contact) {
   return `
   <li class="contacts-item" data-contact-id="${escapeHtmlText(contact.id)}">
@@ -16,7 +20,11 @@ function getContactItemTemplate(contact) {
 }
 
 
-/** Loads an HTML fragment and returns its first root element. */
+/**
+ * Loads an HTML fragment and returns its first root element.
+ * @param {string} templatePath - Relative path of the HTML template.
+ * @returns {Promise<Element|null>} First template root element, if present.
+ */
 async function createTemplateElement(templatePath) {
   const response = await fetch(templatePath);
   const wrapper = document.createElement("div");
@@ -25,7 +33,11 @@ async function createTemplateElement(templatePath) {
 }
 
 
-/** Returns one prepared alphabetic contact section. */
+/**
+ * Returns one prepared alphabetic contact section.
+ * @param {Object} group - Prepared letter and contact collection.
+ * @returns {string} HTML markup for one contact group.
+ */
 function getContactGroupTemplate(group) {
   return `
   <li class="contacts-group">

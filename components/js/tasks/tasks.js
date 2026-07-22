@@ -5,6 +5,7 @@ const taskCategoryValues = ["technical-task", "user-story"];
 
 /**
  * Reads the locally saved task list for the temporary localStorage step.
+ * @returns {Object[]} Locally stored tasks or an empty list.
  */
 function getStoredTasks() {
   return getStoredJson(taskStorageKey, []);
@@ -13,6 +14,7 @@ function getStoredTasks() {
 
 /**
  * Saves the complete task list in localStorage.
+ * @param {Object[]} tasks - Complete task collection to persist.
  */
 function saveStoredTasks(tasks) {
   saveStoredJson(taskStorageKey, tasks);
@@ -21,6 +23,7 @@ function saveStoredTasks(tasks) {
 
 /**
  * Adds one new task to the locally saved task list.
+ * @param {Object} task - New task to append.
  */
 function saveCreatedTask(task) {
   const tasks = getStoredTasks();
@@ -31,6 +34,7 @@ function saveCreatedTask(task) {
 
 /**
  * Replaces one existing task after it was edited on the board.
+ * @param {Object} updatedTask - Task containing the edited values.
  */
 function updateStoredTask(updatedTask) {
   const tasks = getStoredTasks();
@@ -41,6 +45,7 @@ function updateStoredTask(updatedTask) {
 
 /**
  * Removes one task from the locally saved task list.
+ * @param {string} taskId - Id of the task to remove.
  */
 function deleteStoredTask(taskId) {
   const tasks = getStoredTasks();
@@ -51,6 +56,8 @@ function deleteStoredTask(taskId) {
 
 /**
  * Converts supported task date values into the stored ISO date format.
+ * @param {*} value - ISO or legacy Join date value.
+ * @returns {string} Normalized YYYY-MM-DD date or an empty string.
  */
 function normalizeTaskDueDate(value) {
   const dateParts = getTaskDueDateParts(value);
@@ -63,6 +70,8 @@ function normalizeTaskDueDate(value) {
 
 /**
  * Formats a supported task date for the Join user interface.
+ * @param {*} value - ISO or legacy Join date value.
+ * @returns {string} Date in DD/MM/YYYY format or an empty string.
  */
 function formatTaskDueDate(value) {
   const normalizedDate = normalizeTaskDueDate(value);
@@ -74,6 +83,8 @@ function formatTaskDueDate(value) {
 
 /**
  * Parses a supported task date without shifting it through UTC.
+ * @param {*} value - ISO or legacy Join date value.
+ * @returns {Date|null} Local date instance or null for invalid input.
  */
 function parseTaskDueDate(value) {
   const dateParts = getTaskDueDateParts(value);
@@ -84,6 +95,8 @@ function parseTaskDueDate(value) {
 
 /**
  * Reads ISO and legacy Join date strings into numeric date parts.
+ * @param {*} value - Date value to normalize and parse.
+ * @returns {{year: number, month: number, day: number}|null} Parsed date parts.
  */
 function getTaskDueDateParts(value) {
   const normalizedValue = normalizeText(value);
@@ -112,14 +125,22 @@ function getTaskCreatedAtMillis(task) {
 }
 
 
-/** Returns a valid task priority or the default priority. */
+/**
+ * Returns a valid task priority or the default priority.
+ * @param {*} value - Stored priority candidate.
+ * @returns {string} Supported priority value.
+ */
 function normalizeTaskPriority(value) {
   const priority = normalizeText(value);
   return taskPriorityValues.includes(priority) ? priority : "medium";
 }
 
 
-/** Returns a valid task category or an empty required-field value. */
+/**
+ * Returns a valid task category or an empty required-field value.
+ * @param {*} value - Stored category candidate.
+ * @returns {string} Supported category or an empty string.
+ */
 function normalizeTaskCategory(value) {
   const category = normalizeText(value);
   return taskCategoryValues.includes(category) ? category : "";
@@ -128,6 +149,11 @@ function normalizeTaskCategory(value) {
 
 /**
  * Maps matched date groups to a common date-parts object.
+ * @param {RegExpMatchArray} match - Successful date pattern match.
+ * @param {number} yearIndex - Capture index containing the year.
+ * @param {number} monthIndex - Capture index containing the month.
+ * @param {number} dayIndex - Capture index containing the day.
+ * @returns {{year: number, month: number, day: number}} Numeric date parts.
  */
 function getDatePartsFromMatch(match, yearIndex, monthIndex, dayIndex) {
   return {
@@ -140,6 +166,8 @@ function getDatePartsFromMatch(match, yearIndex, monthIndex, dayIndex) {
 
 /**
  * Rejects dates that JavaScript silently rolls into another month.
+ * @param {{year: number, month: number, day: number}} dateParts - Date parts to verify.
+ * @returns {boolean} True when JavaScript preserves every date component.
  */
 function isMatchingTaskDateParts(dateParts) {
   const date = new Date(dateParts.year, dateParts.month - 1, dateParts.day);

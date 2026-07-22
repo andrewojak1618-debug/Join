@@ -52,6 +52,7 @@ function closeContactEditDialog() {
 
 /**
  * Closes the dialog only when the dark backdrop itself is clicked.
+ * @param {MouseEvent} event - Click event from the edit overlay.
  */
 function handleContactOverlayClick(event) {
   if (event.target === document.getElementById("contactEditOverlay")) closeContactEditDialog();
@@ -60,6 +61,7 @@ function handleContactOverlayClick(event) {
 
 /**
  * Writes the contact data into the edit form fields.
+ * @param {Object} contact - Contact whose values fill the form.
  */
 function fillContactEditForm(contact) {
   const avatar = document.getElementById("contactEditAvatar");
@@ -73,6 +75,8 @@ function fillContactEditForm(contact) {
 
 /**
  * Validates the edit form and saves the contact while the submit button is disabled.
+ * @param {SubmitEvent} event - Edit form submission event.
+ * @returns {Promise<void>} Resolves after validation and saving finish.
  */
 async function handleContactEditSubmit(event) {
   event.preventDefault();
@@ -99,7 +103,10 @@ function getValidatedContactValues(prefix) {
 }
 
 
-/** Adds blur and correction validation to one contact form. */
+/**
+ * Adds blur and correction validation to one contact form.
+ * @param {string} prefix - Id prefix shared by the contact form fields.
+ */
 function initContactFormValidation(prefix) {
   const form = document.getElementById(`${prefix}Form`);
   form.addEventListener("focusout", (event) => handleContactValidationEvent(event, prefix));
@@ -107,7 +114,11 @@ function initContactFormValidation(prefix) {
 }
 
 
-/** Validates a contact field on blur and while correcting an invalid value. */
+/**
+ * Validates a contact field on blur and while correcting an invalid value.
+ * @param {FocusEvent|InputEvent} event - Form interaction to process.
+ * @param {string} prefix - Id prefix shared by the contact form fields.
+ */
 function handleContactValidationEvent(event, prefix) {
   const fieldName = getContactFieldName(event.target.id, prefix);
   if (!fieldName) return;
@@ -120,19 +131,33 @@ function handleContactValidationEvent(event, prefix) {
 }
 
 
-/** @returns {string|undefined} Matching contact field suffix. */
+/**
+ * Finds the configured suffix for a contact form field.
+ * @param {string} fieldId - Full id of the interacted field.
+ * @param {string} prefix - Contact form id prefix.
+ * @returns {string|undefined} Matching contact field suffix.
+ */
 function getContactFieldName(fieldId, prefix) {
   return contactFieldNames.find((fieldName) => fieldId === `${prefix}${fieldName}`);
 }
 
 
-/** Validates every required contact field. */
+/**
+ * Validates every required contact field.
+ * @param {string} prefix - Contact form id prefix.
+ * @returns {boolean} True when every contact field is valid.
+ */
 function validateContactForm(prefix) {
   return contactFieldNames.map((fieldName) => validateContactField(prefix, fieldName)).every(Boolean);
 }
 
 
-/** Validates one contact field and renders its feedback. */
+/**
+ * Validates one contact field and renders its feedback.
+ * @param {string} prefix - Contact form id prefix.
+ * @param {string} fieldName - Configured contact field suffix.
+ * @returns {boolean} True when the field is valid.
+ */
 function validateContactField(prefix, fieldName) {
   const field = document.getElementById(`${prefix}${fieldName}`);
   const message = getContactFieldError(
@@ -144,7 +169,12 @@ function validateContactField(prefix, fieldName) {
 }
 
 
-/** Returns validation feedback for a single contact value. */
+/**
+ * Returns validation feedback for a single contact value.
+ * @param {string} fieldName - Contact field suffix to validate.
+ * @param {string} value - Normalized field value.
+ * @returns {string} Validation message or an empty string.
+ */
 function getContactFieldError(fieldName, value) {
   if (fieldName === "Name") return getPersonNameError(value);
   if (fieldName === "Email") return isEmailAddressValid(value) ? "" : "Please enter a valid email address.";
@@ -153,7 +183,11 @@ function getContactFieldError(fieldName, value) {
 }
 
 
-/** @returns {string} Validation feedback for one phone number. */
+/**
+ * Returns validation feedback for one phone number.
+ * @param {string} value - Normalized phone number input.
+ * @returns {string} Validation feedback or an empty string.
+ */
 function getPhoneNumberError(value) {
   if (!value) return "Please enter a phone number.";
   if (!phoneNumberPattern.test(value)) return "Use only numbers and common phone symbols.";
@@ -161,7 +195,12 @@ function getPhoneNumberError(value) {
 }
 
 
-/** Updates one contact field's inline message and accessibility state. */
+/**
+ * Updates one contact field's inline message and accessibility state.
+ * @param {string} prefix - Contact form id prefix.
+ * @param {string} fieldName - Contact field suffix to update.
+ * @param {string} message - Validation message or an empty string.
+ */
 function setContactFieldError(prefix, fieldName, message) {
   const field = document.getElementById(`${prefix}${fieldName}`);
   field.setAttribute("aria-invalid", String(Boolean(message)));
@@ -169,14 +208,21 @@ function setContactFieldError(prefix, fieldName, message) {
 }
 
 
-/** Clears all client and save feedback in a contact form. */
+/**
+ * Clears all client and save feedback in a contact form.
+ * @param {string} prefix - Contact form id prefix.
+ */
 function resetContactFormValidation(prefix) {
   contactFieldNames.forEach((fieldName) => setContactFieldError(prefix, fieldName, ""));
   setContactFormMessage(prefix, "");
 }
 
 
-/** Updates the form-level contact message. */
+/**
+ * Updates the form-level contact message.
+ * @param {string} prefix - Contact form id prefix.
+ * @param {string} message - Form-level message or an empty string.
+ */
 function setContactFormMessage(prefix, message) {
   document.getElementById(`${prefix}Error`).textContent = message;
 }
@@ -188,6 +234,7 @@ function setContactFormMessage(prefix, message) {
  * @param {string} errorId - The id of the error output element.
  * @param {string} failMessage - The message shown when saving fails.
  * @param {Function} action - The async save action to run.
+ * @returns {Promise<void>} Resolves after the save attempt finishes.
  */
 async function submitContactForm(form, errorId, failMessage, action) {
   setSubmitButtonDisabled(form, true);
@@ -203,6 +250,8 @@ async function submitContactForm(form, errorId, failMessage, action) {
 
 /**
  * Combines the stored contact with the edited form values.
+ * @param {Object} contact - Existing contact to extend with form values.
+ * @returns {Object} Updated contact data.
  */
 function getEditedContact(contact) {
   return { ...contact, ...getContactFormValues("contactEdit") };
@@ -226,7 +275,12 @@ async function saveEditedContact() {
 }
 
 
-/** Keeps the signed-in account display name aligned with its own contact. */
+/**
+ * Keeps the signed-in account display name aligned with its own contact.
+ * @param {Object} contact - Account contact before editing.
+ * @param {Object} updatedContact - Account contact after editing.
+ * @returns {Promise<void>} Resolves after local and Firebase names are synchronized.
+ */
 async function syncStoredAccountContactName(contact, updatedContact) {
   if (!isOwnAccountContact(contact)) return true;
   const user = getStoredUser();
@@ -237,7 +291,11 @@ async function syncStoredAccountContactName(contact, updatedContact) {
 }
 
 
-/** Updates Firebase Auth when available without undoing the saved contact. */
+/**
+ * Updates Firebase Auth when available without undoing the saved contact.
+ * @param {string} name - New account display name.
+ * @returns {Promise<void>} Resolves even when Firebase Auth is unavailable.
+ */
 async function updateFirebaseAccountNameSafely(name) {
   const updateDisplayName = window.joinFirebaseAuth?.updateUserDisplayName;
   if (!updateDisplayName) return true;
@@ -250,7 +308,10 @@ async function updateFirebaseAccountNameSafely(name) {
 }
 
 
-/** Shows whether the contact and its Firebase account name both updated. */
+/**
+ * Shows whether the contact and its Firebase account name both updated.
+ * @param {boolean} accountNameSynced - Whether the Firebase display name was synchronized.
+ */
 function showEditedContactFeedback(accountNameSynced) {
   const message = accountNameSynced
     ? "Contact successfully edited"
@@ -288,6 +349,7 @@ function closeContactAddDialog() {
 
 /**
  * Closes the add dialog only when the dark backdrop itself is clicked.
+ * @param {MouseEvent} event - Click event from the add overlay.
  */
 function handleContactAddOverlayClick(event) {
   if (event.target === document.getElementById("contactAddOverlay")) closeContactAddDialog();
@@ -296,6 +358,8 @@ function handleContactAddOverlayClick(event) {
 
 /**
  * Validates the add form and creates the contact while the submit button is disabled.
+ * @param {SubmitEvent} event - Add form submission event.
+ * @returns {Promise<void>} Resolves after validation and creation finish.
  */
 async function handleContactAddSubmit(event) {
   event.preventDefault();
@@ -312,6 +376,8 @@ async function handleContactAddSubmit(event) {
 
 /**
  * Creates a new contact, saves it and opens its detail view.
+ * @param {Object} values - Validated contact form values.
+ * @returns {Promise<void>} Resolves after the contact is stored and displayed.
  */
 async function createContactRecord(values) {
   const newContact = await createContactInStore({ color: getRandomContactColor(), ...values });
@@ -324,6 +390,7 @@ async function createContactRecord(values) {
 
 /**
  * Picks a random avatar color for a new contact.
+ * @returns {string} One configured contact avatar color.
  */
 function getRandomContactColor() {
   return contactColors[Math.floor(Math.random() * contactColors.length)];
@@ -332,6 +399,8 @@ function getRandomContactColor() {
 
 /**
  * Reads the trimmed form values for the given dialog id prefix.
+ * @param {string} idPrefix - Id prefix shared by the form fields.
+ * @returns {{name: string, email: string, phone: string}} Normalized contact values.
  */
 function getContactFormValues(idPrefix) {
   return Object.fromEntries(contactFieldNames.map((fieldName) => [
@@ -343,6 +412,8 @@ function getContactFormValues(idPrefix) {
 
 /**
  * Enables or disables the submit button of the given form.
+ * @param {HTMLFormElement} form - Contact form containing the submit button.
+ * @param {boolean} isDisabled - Whether the submit button should be disabled.
  */
 function setSubmitButtonDisabled(form, isDisabled) {
   form.querySelector('button[type="submit"]').disabled = isDisabled;

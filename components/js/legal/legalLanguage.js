@@ -24,6 +24,9 @@ function initLegalLanguageControls(pages, toggles) {
 
 /**
  * Connects one switch to the shared legal-page language state.
+ * @param {NodeList|Array} pages - Legal page containers to translate.
+ * @param {NodeList|Array} toggles - All synchronized language switches.
+ * @param {HTMLInputElement} toggle - Switch receiving the change listener.
  */
 function bindLegalLanguageToggle(pages, toggles, toggle) {
   toggle.addEventListener("change", () => {
@@ -34,6 +37,9 @@ function bindLegalLanguageToggle(pages, toggles, toggle) {
 
 /**
  * Persists a switch change and applies it to every legal-page control.
+ * @param {NodeList|Array} pages - Legal page containers to translate.
+ * @param {NodeList|Array} toggles - All synchronized language switches.
+ * @param {boolean} showEnglish - Whether English should be active.
  */
 function updateStoredLegalLanguage(pages, toggles, showEnglish) {
   const language = showEnglish ? "en" : "de";
@@ -44,6 +50,9 @@ function updateStoredLegalLanguage(pages, toggles, showEnglish) {
 
 /**
  * Synchronizes page copy, controls and document language metadata.
+ * @param {NodeList|Array} pages - Legal page containers to translate.
+ * @param {NodeList|Array} toggles - All synchronized language switches.
+ * @param {string} language - Supported language code to apply.
  */
 function applyLegalLanguage(pages, toggles, language) {
   const showEnglish = language === "en";
@@ -55,6 +64,8 @@ function applyLegalLanguage(pages, toggles, language) {
 
 /**
  * Mirrors the active language to every visible or hidden switch.
+ * @param {NodeList|Array} toggles - Language switches to synchronize.
+ * @param {boolean} showEnglish - Whether switches should select English.
  */
 function syncLegalLanguageToggles(toggles, showEnglish) {
   toggles.forEach((toggle) => { toggle.checked = showEnglish; });
@@ -63,6 +74,8 @@ function syncLegalLanguageToggles(toggles, showEnglish) {
 
 /**
  * Shows the matching language copy in all page variants.
+ * @param {NodeList|Array} pages - Legal page containers to update.
+ * @param {boolean} showEnglish - Whether English copy should be visible.
  */
 function syncLegalLanguagePages(pages, showEnglish) {
   pages.forEach((page) => {
@@ -71,7 +84,10 @@ function syncLegalLanguagePages(pages, showEnglish) {
 }
 
 
-/** Initializes one legal document in public and signed-in layouts. */
+/**
+ * Initializes one legal document in public and signed-in layouts.
+ * @param {string} documentType - Legal document key used by element ids.
+ */
 function initLegalPage(documentType) {
   syncInternalLegalCopy(documentType);
   updateLegalViewMode(documentType);
@@ -81,7 +97,10 @@ function initLegalPage(documentType) {
 }
 
 
-/** Clones the public legal copy into the app-shell view once. */
+/**
+ * Clones the public legal copy into the app-shell view once.
+ * @param {string} documentType - Legal document key used by element ids.
+ */
 function syncInternalLegalCopy(documentType) {
   const internalCopy = getElement(`${documentType}InternalCopy`);
   const copies = document.querySelectorAll(
@@ -92,7 +111,10 @@ function syncInternalLegalCopy(documentType) {
 }
 
 
-/** Selects the public or signed-in legal view. */
+/**
+ * Selects the public or signed-in legal view.
+ * @param {string} documentType - Legal document key used by element ids.
+ */
 function updateLegalViewMode(documentType) {
   const externalView = getElement(`${documentType}ExternalView`);
   const internalView = getElement(`${documentType}InternalView`);
