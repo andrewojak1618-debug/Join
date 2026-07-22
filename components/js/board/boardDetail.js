@@ -10,7 +10,10 @@ function renderBoardDetailSubtasks(task) {
   const container = getElement("boardTaskDetailSubtasks");
   const subtasks = getNormalizedBoardSubtasks(task.subtasks);
   container.innerHTML = subtasks.length
-    ? subtasks.map(getBoardDetailSubtaskTemplate).join("")
+    ? subtasks
+        .map(getBoardDetailSubtaskViewData)
+        .map(getBoardDetailSubtaskTemplate)
+        .join("")
     : '<span class="board-detail-empty">No subtasks</span>';
 }
 
@@ -78,7 +81,11 @@ async function renderBoardEditAssignees(assignedTo) {
   boardDetailContacts = await loadSortedContactsSafely();
   container.innerHTML = boardDetailContacts.length
     ? boardDetailContacts
-        .map((contact) => getBoardEditAssigneeTemplate(contact, assignedTo))
+        .map((contact) => getAssigneeOptionViewData(
+          contact,
+          isBoardAssigneeSelected(contact, assignedTo),
+        ))
+        .map(getBoardEditAssigneeTemplate)
         .join("")
     : '<span class="board-detail-empty">No contacts available.</span>';
   bindBoardEditAssigneesDropdown();

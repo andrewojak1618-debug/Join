@@ -5,7 +5,7 @@ const { loadBrowserScripts } = require("./helpers/scriptContext");
 
 const context = loadBrowserScripts([
   "components/js/core/shared.js",
-  "components/js/board/boardTemplates.js",
+  "components/js/board/boardViewData.js",
 ]);
 
 

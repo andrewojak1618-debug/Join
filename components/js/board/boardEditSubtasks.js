@@ -156,14 +156,16 @@ function saveBoardEditSubtask(index) {
  */
 function renderBoardEditSubtasks() {
   getElement("boardTaskEditSubtaskList").innerHTML = boardEditSubtaskItems
-    .map((subtask, index) =>
-      getSubtaskItemTemplate(
-        subtask,
-        index,
-        index === boardEditSubtaskEditingIndex,
-      ),
-    )
+    .map(renderBoardEditSubtaskTemplate)
     .join("");
+}
+
+
+/** Selects the view or edit template for one board-edit subtask. */
+function renderBoardEditSubtaskTemplate(subtask, index) {
+  return index === boardEditSubtaskEditingIndex
+    ? getSubtaskEditTemplate(subtask, index)
+    : getSubtaskItemTemplate(subtask, index);
 }
 
 

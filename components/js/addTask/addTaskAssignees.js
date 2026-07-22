@@ -32,7 +32,10 @@ function bindAssigneeDropdown() {
 function renderAssigneeOptions() {
   const panel = getElement("taskAssigneesPanel");
   panel.innerHTML = addTaskContacts.length
-    ? addTaskContacts.map(getAssigneeOptionTemplate).join("")
+    ? addTaskContacts
+        .map((contact) => getAssigneeOptionViewData(contact))
+        .map(getAssigneeOptionTemplate)
+        .join("")
     : '<p class="contact-dropdown__empty">No contacts available.</p>';
   panel.querySelectorAll("input").forEach((input) => {
     input.addEventListener("change", handleAssigneeChange);
@@ -113,7 +116,10 @@ function renderSelectedAssigneeChips() {
   const { visible, overflowCount } = getVisibleAssigneeChips(
     selectedTaskAssignees, maxVisibleAssigneeChips,
   );
-  const chips = visible.map(getAssigneeChipTemplate).join("");
+  const chips = visible
+    .map(getAssigneeChipViewData)
+    .map(getAssigneeChipTemplate)
+    .join("");
   getElement("taskAssigneesSelected").innerHTML =
     chips + getAssigneeOverflowChipTemplate(overflowCount);
 }

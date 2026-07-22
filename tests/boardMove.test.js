@@ -5,7 +5,7 @@ const { loadBrowserScripts } = require("./helpers/scriptContext");
 
 
 test("offers the adjacent board columns as move targets", () => {
-  const context = loadBrowserScripts(["components/js/board/boardTemplates.js"]);
+  const context = loadBrowserScripts(["components/js/board/boardViewData.js"]);
 
   assert.deepEqual(
     Array.from(
@@ -18,7 +18,7 @@ test("offers the adjacent board columns as move targets", () => {
 
 
 test("uses directional icons relative to the current board column", () => {
-  const context = loadBrowserScripts(["components/js/board/boardTemplates.js"]);
+  const context = loadBrowserScripts(["components/js/board/boardViewData.js"]);
   const targets = context.getBoardMoveTargets("feedback");
 
   assert.deepEqual(
@@ -34,7 +34,9 @@ test("renders one column's tasks ordered by creation time, oldest first", () => 
     ["components/js/tasks/tasks.js", "components/js/board/board.js"],
     {
       getBoardTaskTemplate: (task) => `${task.id};`,
+      getBoardTaskViewData: (task) => task,
       getBoardEmptyTemplate: () => "empty",
+      formatBoardStatus: (status) => status,
     },
   );
   const tasks = [

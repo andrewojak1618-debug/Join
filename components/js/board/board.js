@@ -69,8 +69,8 @@ function renderBoardColumn(taskList, tasks) {
     .filter((task) => task.status === status)
     .sort((a, b) => getTaskCreatedAtMillis(a) - getTaskCreatedAtMillis(b));
   taskList.innerHTML = filteredTasks.length
-    ? filteredTasks.map(getBoardTaskTemplate).join("")
-    : getBoardEmptyTemplate(status);
+    ? filteredTasks.map(getBoardTaskViewData).map(getBoardTaskTemplate).join("")
+    : getBoardEmptyTemplate(formatBoardStatus(status));
 }
 
 
@@ -335,7 +335,8 @@ function renderBoardDetailAssignees(assignedTo) {
     return;
   }
   target.innerHTML = references
-    .map((reference) => getBoardDetailAssigneeTemplate(resolveAssigneeDisplay(reference, activeBoardContacts)))
+    .map(getBoardDetailAssigneeViewData)
+    .map(getBoardDetailAssigneeTemplate)
     .join("");
 }
 

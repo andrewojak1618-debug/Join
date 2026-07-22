@@ -103,10 +103,16 @@ function updateSubtaskInputMode() {
  */
 function renderSubtaskList() {
   getElement("taskSubtaskList").innerHTML = addTaskSubtasks
-    .map((subtask, index) =>
-      getSubtaskItemTemplate(subtask, index, index === editingSubtaskIndex),
-    )
+    .map(renderSubtaskTemplate)
     .join("");
+}
+
+
+/** Selects the view or edit template for one subtask row. */
+function renderSubtaskTemplate(subtask, index) {
+  return index === editingSubtaskIndex
+    ? getSubtaskEditTemplate(subtask, index)
+    : getSubtaskItemTemplate(subtask, index);
 }
 
 

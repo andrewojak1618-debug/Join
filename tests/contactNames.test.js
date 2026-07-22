@@ -6,6 +6,7 @@ const {
 } = require("./helpers/scriptContext");
 
 const contactTemplatesScript = "components/js/contacts/contactsTemplates.js";
+const contactViewDataScript = "components/js/contacts/contactsViewData.js";
 const sharedScript = "components/js/core/shared.js";
 
 
@@ -14,7 +15,7 @@ const sharedScript = "components/js/core/shared.js";
  * @returns {Object} Context exposing the abbreviation function.
  */
 function createContactNameContext() {
-  return loadBrowserScripts([sharedScript, contactTemplatesScript]);
+  return loadBrowserScripts([sharedScript, contactViewDataScript]);
 }
 
 
@@ -24,7 +25,7 @@ function createContactNameContext() {
  */
 function createContactTemplateContext() {
   return loadBrowserScripts(
-    [sharedScript, contactTemplatesScript],
+    [sharedScript, contactViewDataScript, contactTemplatesScript],
   );
 }
 
@@ -70,12 +71,15 @@ test("normalizes surrounding and repeated whitespace", () => {
 
 test("renders full and abbreviated contact names", () => {
   const context = createContactTemplateContext();
-  const markup = context.getContactItemTemplate({
+  const contact = {
     id: "contact-1",
     name: "Valentina Rodriguez Pena",
     email: "valentina@example.com",
     color: "#FF7A00",
-  });
+  };
+  const markup = context.getContactItemTemplate(
+    context.getContactItemViewData(contact),
+  );
 
   assert.ok(markup.includes(
     '<span class="contacts-item-name__full">Valentina Rodriguez Pena</span>',

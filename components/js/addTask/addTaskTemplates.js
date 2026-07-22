@@ -1,51 +1,31 @@
-/**
- * Creates one contact option for the assignee dropdown.
- *
- * @param {Object} contact - Contact object from the contacts store.
- * @returns {string} HTML markup for one selectable contact.
- */
-function getAssigneeOptionTemplate(contact, isChecked = false) {
-  const checked = isChecked ? "checked" : "";
+/** Creates one prepared contact option for the assignee dropdown. */
+function getAssigneeOptionTemplate(contact) {
   return `
     <label class="contact-dropdown__option">
-      <span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color || "var(--color-primary-auth)")}">
-        ${getInitials(contact.name)}
+      <span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color)}">
+        ${contact.initials}
       </span>
       <span>${escapeHtmlText(contact.name)}</span>
-      <input type="checkbox" value="${escapeHtmlText(contact.id)}" ${checked} />
-    </label>
-  `;
+      <input type="checkbox" value="${escapeHtmlText(contact.id)}" ${contact.checkedAttribute} />
+    </label>`;
 }
 
 
-/**
- * Returns a colored initials avatar for one selected contact.
- *
- * @param {Object} contact - Selected contact object.
- * @returns {string} HTML markup for the selected-contact avatar chip.
- */
+/** Returns one prepared selected-contact avatar chip. */
 function getAssigneeChipTemplate(contact) {
-  return `<span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color || "var(--color-primary-auth)")}">${getInitials(contact.name)}</span>`;
+  return `<span class="contact-dropdown__avatar" style="background-color: ${escapeHtmlText(contact.color)}">${contact.initials}</span>`;
 }
 
 
-/**
- * Returns a muted "+N" avatar for assignees hidden beyond the visible limit.
- *
- * @param {number} overflowCount - Number of assignees not shown directly.
- * @returns {string} HTML markup for the overflow avatar, or an empty string.
- */
+/** Returns the optional hidden-assignee counter. */
 function getAssigneeOverflowChipTemplate(overflowCount) {
   if (!overflowCount) return "";
   return `<span class="contact-dropdown__avatar contact-dropdown__avatar--overflow">+${overflowCount}</span>`;
 }
 
 
-/**
- * Returns the markup for one subtask row in view or edit mode.
- */
-function getSubtaskItemTemplate(subtask, index, isEditing = false) {
-  if (isEditing) return getSubtaskEditTemplate(subtask, index);
+/** Returns one prepared subtask row in view mode. */
+function getSubtaskItemTemplate(subtask, index) {
   return `
     <li class="add-task-subtask" data-subtask-index="${index}">
       <span class="add-task-subtask__title">${escapeHtmlText(subtask.title)}</span>
@@ -62,9 +42,7 @@ function getSubtaskItemTemplate(subtask, index, isEditing = false) {
 }
 
 
-/**
- * Returns the inline edit markup for the subtask that is being changed.
- */
+/** Returns one prepared subtask row in edit mode. */
 function getSubtaskEditTemplate(subtask, index) {
   return `
     <li class="add-task-subtask add-task-subtask--editing" data-subtask-index="${index}">

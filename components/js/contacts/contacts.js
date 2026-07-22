@@ -15,7 +15,8 @@ async function initContacts() {
   );
   const groups = groupContactsByLetter(sortContactsByName(activeContacts));
   contactsList.innerHTML = Object.keys(groups)
-    .map((letter) => getContactGroupTemplate(letter, groups[letter]))
+    .map((letter) => getContactGroupViewData(letter, groups[letter]))
+    .map(getContactGroupTemplate)
     .join("");
   initContactDetails(activeContacts);
 }
