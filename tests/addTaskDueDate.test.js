@@ -18,7 +18,11 @@ const document = {
   },
 };
 const context = loadBrowserScripts(
-  ["components/js/addTask/addTaskValidation.js", "components/js/addTask/addTaskDatePicker.js"],
+  [
+    "components/js/core/shared.js",
+    "components/js/addTask/addTaskValidation.js",
+    "components/js/addTask/addTaskDatePicker.js",
+  ],
   { document, getAddTaskDueDate: () => normalizedDueDate },
 );
 

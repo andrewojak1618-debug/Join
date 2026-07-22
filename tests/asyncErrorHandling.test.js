@@ -96,13 +96,18 @@ test("shows feedback when initial board loading fails", async () => {
  */
 function createBoardActionContext(task) {
   const messages = [];
+  const toast = {
+    hidden: true,
+    set textContent(message) { messages.push(message); },
+  };
   const context = loadBrowserScripts([
     "components/js/core/shared.js",
     "components/js/board/boardDetail.js",
   ], {
+    document: { getElementById: () => toast },
     getActiveBoardTask: () => task,
     updateTaskInStore: async () => { throw new Error("offline"); },
-    showTimedFeedback: (_target, message) => messages.push(message),
+    setTimeout: () => 0,
   });
   return { context, messages };
 }

@@ -190,8 +190,10 @@ function getSignupFieldError(fieldId) {
 
 /** @returns {string} Name validation feedback. */
 function getSignupNameError() {
-  if (!getTrimmedInputValue("signupName")) return "Please enter your name.";
-  return isSignupNameValid() ? "" : "Enter at least 2 characters.";
+  const name = getTrimmedInputValue("signupName");
+  if (!name) return "Please enter your name.";
+  if (name.length < 2) return "Enter at least 2 characters.";
+  return isSignupNameValid() ? "" : "Names cannot contain numbers.";
 }
 
 
@@ -211,7 +213,7 @@ function getSignupConfirmPasswordError() {
 
 /** @returns {boolean} True when the trimmed name has at least two characters. */
 function isSignupNameValid() {
-  return getTrimmedInputValue("signupName").length >= 2;
+  return isPersonNameValid(getTrimmedInputValue("signupName"), 2);
 }
 
 
