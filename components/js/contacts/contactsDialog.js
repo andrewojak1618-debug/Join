@@ -146,17 +146,10 @@ function validateContactField(prefix, fieldName) {
 
 /** Returns validation feedback for a single contact value. */
 function getContactFieldError(fieldName, value) {
-  if (fieldName === "Name") return getContactNameError(value);
+  if (fieldName === "Name") return getPersonNameError(value);
   if (fieldName === "Email") return isEmailAddressValid(value) ? "" : "Please enter a valid email address.";
   if (fieldName === "Phone") return getPhoneNumberError(value);
   return "";
-}
-
-
-/** @returns {string} Validation feedback for a contact name. */
-function getContactNameError(value) {
-  if (!value) return "Please enter a name.";
-  return isPersonNameValid(value) ? "" : "Names cannot contain numbers.";
 }
 
 
