@@ -20,6 +20,16 @@ test("accepts a contact email that passes signup validation", () => {
 });
 
 
+test("rejects numbers in contact names and accepts common name punctuation", () => {
+  assert.equal(
+    context.getContactFieldError("Name", "Ada2 Lovelace"),
+    "Names cannot contain numbers.",
+  );
+  assert.equal(context.getContactFieldError("Name", "Jörg Müller-Schmidt"), "");
+  assert.equal(context.getContactFieldError("Name", "Anne O'Connor"), "");
+});
+
+
 test("rejects an incomplete contact email", () => {
   const values = { ...validContact, email: "a@.." };
   assert.equal(

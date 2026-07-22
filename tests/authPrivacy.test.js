@@ -145,6 +145,16 @@ test("shows a name error after a one-character name loses focus", () => {
 });
 
 
+test("rejects numbers in the signup name after blur", () => {
+  const { context, elements } = createAuthContext();
+  elements.signupName.value = "Ada2 Lovelace";
+  context.handleSignupFieldBlur({ target: elements.signupName });
+  assert.equal(elements.signupNameError.textContent, "Names cannot contain numbers.");
+  assert.equal(elements.signupName.attributes["aria-invalid"], "true");
+  assert.equal(elements.privacyAccepted.disabled, true);
+});
+
+
 test("rejects signup email addresses containing umlauts", () => {
   const { context, elements } = createAuthContext();
   const invalidEmails = ["jürgen@example.com", "user@exämple.com", "user@example.öe"];

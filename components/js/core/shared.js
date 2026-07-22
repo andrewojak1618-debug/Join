@@ -3,6 +3,7 @@
 
 const emailAddressPattern = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 const phoneNumberPattern = /^\+?[\d\s()-]+$/;
+const nameNumberPattern = /\p{N}/u;
 const minimumPhoneDigits = 6;
 
 
@@ -34,6 +35,18 @@ function getTrimmedInputValue(inputId) {
 /** Converts a value into text without surrounding whitespace. */
 function normalizeText(value) {
   return String(value ?? "").trim();
+}
+
+
+/**
+ * Checks a person's name without restricting international letters or punctuation.
+ * @param {string} name - Display name to validate.
+ * @param {number} minimumLength - Required length after trimming.
+ * @returns {boolean} True when the name is long enough and contains no numbers.
+ */
+function isPersonNameValid(name, minimumLength = 1) {
+  const normalizedName = normalizeText(name);
+  return normalizedName.length >= minimumLength && !nameNumberPattern.test(normalizedName);
 }
 
 
