@@ -34,7 +34,9 @@
       </label>
 
       <div class="add-task-field">
-        <label for="taskDueDate">Due date<strong>*</strong></label>
+        <label class="add-task-field__control-label" for="taskDueDate">
+          Due date<strong>*</strong>
+        </label>
         <span
           data-include="./components/html/molecules/addTaskDatePicker.html"
         ></span>
@@ -92,7 +94,9 @@
       </fieldset>
 
       <div class="add-task-field">
-        <span>Assigned to</span>
+        <label class="add-task-field__control-label" for="taskAssigneesButton">
+          Assigned to
+        </label>
         <div
           class="contact-dropdown"
           id="taskAssigneesDropdown"
@@ -123,7 +127,9 @@
       </div>
 
       <div class="add-task-field">
-        <span>Category<strong>*</strong></span>
+        <label class="add-task-field__control-label" for="taskCategoryButton">
+          Category<strong>*</strong>
+        </label>
         <div
           class="contact-dropdown"
           id="taskCategoryDropdown"
@@ -173,7 +179,13 @@
       </div>
 
       <div class="add-task-field add-task-subtasks">
-        <span id="taskSubtasksLabel">Subtasks</span>
+        <label
+          class="add-task-field__control-label"
+          id="taskSubtasksLabel"
+          for="taskSubtasks"
+        >
+          Subtasks
+        </label>
         <div class="add-task-subtask-input" id="taskSubtasksInputWrapper">
           <input
             id="taskSubtasks"

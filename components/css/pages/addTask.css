@@ -123,6 +123,11 @@
   font-size: 20px;
 }
 
+.add-task-field__control-label {
+  width: fit-content;
+  cursor: pointer;
+}
+
 .add-task-field strong,
 .add-task-form__footer strong {
   color: 	var(--color-required);
