@@ -57,7 +57,9 @@ function renderBoardColumns(tasks) {
  */
 function renderBoardColumn(taskList, tasks) {
   const status = taskList.dataset.boardStatus;
-  const filteredTasks = tasks.filter((task) => task.status === status);
+  const filteredTasks = tasks
+    .filter((task) => task.status === status)
+    .sort((a, b) => getTaskCreatedAtMillis(a) - getTaskCreatedAtMillis(b));
   taskList.innerHTML = filteredTasks.length
     ? filteredTasks.map(getBoardTaskTemplate).join("")
     : getBoardEmptyTemplate(status);

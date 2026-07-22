@@ -28,6 +28,29 @@ test("uses directional icons relative to the current board column", () => {
 });
 
 
+test("renders one column's tasks ordered by creation time, oldest first", () => {
+  const taskList = { dataset: { boardStatus: "todo" }, innerHTML: "" };
+  const context = loadBrowserScripts(
+    ["components/js/tasks/tasks.js", "components/js/board/board.js"],
+    {
+      getBoardTaskTemplate: (task) => `${task.id};`,
+      getBoardEmptyTemplate: () => "empty",
+    },
+  );
+  const tasks = [
+    { id: "third", status: "todo", createdAt: "2026-01-03T00:00:00.000Z" },
+    { id: "first", status: "todo", createdAt: "2026-01-01T00:00:00.000Z" },
+    { id: "other-column", status: "done", createdAt: "2026-01-02T00:00:00.000Z" },
+    { id: "second", status: "todo", createdAt: "2026-01-02T00:00:00.000Z" },
+    { id: "no-timestamp", status: "todo" },
+  ];
+
+  context.renderBoardColumn(taskList, tasks);
+
+  assert.equal(taskList.innerHTML, "no-timestamp;first;second;third;");
+});
+
+
 test("renders a moved task immediately and persists its new status", async () => {
   const task = { id: "task-1", status: "todo" };
   const state = { renders: 0, savedStatus: "" };

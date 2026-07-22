@@ -102,6 +102,16 @@ test("rejects impossible or unsupported task dates", () => {
 });
 
 
+test("reads a comparable creation time from different createdAt shapes", () => {
+  const { context } = createTaskContext();
+  assert.equal(context.getTaskCreatedAtMillis({ createdAt: "2026-01-01T00:00:00.000Z" }), Date.parse("2026-01-01T00:00:00.000Z"));
+  assert.equal(context.getTaskCreatedAtMillis({ createdAt: { toMillis: () => 1234 } }), 1234);
+  assert.equal(context.getTaskCreatedAtMillis({ createdAt: { seconds: 2 } }), 2000);
+  assert.equal(context.getTaskCreatedAtMillis({}), 0);
+  assert.equal(context.getTaskCreatedAtMillis({ createdAt: "not-a-date" }), 0);
+});
+
+
 test("uses the Firebase adapter when it is available", async () => {
   const calls = [];
   const firebaseTasks = {

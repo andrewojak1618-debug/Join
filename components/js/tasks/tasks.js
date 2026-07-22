@@ -94,6 +94,24 @@ function getTaskDueDateParts(value) {
 }
 
 
+/**
+ * Returns a comparable creation time for stable task ordering.
+ * Supports Firestore timestamps and ISO strings; tasks without a usable
+ * value fall back to 0 so they sort first without disturbing the relative
+ * order they otherwise arrived in.
+ * @param {Object} task - Task with an optional createdAt value.
+ * @returns {number} Milliseconds since epoch, or 0 as a stable fallback.
+ */
+function getTaskCreatedAtMillis(task) {
+  const createdAt = task?.createdAt;
+  if (!createdAt) return 0;
+  if (typeof createdAt.toMillis === "function") return createdAt.toMillis();
+  if (typeof createdAt.seconds === "number") return createdAt.seconds * 1000;
+  const parsed = new Date(createdAt).getTime();
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+
 /** Returns a valid task priority or the default priority. */
 function normalizeTaskPriority(value) {
   const priority = normalizeText(value);
