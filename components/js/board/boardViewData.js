@@ -38,14 +38,29 @@ function getBoardCategoryClass(category) {
 }
 
 
+const boardPreviewStopWords = new Set([
+  "aber", "als", "auf", "aus", "bei", "das", "dem", "den", "der", "des",
+  "die", "ein", "eine", "einer", "für", "hat", "hier", "ist", "mit", "oder",
+  "sich", "und", "von", "werden", "wird", "zu", "zum", "zur",
+  "across", "and", "are", "every", "for", "from", "has", "have", "into",
+  "is", "of", "on", "or", "that", "the", "this", "to", "was", "with",
+  "will", "you", "your",
+]);
+
+
+const boardPreviewActionWords = new Set([
+  "add", "align", "build", "check", "collect", "coordinate", "create", "define",
+  "implement", "improve", "prepare", "review", "summarize", "update",
+]);
+
+
 /**
- * Keeps links complete and shortens regular card descriptions.
+ * Shortens card descriptions while details keep the complete text.
  * @param {string} text - Task description shown on the board card.
- * @returns {string} Complete link text or shortened regular text.
+ * @returns {string} Description limited to the card preview length.
  */
 function getBoardShortText(text) {
   const cleanedText = String(text);
-  if (hasBoardLink(text)) return cleanedText;
   return cleanedText.length > 72
     ? `${cleanedText.slice(0, 69)}...`
     : cleanedText;
@@ -53,12 +68,80 @@ function getBoardShortText(text) {
 
 
 /**
- * Returns whether text contains a web address that must stay complete.
- * @param {string} text - Task text to inspect.
- * @returns {boolean} Whether the text contains a web address.
+ * Creates a short readable sentence without changing the stored description.
+ * @param {string} text - Complete stored description.
+ * @returns {string} Readable preview assembled from meaningful phrases.
  */
-function hasBoardLink(text) {
-  return /(?:https?:\/\/|www\.)\S+/i.test(String(text));
+function getBoardDescriptionPreview(text) {
+  const phrases = getBoardPreviewPhrases(text).slice(0, 3);
+  if (!phrases.length) return getBoardShortText(text);
+  const summary = formatBoardPreviewPhrases(phrases);
+  return `${summary.charAt(0).toUpperCase()}${summary.slice(1)}.`;
+}
+
+
+/**
+ * Extracts distinct one- or two-word phrases from the description.
+ * @param {string} text - Complete stored description.
+ * @returns {string[]} Distinct phrases suitable for the card preview.
+ */
+function getBoardPreviewPhrases(text) {
+  const cleanedText = String(text).replace(/(?:https?:\/\/|www\.)\S+/gi, " ");
+  const phrases = cleanedText
+    .split(/[.!?;:,\n]+/)
+    .flatMap(getBoardClausePhrases);
+  const uniquePhrases = new Map(
+    phrases.map((phrase) => [phrase.toLocaleLowerCase(), phrase]),
+  );
+  return [...uniquePhrases.values()];
+}
+
+
+/**
+ * Groups neighboring meaningful words from one sentence clause.
+ * @param {string} clause - One clause from the description.
+ * @returns {string[]} Meaningful phrases found in the clause.
+ */
+function getBoardClausePhrases(clause) {
+  const words = clause.match(/\p{L}[\p{L}\p{N}-]{2,}/gu) || [];
+  const phrases = [];
+  let currentPhrase = [];
+  words.forEach((word) => {
+    const normalizedWord = word.toLocaleLowerCase();
+    if (boardPreviewStopWords.has(normalizedWord)) {
+      appendBoardPreviewPhrase(phrases, currentPhrase);
+      currentPhrase = [];
+    } else if (!currentPhrase.length && boardPreviewActionWords.has(normalizedWord)) return;
+    else currentPhrase.push(word);
+    if (currentPhrase.length === 2) {
+      appendBoardPreviewPhrase(phrases, currentPhrase);
+      currentPhrase = [];
+    }
+  });
+  appendBoardPreviewPhrase(phrases, currentPhrase);
+  return phrases;
+}
+
+
+/**
+ * Adds a collected phrase when it contains meaningful words.
+ * @param {string[]} phrases - Target phrase list.
+ * @param {string[]} words - Words collected for one phrase.
+ */
+function appendBoardPreviewPhrase(phrases, words) {
+  if (words.length) phrases.push(words.join(" "));
+}
+
+
+/**
+ * Joins preview phrases as a natural short list.
+ * @param {string[]} phrases - Phrases selected for the preview.
+ * @returns {string} Joined natural-language summary.
+ */
+function formatBoardPreviewPhrases(phrases) {
+  if (phrases.length === 1) return phrases[0];
+  const lastPhrase = phrases[phrases.length - 1];
+  return `${phrases.slice(0, -1).join(", ")} and ${lastPhrase}`;
 }
 
 
@@ -130,7 +213,9 @@ function getBoardTaskViewData(task) {
     categoryClass: getBoardCategoryClass(task.category),
     categoryLabel: formatBoardCategory(task.category),
     title: task.title,
-    description: getBoardShortText(task.description || "No description"),
+    description: task.description
+      ? getBoardDescriptionPreview(task.description)
+      : "No description",
     subtask: getBoardSubtaskViewData(task.subtasks),
     assignees: getBoardAssigneeViewData(task.assignedTo),
     priority: task.priority,

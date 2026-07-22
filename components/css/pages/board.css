@@ -147,6 +147,10 @@ body.board-dragging * {
   color: var(--color-text-main);
   font-size: 16px;
   line-height: 1.15;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .board-card__description,
@@ -154,6 +158,13 @@ body.board-dragging * {
   color: var(--color-muted);
   font-size: 16px;
   line-height: 1.2;
+}
+
+.board-card__description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .board-card__subtasks,
@@ -291,6 +302,7 @@ body.board-dragging * {
     width: 100%;
     min-width: 0;
     display: flex;
+    align-items: flex-start;
     justify-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
